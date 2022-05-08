@@ -1,5 +1,5 @@
 # Old School Fiesta
 
-This initial purpose of this project is to support the first Old School Fiesta Event!
+The initial purpose of this project is to support Old School Fiesta Events!
 
-June 21st at Lekker Coffee be there or be a real bitch. 
+First occurrence: June 21st at Lekker Coffee, be there or be a real bitch. 
