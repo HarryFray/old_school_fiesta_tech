@@ -18,7 +18,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>OLD SCHOOL FIESTA </h1>
+      <h1>OLD SOL FIESTA </h1>
     </div>
   );
 }
