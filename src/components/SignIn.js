@@ -9,9 +9,10 @@ import {
 import styled from "styled-components";
 
 const StyledSignIn = styled.div`
-  background: lightgray;
+  background: white;
   height: 100vh;
   width: 100vw;
+  display: flex;
   align-items: center;
   justify-content: center;
 
@@ -21,6 +22,7 @@ const StyledSignIn = styled.div`
     flex-direction: column;
     padding: 24px;
     border-radius: 4px;
+    border: 1px solid lightgray;
     justify-content: center;
     align-items: center;
 
@@ -31,10 +33,6 @@ const StyledSignIn = styled.div`
     button,
     .input {
       margin-top: 24px;
-    }
-
-    .input {
-      width: 300px;
     }
   }
 `;
