@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import Button from "@mui/material/Button";
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
 import SignIn from "./components/SignIn";
 
@@ -16,23 +16,46 @@ const firebaseConfig = {
 };
 
 function App() {
+  const [userSignedIn, setUserSignedIn] = useState(false);
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
 
   const auth = getAuth(app);
 
-  const user = auth.currentUser;
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is signed in: ", user);
+        setUserSignedIn(true);
+      } else {
+        setUserSignedIn(false);
+        console.log("User not signed in");
+      }
+    });
+  }, [auth]);
 
-  if (user) {
-    console.log("User is signed in: ", user);
-    // ...
-  } else {
-    console.log("User not signed in", user);
-  }
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("User signed out: ", auth);
+      })
+      .catch((error) => {
+        console.log("Error signing out: ", error);
+      });
+  };
 
   return (
     <div className="App">
-      <SignIn />
+      {userSignedIn ? (
+        <>
+          <h1>home page</h1>
+          <Button onClick={handleSignOut} variant="outlined">
+            Sign Out
+          </Button>
+        </>
+      ) : (
+        <SignIn />
+      )}
     </div>
   );
 }

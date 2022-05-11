@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import styled from "styled-components";
 
 const StyledSignIn = styled.div`
@@ -31,7 +35,17 @@ const SignIn = () => {
         console.log("New user created: ", user);
       })
       .catch((error) => {
-        console.log("Error on signUp/LogIn", error);
+        console.log("Error on signUp", error);
+      });
+  };
+
+  const handleUserSignIn = (auth, email, password) => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log("User loged in in: ", userCredential);
+      })
+      .catch((error) => {
+        console.log("Error on log in", error);
       });
   };
 
@@ -58,7 +72,7 @@ const SignIn = () => {
         Create New Account
       </Button>
       <Button
-        onClick={() => alert("sign in existing user not set up yet")}
+        onClick={() => handleUserSignIn(auth, email, password)}
         variant="outlined"
       >
         Sign In
