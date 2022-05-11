@@ -2,6 +2,21 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import styled from "styled-components";
+
+const StyledSignIn = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 800px;
+  justify-content: center;
+  align-items: center;
+
+  button,
+  .input {
+    margin-top: 24px;
+  }
+`;
 
 const SignIn = () => {
   const [password, setPassword] = useState("");
@@ -21,34 +36,34 @@ const SignIn = () => {
   };
 
   return (
-    <div className="SignIn">
+    <StyledSignIn>
+      <h1>Old Sol Fiesta</h1>
       <TextField
+        className="input"
         id="outlined-basic"
         label="Enter email"
         variant="outlined"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-
       <TextField
+        className="input"
         id="outlined-basic"
         label="Enter Password"
         variant="outlined"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <div>
-        <Button
-          onClick={() => alert("sign in existing user not set up yet")}
-          variant="outlined"
-        >
-          Sign In
-        </Button>
-        <Button onClick={() => handleCreateUser(auth, email, password)}>
-          Create New Account
-        </Button>
-      </div>
-    </div>
+      <Button onClick={() => handleCreateUser(auth, email, password)}>
+        Create New Account
+      </Button>
+      <Button
+        onClick={() => alert("sign in existing user not set up yet")}
+        variant="outlined"
+      >
+        Sign In
+      </Button>
+    </StyledSignIn>
   );
 };
 

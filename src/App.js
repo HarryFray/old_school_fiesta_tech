@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
@@ -19,11 +21,17 @@ function App() {
 
   const auth = getAuth(app);
 
-  console.log({ auth });
+  const user = auth.currentUser;
+
+  if (user) {
+    console.log("User is signed in: ", user);
+    // ...
+  } else {
+    console.log("User not signed in", user);
+  }
 
   return (
     <div className="App">
-      <h1>OLD SOL FIESTA </h1>
       <SignIn />
     </div>
   );
