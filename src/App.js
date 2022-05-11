@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
+
+import SignIn from "./components/SignIn";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXx9TD8ryWSwhWGj1bvlbqdQ9iquaP8nU",
@@ -14,11 +16,15 @@ const firebaseConfig = {
 function App() {
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  getAnalytics(app);
+
+  const auth = getAuth(app);
+
+  console.log({ auth });
 
   return (
     <div className="App">
       <h1>OLD SOL FIESTA </h1>
+      <SignIn />
     </div>
   );
 }
