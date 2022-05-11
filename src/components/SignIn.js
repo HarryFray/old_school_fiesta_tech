@@ -9,16 +9,33 @@ import {
 import styled from "styled-components";
 
 const StyledSignIn = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 800px;
-  justify-content: center;
+  background: lightgray;
+  height: 100vh;
+  width: 100vw;
   align-items: center;
+  justify-content: center;
 
-  button,
-  .input {
-    margin-top: 24px;
+  .login_card {
+    display: flex;
+    background: white;
+    flex-direction: column;
+    padding: 24px;
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+      margin: 0;
+    }
+
+    button,
+    .input {
+      margin-top: 24px;
+    }
+
+    .input {
+      width: 300px;
+    }
   }
 `;
 
@@ -51,32 +68,41 @@ const SignIn = () => {
 
   return (
     <StyledSignIn>
-      <h1>Old Sol Fiesta</h1>
-      <TextField
-        className="input"
-        id="outlined-basic"
-        label="Enter email"
-        variant="outlined"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <TextField
-        className="input"
-        id="outlined-basic"
-        label="Enter Password"
-        variant="outlined"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <Button onClick={() => handleCreateUser(auth, email, password)}>
-        Create New Account
-      </Button>
-      <Button
-        onClick={() => handleUserSignIn(auth, email, password)}
-        variant="outlined"
-      >
-        Sign In
-      </Button>
+      <div className="login_card">
+        <h1>Old Sol Fiesta</h1>
+        <TextField
+          className="input"
+          id="outlined-basic"
+          label="Enter email"
+          variant="outlined"
+          size="small"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          className="input"
+          id="outlined-basic"
+          label="Enter Password"
+          variant="outlined"
+          size="small"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button
+          onClick={() => handleCreateUser(auth, email, password)}
+          variant="contained"
+        >
+          Create New Account
+        </Button>
+        <br />
+        Orrr...
+        <Button
+          onClick={() => handleUserSignIn(auth, email, password)}
+          variant="outlined"
+        >
+          Sign In
+        </Button>
+      </div>
     </StyledSignIn>
   );
 };
