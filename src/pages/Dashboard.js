@@ -72,10 +72,6 @@ const StyledDashBoard = styled.div`
         }
 
         .large_col {
-          width: 30%;
-        }
-
-        .medium_col {
           width: 24%;
         }
 
@@ -87,12 +83,9 @@ const StyledDashBoard = styled.div`
 
     tbody {
       tr {
-        :hover {
-          background: ${({ theme }) => theme.colors.black60};
-          cursor: pointer;
-        }
-
         td {
+          border-bottom: 0.5px solid ${({ theme }) => theme.colors.black34};
+
           padding: 10px 0 10px 20px;
           min-height: 62px;
 
@@ -102,13 +95,6 @@ const StyledDashBoard = styled.div`
         }
       }
     }
-  }
-
-  .loading {
-    margin-top: 100px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
   }
 
   @media (max-width: ${({ theme }) => theme.breakPoints.small}) {
@@ -144,13 +130,13 @@ const DashBoard = ({ auth }) => {
       <StyledDashBoard>
         <table>
           <thead>
-            <tr className="body-2">
-              <th className="medium_col">Name</th>
-              <th className="medium_col">Artist Name</th>
-              <th className="medium_col">Email</th>
-              <th className="medium_col">Instagram</th>
+            <tr>
+              <th className="large_col">Name</th>
+              <th className="large_col">Artist Name</th>
+              <th className="large_col">Email</th>
+              <th className="large_col">Instagram</th>
               <th className="small_col">Tickets</th>
-              <th className="small_col">Labels</th>
+              <th className="small_col">Action</th>
             </tr>
           </thead>
           {Boolean(SALES_DUMMY_DATA?.length && !loadingSales) && (
@@ -166,7 +152,7 @@ const DashBoard = ({ auth }) => {
 
                 return (
                   <React.Fragment key={id}>
-                    <tr className="body-2">
+                    <tr>
                       <td>{name}</td>
                       <td>{artistName}</td>
                       <td>{email}</td>
@@ -174,7 +160,6 @@ const DashBoard = ({ auth }) => {
                       <td>{ticketsBought}</td>
                       <td>EDIT</td>
                     </tr>
-                    <tr className="break_line" />
                   </React.Fragment>
                 );
               })}
