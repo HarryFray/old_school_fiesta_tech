@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 const StyledTopBarNavigation = styled.div`
   background: ${({ theme }) => theme.colors.black12};
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  padding: 8px;
+  padding: 8px 24px;
 `;
 
 const TopBarNavigation = ({ auth }) => {
@@ -28,6 +28,7 @@ const TopBarNavigation = ({ auth }) => {
 
   return (
     <StyledTopBarNavigation>
+      <h1>Old Sol Fiesta Tech</h1>
       <Button onClick={handleSignOut} variant="outlined">
         Sign Out
       </Button>

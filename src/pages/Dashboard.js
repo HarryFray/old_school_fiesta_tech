@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 import Layout from "../global/Layout";
 
@@ -62,9 +63,14 @@ const StyledDashBoard = styled.div`
   height: 100%;
   width: 100%;
 
-  .filter_text_input {
-    width: 180px;
+  .table_management_heading {
     margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+
+    .filter_text_input {
+      width: 180px;
+    }
   }
 
   table {
@@ -164,14 +170,22 @@ const DashBoard = ({ auth }) => {
   return (
     <Layout auth={auth}>
       <StyledDashBoard>
-        <TextField
-          label="Search"
-          className="filter_text_input"
-          variant="outlined"
-          size="small"
-          value={filterText}
-          onChange={(e) => setFilterText(e.target.value)}
-        />
+        <div className="table_management_heading">
+          <TextField
+            label="Search"
+            className="filter_text_input"
+            variant="outlined"
+            size="small"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+          />
+          <Button
+            onClick={() => alert("TODO: SET UP ADD ITEM")}
+            variant="contained"
+          >
+            ADD SALE
+          </Button>
+        </div>
         <table>
           <thead>
             <tr>
