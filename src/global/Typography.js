@@ -2,6 +2,16 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledTypography = styled.div`
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    padding: 0;
+  }
+
   h1 {
     font-size: 28px;
     font-style: normal;

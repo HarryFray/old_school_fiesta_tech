@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import { initializeApp } from "firebase/app";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Layout from "./global/Layout";
 import Theme from "./global/Theme";
 import Typography from "./global/Typography";
+import DashBoard from "./pages/Dashboard";
 
 import SignIn from "./components/SignIn";
 
@@ -38,28 +41,14 @@ function App() {
     });
   }, [auth]);
 
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        console.log("User signed out: ", auth);
-      })
-      .catch((error) => {
-        console.log("Error signing out: ", error);
-      });
-  };
-
   return (
     <Theme>
       <Typography>
-        <Layout>
-          {userSignedIn ? (
-            <Button onClick={handleSignOut} variant="outlined">
-              Sign Out
-            </Button>
-          ) : (
-            <SignIn />
-          )}
-        </Layout>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<DashBoard auth={auth} />} />
+          </Routes>
+        </BrowserRouter>
       </Typography>
     </Theme>
   );
