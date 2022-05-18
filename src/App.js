@@ -3,6 +3,10 @@ import Button from "@mui/material/Button";
 import { initializeApp } from "firebase/app";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
+import Layout from "./global/Layout";
+import Theme from "./global/Theme";
+import Typography from "./global/Typography";
+
 import SignIn from "./components/SignIn";
 
 const firebaseConfig = {
@@ -45,18 +49,19 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {userSignedIn ? (
-        <>
-          <h1>home page</h1>
-          <Button onClick={handleSignOut} variant="outlined">
-            Sign Out
-          </Button>
-        </>
-      ) : (
-        <SignIn />
-      )}
-    </div>
+    <Theme>
+      <Typography>
+        <Layout>
+          {userSignedIn ? (
+            <Button onClick={handleSignOut} variant="outlined">
+              Sign Out
+            </Button>
+          ) : (
+            <SignIn />
+          )}
+        </Layout>
+      </Typography>
+    </Theme>
   );
 }
 
