@@ -187,7 +187,11 @@ const DashBoard = ({ auth }) => {
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
           />
-          <Button onClick={() => alert("TODO: ADD ITEM")} variant="contained">
+          <Button
+            size="small"
+            onClick={() => alert("TODO: ADD ITEM")}
+            variant="contained"
+          >
             ADD SALE
           </Button>
         </div>
@@ -222,10 +226,16 @@ const DashBoard = ({ auth }) => {
                       <td>{instagramHandle}</td>
                       <td>{ticketsBought}</td>
                       <td>
-                        <Button onClick={() => alert("TODO: EDIT ITEM")}>
+                        <Button
+                          size="small"
+                          onClick={() => alert("TODO: EDIT ITEM")}
+                        >
                           Edit
                         </Button>
-                        <Button onClick={() => alert("TODO: DELETE ITEM")}>
+                        <Button
+                          size="small"
+                          onClick={() => alert("TODO: DELETE ITEM")}
+                        >
                           Delete
                         </Button>
                       </td>
