@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
+  // createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const StyledSignIn = styled.div`
   background: white;
@@ -37,32 +37,33 @@ const StyledSignIn = styled.div`
   }
 `;
 
-const SignIn = () => {
+const SignIn = ({ auth }) => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
-  const auth = getAuth();
-
-  const handleCreateUser = (auth, email, password) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("New user created: ", user);
-      })
-      .catch((error) => {
-        console.log("Error on signUp", error);
-      });
-  };
+  const navigate = useNavigate();
 
   const handleUserSignIn = (auth, email, password) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log("User loged in in: ", userCredential);
+        navigate("/");
       })
       .catch((error) => {
         console.log("Error on log in", error);
       });
   };
+
+  // const handleCreateUser = (auth, email, password) => {
+  //   createUserWithEmailAndPassword(auth, email, password)
+  //     .then((userCredential) => {
+  //       const user = userCredential.user;
+  //       console.log("New user created: ", user);
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error on signUp", error);
+  //     });
+  // };
 
   return (
     <StyledSignIn>
@@ -86,14 +87,6 @@ const SignIn = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button
-          onClick={() => handleCreateUser(auth, email, password)}
-          variant="contained"
-        >
-          Create New Account
-        </Button>
-        <br />
-        Orrr...
         <Button
           onClick={() => handleUserSignIn(auth, email, password)}
           variant="outlined"

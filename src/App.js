@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
 import { initializeApp } from "firebase/app";
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 
-import Layout from "./global/Layout";
 import Theme from "./global/Theme";
 import Typography from "./global/Typography";
 import DashBoard from "./pages/Dashboard";
-
 import SignIn from "./components/SignIn";
 
 const firebaseConfig = {
@@ -24,9 +21,8 @@ const firebaseConfig = {
 
 function App() {
   const [userSignedIn, setUserSignedIn] = useState(false);
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
 
+  const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
   useEffect(() => {
@@ -46,7 +42,13 @@ function App() {
       <Typography>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<DashBoard auth={auth} />} />
+            <Route path="/auth" element={<SignIn auth={auth} />} />
+            {userSignedIn && (
+              <>
+                <Route path="/" element={<DashBoard auth={auth} />} />
+                <Route path="/dashboard" element={<DashBoard auth={auth} />} />
+              </>
+            )}
           </Routes>
         </BrowserRouter>
       </Typography>

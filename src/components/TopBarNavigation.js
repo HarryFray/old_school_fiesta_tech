@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import { signOut } from "firebase/auth";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const StyledTopBarNavigation = styled.div`
   background: pink;
@@ -12,10 +13,13 @@ const StyledTopBarNavigation = styled.div`
 `;
 
 const TopBarNavigation = ({ auth }) => {
+  const navigate = useNavigate();
+
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
         console.log("User signed out: ", auth);
+        navigate("/auth");
       })
       .catch((error) => {
         console.log("Error signing out: ", error);
