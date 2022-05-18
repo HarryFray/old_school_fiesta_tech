@@ -100,6 +100,10 @@ const StyledDashBoard = styled.div`
         .small_col {
           width: 14%;
         }
+
+        .fixed_action_col {
+          width: 120px;
+        }
       }
     }
 
@@ -108,11 +112,15 @@ const StyledDashBoard = styled.div`
         td {
           border-bottom: 0.5px solid ${({ theme }) => theme.colors.black34};
 
-          padding: 10px 0 10px 20px;
-          min-height: 62px;
+          padding: 0 0 0 20px;
 
           :first-child {
             padding: 0 0 0 20px;
+          }
+
+          :last-child {
+            display: flex;
+            padding: 0;
           }
         }
       }
@@ -179,10 +187,7 @@ const DashBoard = ({ auth }) => {
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
           />
-          <Button
-            onClick={() => alert("TODO: SET UP ADD ITEM")}
-            variant="contained"
-          >
+          <Button onClick={() => alert("TODO: ADD ITEM")} variant="contained">
             ADD SALE
           </Button>
         </div>
@@ -194,7 +199,7 @@ const DashBoard = ({ auth }) => {
               <th className="large_col">Email</th>
               <th className="large_col">Instagram</th>
               <th className="small_col">Tickets</th>
-              <th className="small_col">Action</th>
+              <th className="fixed_action_col">Action</th>
             </tr>
           </thead>
           {Boolean(filteredSales?.length && !loadingSales) && (
@@ -216,7 +221,14 @@ const DashBoard = ({ auth }) => {
                       <td>{email}</td>
                       <td>{instagramHandle}</td>
                       <td>{ticketsBought}</td>
-                      <td>EDIT</td>
+                      <td>
+                        <Button onClick={() => alert("TODO: EDIT ITEM")}>
+                          Edit
+                        </Button>
+                        <Button onClick={() => alert("TODO: DELETE ITEM")}>
+                          Delete
+                        </Button>
+                      </td>
                     </tr>
                   </React.Fragment>
                 );
