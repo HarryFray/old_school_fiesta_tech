@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import CircularProgress from "@mui/material/CircularProgress";
+import TextField from "@mui/material/TextField";
 
 import Layout from "../global/Layout";
+
+const filteredSalesBasedOnSearchText = (sales, searchText) => {
+  let searchedSales = sales?.filter((sale) => {
+    let nameIncludedInSearch = sale.name
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
+
+    let artistIncludedInSearch = sale.artistName
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
+
+    return nameIncludedInSearch || artistIncludedInSearch;
+  });
+  return searchedSales;
+};
 
 const SALES_DUMMY_DATA = [
   {
@@ -46,12 +62,12 @@ const StyledDashBoard = styled.div`
   height: 100%;
   width: 100%;
 
-  .search_input {
+  .filter_text_input {
     width: 180px;
+    margin-bottom: 12px;
   }
 
   table {
-    margin: 20px 0 0 0;
     width: 100%;
     table-layout: fixed;
 
@@ -97,6 +113,19 @@ const StyledDashBoard = styled.div`
     }
   }
 
+  .empty_search_text {
+    display: flex;
+    flex-direction: column;
+    margin: 48px 0 0 0;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+
+    h6 {
+      margin: 8px 0 0 0;
+    }
+  }
+
   @media (max-width: ${({ theme }) => theme.breakPoints.small}) {
     margin: 0 20px 0 0;
 
@@ -123,25 +152,40 @@ const StyledDashBoard = styled.div`
 `;
 
 const DashBoard = ({ auth }) => {
+  const [filterText, setFilterText] = useState("");
+
+  const filteredSales = filteredSalesBasedOnSearchText(
+    SALES_DUMMY_DATA,
+    filterText
+  );
+
   const loadingSales = false;
 
   return (
     <Layout auth={auth}>
       <StyledDashBoard>
+        <TextField
+          label="Search"
+          className="filter_text_input"
+          variant="outlined"
+          size="small"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+        />
         <table>
           <thead>
             <tr>
-              <th className="large_col">Name</th>
-              <th className="large_col">Artist Name</th>
+              <th className="large_col">Artist's Name</th>
+              <th className="large_col">Art Sold To</th>
               <th className="large_col">Email</th>
               <th className="large_col">Instagram</th>
               <th className="small_col">Tickets</th>
               <th className="small_col">Action</th>
             </tr>
           </thead>
-          {Boolean(SALES_DUMMY_DATA?.length && !loadingSales) && (
+          {Boolean(filteredSales?.length && !loadingSales) && (
             <tbody>
-              {SALES_DUMMY_DATA?.map((sale, id) => {
+              {filteredSales?.map((sale, id) => {
                 const {
                   name,
                   artistName,
@@ -153,8 +197,8 @@ const DashBoard = ({ auth }) => {
                 return (
                   <React.Fragment key={id}>
                     <tr>
-                      <td>{name}</td>
                       <td>{artistName}</td>
+                      <td>{name}</td>
                       <td>{email}</td>
                       <td>{instagramHandle}</td>
                       <td>{ticketsBought}</td>
@@ -167,8 +211,13 @@ const DashBoard = ({ auth }) => {
           )}
         </table>
         {Boolean(loadingSales) && <CircularProgress color="inherit" />}
-        {Boolean(!SALES_DUMMY_DATA?.length && !loadingSales) && (
-          <h2>There is noting in your search!</h2>
+        {Boolean(!filteredSales?.length && !loadingSales) && (
+          <div className="empty_search_text">
+            <h2>No sales available</h2>
+            <h6 className="subtitle-2">
+              Either sell something or update your search
+            </h6>
+          </div>
         )}
       </StyledDashBoard>
     </Layout>

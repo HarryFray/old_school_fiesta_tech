@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const StyledTopBarNavigation = styled.div`
-  background: ${({ theme }) => theme.colors.background};
+  background: ${({ theme }) => theme.colors.black12};
   display: flex;
   justify-content: flex-end;
   align-items: center;
