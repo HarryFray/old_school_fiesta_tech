@@ -6,15 +6,18 @@ import TopBarNavigation from "../components/TopBarNavigation";
 const StyledLayout = styled.div`
   width: 100vw;
   height: 100vh;
+  background: ${({ theme }) => theme.colors.white};
 
-  background: violet;
+  .page_content {
+    padding: 24px;
+  }
 `;
 
 const Layout = ({ children, auth }) => {
   return (
     <StyledLayout>
       <TopBarNavigation auth={auth} />
-      {children}
+      <div className="page_content">{children}</div>
     </StyledLayout>
   );
 };
