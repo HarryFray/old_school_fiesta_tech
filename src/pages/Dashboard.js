@@ -57,6 +57,41 @@ const SALES_DUMMY_DATA = [
     instagramHandle: "asdfasdfadsf",
     ticketsBought: 2,
   },
+  {
+    name: "Nicholas Fray",
+    artistName: "Joey Bada$$",
+    email: "harry.fray7@gmail.com",
+    instagramHandle: "harryfray",
+    ticketsBought: 5,
+  },
+  {
+    name: "Cat t",
+    artistName: "Joey tBada$$",
+    email: "cat.james@gtmail.com",
+    instagramHandle: "oldsoltewhatever",
+    ticketsBought: 11,
+  },
+  {
+    name: "Patrick long naqqme long",
+    artistName: "Court Badqa$$",
+    email: "patrick_long_namqe@gmail.com",
+    instagramHandle: "reqally long",
+    ticketsBought: 1,
+  },
+  {
+    name: "short naeme",
+    artistName: "Court Baeda$$",
+    email: "sn7@gmreail.com",
+    instagramHandle: "asedf",
+    ticketsBought: 1,
+  },
+  {
+    name: "Bill whrratever....",
+    artistName: "Joey Badra$$",
+    email: "harsrsy.fray7@gmail.com",
+    instagramHandle: "asddfadsf",
+    ticketsBought: 456,
+  },
 ];
 
 const StyledDashBoard = styled.div`
@@ -127,6 +162,7 @@ const StyledDashBoard = styled.div`
     }
   }
 
+  .loading_icon,
   .empty_search_text {
     display: flex;
     flex-direction: column;
@@ -246,7 +282,11 @@ const DashBoard = ({ auth }) => {
             </tbody>
           )}
         </table>
-        {Boolean(loadingSales) && <CircularProgress color="inherit" />}
+        {Boolean(loadingSales) && (
+          <div className="loading_icon">
+            <CircularProgress color="inherit" />
+          </div>
+        )}
         {Boolean(!filteredSales?.length && !loadingSales) && (
           <div className="empty_search_text">
             <h2>No sales available</h2>
