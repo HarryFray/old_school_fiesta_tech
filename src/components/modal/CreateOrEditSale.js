@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import Modal from "@mui/material/Modal";
-
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+
+import Typography from "../../global/Typography";
 
 const StyledCreateOrEditSale = styled(Modal)`
   .MuiBox-root {
@@ -18,11 +20,18 @@ const StyledCreateOrEditSale = styled(Modal)`
     background-color: ${({ theme }) => theme.colors.white};
 
     .content_section {
+      display: flex;
+      flex-direction: column;
+
+      .text_input {
+        margin-top: 24px;
+      }
     }
 
     .buttons {
       display: flex;
       justify-content: space-between;
+      margin-top: 24px;
 
       button:first-child {
         margin-right: 24px;
@@ -35,17 +44,13 @@ const CreateOrEditSale = ({
   createOrEditSaleOpen,
   setCreateOrEditSaleOpen,
 }) => {
-  const { register, handleSubmit, control, getValues } = useForm({
+  const { register, handleSubmit } = useForm({
     defaultValues: {
-      // SECTION 1: CITATION DETAILS
-      isAdult: "adult",
-      eventNumber: "",
-      IDNumber: "",
-      citationType: "traffic",
-      trafficCitationEnhancements: [],
-      area: "urban",
-      travelDirection: "north",
-      beatArea: "",
+      artistName: "Joey Bada$$",
+      name: "Nicholas Fray",
+      email: "harry.fray7@gmail.com",
+      instagramHandle: "harryfray",
+      ticketsBought: 5,
     },
   });
 
@@ -54,24 +59,63 @@ const CreateOrEditSale = ({
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
       <Box>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <h3 className="label">Add Sale</h3>
-          <div className="content_section"></div>
-          <div className="buttons">
-            <Button
-              onClick={() => setCreateOrEditSaleOpen(false)}
-              variant="outlined"
-            >
-              Never Mind
-            </Button>
-            <Button
-              onClick={() => setCreateOrEditSaleOpen(false)}
-              variant="contained"
-            >
-              Create Sale
-            </Button>
-          </div>
-        </form>
+        <Typography>
+          <form onClick={handleSubmit(onSubmit)}>
+            <h3>Add Sale</h3>
+            <div className="content_section">
+              <TextField
+                {...register("artistName")}
+                label="Artist Name"
+                className="text_input"
+                variant="outlined"
+                size="small"
+              />
+              <TextField
+                {...register("name")}
+                label="Art sold to"
+                className="text_input"
+                variant="outlined"
+                size="small"
+              />
+              <TextField
+                {...register("email")}
+                label="Email"
+                className="text_input"
+                variant="outlined"
+                size="small"
+              />
+              <TextField
+                {...register("instagramHandle")}
+                label="Instagram Handle"
+                className="text_input"
+                variant="outlined"
+                size="small"
+              />
+              <TextField
+                {...register("ticketsBought")}
+                label="Tickets Bought"
+                className="text_input"
+                variant="outlined"
+                size="small"
+              />
+            </div>
+            <div className="buttons">
+              <Button
+                onClick={() => setCreateOrEditSaleOpen(false)}
+                variant="outlined"
+              >
+                Never Mind
+              </Button>
+              <Button
+                onClick={() => setCreateOrEditSaleOpen(false)}
+                variant="contained"
+                type="submit"
+              >
+                Create Sale
+              </Button>
+            </div>
+          </form>
+        </Typography>
       </Box>
     </StyledCreateOrEditSale>
   );
