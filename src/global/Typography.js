@@ -98,8 +98,8 @@ const StyledTypography = styled.div`
   }
 `;
 
-const StyleGuide = ({ children }) => {
+const Typography = ({ children }) => {
   return <StyledTypography>{children}</StyledTypography>;
 };
 
-export default StyleGuide;
+export default Typography;

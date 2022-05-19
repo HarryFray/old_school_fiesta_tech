@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 import Layout from "../global/Layout";
+import CreateOrEditSale from "../components/modal/CreateOrEditSale";
 
 const filteredSalesBasedOnSearchText = (sales, searchText) => {
   let searchedSales = sales?.filter((sale) => {
@@ -203,6 +204,7 @@ const StyledDashBoard = styled.div`
 
 const DashBoard = ({ auth }) => {
   const [filterText, setFilterText] = useState("");
+  const [createOrEditSaleOpen, setCreateOrEditSaleOpen] = useState(false);
 
   const filteredSales = filteredSalesBasedOnSearchText(
     SALES_DUMMY_DATA,
@@ -212,91 +214,97 @@ const DashBoard = ({ auth }) => {
   const loadingSales = false;
 
   return (
-    <Layout auth={auth}>
-      <StyledDashBoard>
-        <div className="table_management_heading">
-          <TextField
-            label="Search"
-            className="filter_text_input"
-            variant="outlined"
-            size="small"
-            value={filterText}
-            onChange={(e) => setFilterText(e.target.value)}
-          />
-          <Button
-            size="small"
-            onClick={() => alert("TODO: ADD ITEM")}
-            variant="contained"
-          >
-            ADD SALE
-          </Button>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th className="large_col">Artist's Name</th>
-              <th className="large_col">Art Sold To</th>
-              <th className="large_col">Email</th>
-              <th className="large_col">Instagram</th>
-              <th className="small_col">Tickets</th>
-              <th className="fixed_action_col">Action</th>
-            </tr>
-          </thead>
-          {Boolean(filteredSales?.length && !loadingSales) && (
-            <tbody>
-              {filteredSales?.map((sale, id) => {
-                const {
-                  name,
-                  artistName,
-                  email,
-                  instagramHandle,
-                  ticketsBought,
-                } = sale;
+    <>
+      <CreateOrEditSale
+        createOrEditSaleOpen={createOrEditSaleOpen}
+        setCreateOrEditSaleOpen={setCreateOrEditSaleOpen}
+      />
+      <Layout auth={auth}>
+        <StyledDashBoard>
+          <div className="table_management_heading">
+            <TextField
+              label="Search"
+              className="filter_text_input"
+              variant="outlined"
+              size="small"
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+            />
+            <Button
+              size="small"
+              onClick={() => setCreateOrEditSaleOpen(true)}
+              variant="contained"
+            >
+              ADD SALE
+            </Button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th className="large_col">Artist's Name</th>
+                <th className="large_col">Art Sold To</th>
+                <th className="large_col">Email</th>
+                <th className="large_col">Instagram</th>
+                <th className="small_col">Tickets</th>
+                <th className="fixed_action_col">Action</th>
+              </tr>
+            </thead>
+            {Boolean(filteredSales?.length && !loadingSales) && (
+              <tbody>
+                {filteredSales?.map((sale, id) => {
+                  const {
+                    name,
+                    artistName,
+                    email,
+                    instagramHandle,
+                    ticketsBought,
+                  } = sale;
 
-                return (
-                  <React.Fragment key={id}>
-                    <tr>
-                      <td>{artistName}</td>
-                      <td>{name}</td>
-                      <td>{email}</td>
-                      <td>{instagramHandle}</td>
-                      <td>{ticketsBought}</td>
-                      <td>
-                        <Button
-                          size="small"
-                          onClick={() => alert("TODO: EDIT ITEM")}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          size="small"
-                          onClick={() => alert("TODO: DELETE ITEM")}
-                        >
-                          Delete
-                        </Button>
-                      </td>
-                    </tr>
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
+                  return (
+                    <React.Fragment key={id}>
+                      <tr>
+                        <td>{artistName}</td>
+                        <td>{name}</td>
+                        <td>{email}</td>
+                        <td>{instagramHandle}</td>
+                        <td>{ticketsBought}</td>
+                        <td>
+                          <Button
+                            size="small"
+                            onClick={() => setCreateOrEditSaleOpen(true)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="small"
+                            onClick={() => alert("TODO: DELETE ITEM")}
+                          >
+                            Delete
+                          </Button>
+                        </td>
+                      </tr>
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            )}
+          </table>
+          {Boolean(loadingSales) && (
+            <div className="loading_icon">
+              <CircularProgress color="inherit" />
+            </div>
           )}
-        </table>
-        {Boolean(loadingSales) && (
-          <div className="loading_icon">
-            <CircularProgress color="inherit" />
-          </div>
-        )}
-        {Boolean(!filteredSales?.length && !loadingSales) && (
-          <div className="empty_search_text">
-            <h2>No sales available</h2>
-            <h6 className="subtitle-2">
-              Either sell something or update your search
-            </h6>
-          </div>
-        )}
-      </StyledDashBoard>
-    </Layout>
+          {Boolean(!filteredSales?.length && !loadingSales) && (
+            <div className="empty_search_text">
+              <h2>No sales available</h2>
+              <h6 className="subtitle-2">
+                Either sell something or update your search
+              </h6>
+            </div>
+          )}
+        </StyledDashBoard>
+      </Layout>
+    </>
   );
 };
 
