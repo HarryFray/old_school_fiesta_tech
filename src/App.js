@@ -8,6 +8,8 @@ import Theme from "./global/Theme";
 import Typography from "./global/Typography";
 import DashBoard from "./pages/Dashboard";
 import SignIn from "./components/SignIn";
+import UnAuthorized from "./pages/Unauthorized";
+import NotFound from "./pages/NotFound";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXx9TD8ryWSwhWGj1bvlbqdQ9iquaP8nU",
@@ -28,11 +30,9 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log("User is signed in: ", user);
         setUserSignedIn(true);
       } else {
         setUserSignedIn(false);
-        console.log("User not signed in");
       }
     });
   }, [auth]);
@@ -42,12 +42,12 @@ function App() {
       <Typography>
         <BrowserRouter>
           <Routes>
+            <Route path="*" element={<NotFound />} />
             <Route path="/auth" element={<SignIn auth={auth} />} />
-            {userSignedIn && (
-              <>
-                <Route path="/" element={<DashBoard auth={auth} />} />
-                <Route path="/dashboard" element={<DashBoard auth={auth} />} />
-              </>
+            {userSignedIn ? (
+              <Route path="/" element={<DashBoard auth={auth} />} />
+            ) : (
+              <Route path="/" element={<UnAuthorized />} />
             )}
           </Routes>
         </BrowserRouter>
