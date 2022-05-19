@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {
@@ -17,6 +17,7 @@ const StyledSignIn = styled.div`
   justify-content: center;
 
   .login_card {
+    position: absolute;
     display: flex;
     background: white;
     flex-direction: column;
@@ -30,9 +31,30 @@ const StyledSignIn = styled.div`
       margin: 0;
     }
 
+    h5 {
+      color: ${({ theme }) => theme.colors.error};
+      position: absolute;
+      bottom: 68px;
+      left: 26px;
+    }
+
+    .input {
+      width: 300px;
+    }
+
     button,
     .input {
-      margin-top: 24px;
+      margin-top: 28px;
+    }
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakPoints.xSmall}) {
+    .login_card {
+      border: none;
+
+      .input {
+        max-width: 250px;
+      }
     }
   }
 `;
@@ -40,17 +62,27 @@ const StyledSignIn = styled.div`
 const SignIn = ({ auth }) => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [errorText, setErrorText] = useState("");
+
+  useEffect(() => {
+    setErrorText("");
+  }, [password, email]);
 
   const navigate = useNavigate();
 
   const handleUserSignIn = (auth, email, password) => {
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log("User loged in in: ", userCredential);
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log("Error on log in", error);
+      .then(() => navigate("/"))
+      .catch(({ message }) => {
+        if (!email || !password) {
+          setErrorText("Please enter a password and email");
+        } else if (message.includes("password")) {
+          setErrorText("Invalid Password");
+        } else if (message.includes("email")) {
+          setErrorText("Invalid Email");
+        } else {
+          setErrorText(message);
+        }
       });
   };
 
@@ -87,6 +119,7 @@ const SignIn = ({ auth }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {Boolean(errorText) && <h5>{errorText}</h5>}
         <Button
           onClick={() => handleUserSignIn(auth, email, password)}
           variant="outlined"

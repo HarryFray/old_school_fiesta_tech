@@ -16,14 +16,9 @@ const TopBarNavigation = ({ auth }) => {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        console.log("User signed out: ", auth);
-        navigate("/auth");
-      })
-      .catch((error) => {
-        console.log("Error signing out: ", error);
-      });
+    signOut(auth).then(() => {
+      navigate("/auth");
+    });
   };
 
   return (
