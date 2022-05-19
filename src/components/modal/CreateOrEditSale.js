@@ -9,6 +9,14 @@ import TextField from "@mui/material/TextField";
 
 import Typography from "../../global/Typography";
 
+const DEFAULT_SALE = {
+  name: "",
+  artistName: "",
+  email: "",
+  instagramHandle: "",
+  ticketsBought: 0,
+};
+
 const StyledCreateOrEditSale = styled(Modal)`
   .MuiBox-root {
     border-radius: 4px;
@@ -46,23 +54,20 @@ const CreateOrEditSale = ({
   setSelectedSale,
   selectedSale,
 }) => {
-  const { register, handleSubmit } = useForm({
-    defaultValues: {
-      artistName: "",
-      name: "",
-      email: "",
-      instagramHandle: "",
-      ticketsBought: 0,
-      ...selectedSale,
-    },
-  });
+  const { register, handleSubmit, reset } = useForm();
+
+  console.log({ selectedSale });
 
   useEffect(() => {
-    if (createOrEditSaleOpen) return;
-    setSelectedSale({});
-  });
+    if (selectedSale?.name) {
+      reset(selectedSale);
+    } else {
+      reset(DEFAULT_SALE);
+    }
+  }, [selectedSale, reset]);
 
   const onSubmit = (data) => {
+    setSelectedSale({});
     console.log(data);
   };
 
@@ -113,6 +118,7 @@ const CreateOrEditSale = ({
               <Button
                 onClick={() => {
                   setCreateOrEditSaleOpen(false);
+                  setSelectedSale({});
                 }}
                 variant="outlined"
               >

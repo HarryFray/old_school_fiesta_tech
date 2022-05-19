@@ -275,7 +275,10 @@ const DashBoard = ({ auth }) => {
                         <td>
                           <Button
                             size="small"
-                            onClick={() => setSelectedSale(sale)}
+                            onClick={() => {
+                              setSelectedSale(sale);
+                              setCreateOrEditSaleOpen(true);
+                            }}
                           >
                             Edit
                           </Button>
