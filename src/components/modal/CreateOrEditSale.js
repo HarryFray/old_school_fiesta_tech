@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
@@ -43,18 +43,28 @@ const StyledCreateOrEditSale = styled(Modal)`
 const CreateOrEditSale = ({
   createOrEditSaleOpen,
   setCreateOrEditSaleOpen,
+  setSelectedSale,
+  selectedSale,
 }) => {
   const { register, handleSubmit } = useForm({
     defaultValues: {
-      artistName: "Joey Bada$$",
-      name: "Nicholas Fray",
-      email: "harry.fray7@gmail.com",
-      instagramHandle: "harryfray",
-      ticketsBought: 5,
+      artistName: "",
+      name: "",
+      email: "",
+      instagramHandle: "",
+      ticketsBought: 0,
+      ...selectedSale,
     },
   });
 
-  const onSubmit = (data) => console.log(data);
+  useEffect(() => {
+    if (createOrEditSaleOpen) return;
+    setSelectedSale({});
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
 
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
@@ -101,7 +111,9 @@ const CreateOrEditSale = ({
             </div>
             <div className="buttons">
               <Button
-                onClick={() => setCreateOrEditSaleOpen(false)}
+                onClick={() => {
+                  setCreateOrEditSaleOpen(false);
+                }}
                 variant="outlined"
               >
                 Never Mind

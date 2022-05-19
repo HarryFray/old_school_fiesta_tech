@@ -204,7 +204,9 @@ const StyledDashBoard = styled.div`
 
 const DashBoard = ({ auth }) => {
   const [filterText, setFilterText] = useState("");
+
   const [createOrEditSaleOpen, setCreateOrEditSaleOpen] = useState(false);
+  const [selectedSale, setSelectedSale] = useState({});
 
   const filteredSales = filteredSalesBasedOnSearchText(
     SALES_DUMMY_DATA,
@@ -218,6 +220,8 @@ const DashBoard = ({ auth }) => {
       <CreateOrEditSale
         createOrEditSaleOpen={createOrEditSaleOpen}
         setCreateOrEditSaleOpen={setCreateOrEditSaleOpen}
+        setSelectedSale={setSelectedSale}
+        selectedSale={selectedSale}
       />
       <Layout auth={auth}>
         <StyledDashBoard>
@@ -271,7 +275,7 @@ const DashBoard = ({ auth }) => {
                         <td>
                           <Button
                             size="small"
-                            onClick={() => setCreateOrEditSaleOpen(true)}
+                            onClick={() => setSelectedSale(sale)}
                           >
                             Edit
                           </Button>
