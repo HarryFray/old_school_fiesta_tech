@@ -113,6 +113,10 @@ const CreateOrEditSale = ({
                 className="text_input"
                 variant="outlined"
                 size="small"
+                type="number"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </div>
             <div className="buttons">
