@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { isEmpty } from "lodash";
 
 import Typography from "../../global/Typography";
 
@@ -56,15 +57,15 @@ const CreateOrEditSale = ({
 }) => {
   const { register, handleSubmit, reset } = useForm();
 
-  console.log({ selectedSale });
+  const isNewSale = isEmpty(selectedSale);
 
   useEffect(() => {
-    if (selectedSale?.name) {
-      reset(selectedSale);
-    } else {
+    if (isNewSale) {
       reset(DEFAULT_SALE);
+    } else {
+      reset(selectedSale);
     }
-  }, [selectedSale, reset]);
+  }, [isNewSale, reset, selectedSale]);
 
   const onSubmit = (data) => {
     setSelectedSale({});
@@ -75,8 +76,8 @@ const CreateOrEditSale = ({
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
       <Box>
         <Typography>
-          <form onClick={handleSubmit(onSubmit)}>
-            <h3>Add Sale</h3>
+          <form onClick={() => handleSubmit(onSubmit)}>
+            <h3>{isNewSale ? "Add A New Sale" : "Edit Existing Sale"}</h3>
             <div className="content_section">
               <TextField
                 {...register("artistName")}
@@ -129,7 +130,7 @@ const CreateOrEditSale = ({
                 variant="contained"
                 type="submit"
               >
-                Create Sale
+                {isNewSale ? "Create Sale" : "Update Sale"}
               </Button>
             </div>
           </form>
