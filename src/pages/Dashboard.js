@@ -22,7 +22,7 @@ const filteredSalesBasedOnSearchText = (sales, searchText) => {
   return searchedSales;
 };
 
-const SALES_DUMMY_DATA = [
+const DEFAULT_SALES_DUMMY_DATA = [
   {
     name: "Nicholas Fray",
     artistName: "Joey Bada$$",
@@ -203,15 +203,30 @@ const StyledDashBoard = styled.div`
 `;
 
 const DashBoard = ({ auth }) => {
-  const [filterText, setFilterText] = useState("");
-
-  const [createOrEditSaleOpen, setCreateOrEditSaleOpen] = useState(false);
+  const [allSales, setAllSales] = useState(DEFAULT_SALES_DUMMY_DATA);
   const [selectedSale, setSelectedSale] = useState({});
+  const [filterText, setFilterText] = useState("");
+  const [createOrEditSaleOpen, setCreateOrEditSaleOpen] = useState(false);
 
-  const filteredSales = filteredSalesBasedOnSearchText(
-    SALES_DUMMY_DATA,
-    filterText
-  );
+  const handleCreateSale = (newSale) => {
+    setAllSales([...allSales, newSale]);
+  };
+
+  const handleUpdateSale = (id, updatedSale) => {
+    const beforeUpdatedSales = allSales.slice(0, id);
+    const afterUpdatedSales = allSales.slice(id + 1);
+
+    setAllSales([...beforeUpdatedSales, updatedSale, ...afterUpdatedSales]);
+  };
+
+  const handleDeleteSale = (id) => {
+    const beforeDeletedSale = allSales.slice(0, id);
+    const afterDeletedSale = allSales.slice(id + 1);
+
+    setAllSales([...beforeDeletedSale, ...afterDeletedSale]);
+  };
+
+  const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
 
   const loadingSales = false;
 
@@ -222,6 +237,8 @@ const DashBoard = ({ auth }) => {
         setCreateOrEditSaleOpen={setCreateOrEditSaleOpen}
         setSelectedSale={setSelectedSale}
         selectedSale={selectedSale}
+        handleUpdateSale={handleUpdateSale}
+        handleCreateSale={handleCreateSale}
       />
       <Layout auth={auth}>
         <StyledDashBoard>
@@ -276,7 +293,7 @@ const DashBoard = ({ auth }) => {
                           <Button
                             size="small"
                             onClick={() => {
-                              setSelectedSale(sale);
+                              setSelectedSale({ ...sale, id });
                               setCreateOrEditSaleOpen(true);
                             }}
                           >
@@ -284,7 +301,7 @@ const DashBoard = ({ auth }) => {
                           </Button>
                           <Button
                             size="small"
-                            onClick={() => alert("TODO: DELETE ITEM")}
+                            onClick={() => handleDeleteSale(id)}
                           >
                             Delete
                           </Button>

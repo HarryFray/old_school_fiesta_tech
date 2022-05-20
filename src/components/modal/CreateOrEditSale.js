@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import Modal from "@mui/material/Modal";
@@ -54,6 +53,8 @@ const CreateOrEditSale = ({
   setCreateOrEditSaleOpen,
   setSelectedSale,
   selectedSale,
+  handleUpdateSale,
+  handleCreateSale,
 }) => {
   const { register, handleSubmit, reset } = useForm();
 
@@ -69,14 +70,15 @@ const CreateOrEditSale = ({
 
   const onSubmit = (data) => {
     setSelectedSale({});
-    console.log(data);
+    setCreateOrEditSaleOpen(false);
+    isNewSale ? handleCreateSale(data) : handleUpdateSale(data?.id, data);
   };
 
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
       <Box>
         <Typography>
-          <form onClick={() => handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <h3>{isNewSale ? "Add A New Sale" : "Edit Existing Sale"}</h3>
             <div className="content_section">
               <TextField
@@ -129,11 +131,7 @@ const CreateOrEditSale = ({
               >
                 Never Mind
               </Button>
-              <Button
-                onClick={() => setCreateOrEditSaleOpen(false)}
-                variant="contained"
-                type="submit"
-              >
+              <Button variant="contained" type="submit">
                 {isNewSale ? "Create Sale" : "Update Sale"}
               </Button>
             </div>
@@ -142,12 +140,6 @@ const CreateOrEditSale = ({
       </Box>
     </StyledCreateOrEditSale>
   );
-};
-
-CreateOrEditSale.propTypes = {
-  CreateOrEditSaleOpen: PropTypes.bool.isRequired,
-  setCreateOrEditSaleOpen: PropTypes.func.isRequired,
-  setCitationIssuedModalOpen: PropTypes.func.isRequired,
 };
 
 export default CreateOrEditSale;
