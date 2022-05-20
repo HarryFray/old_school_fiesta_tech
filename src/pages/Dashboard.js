@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 
 import Layout from "../global/Layout";
 import CreateOrEditSale from "../components/modal/CreateOrEditSale";
+import DeleteSale from "../components/modal/DeleteSale";
 
 const filteredSalesBasedOnSearchText = (sales, searchText) => {
   let searchedSales = sales?.filter((sale) => {
@@ -206,7 +207,9 @@ const DashBoard = ({ auth }) => {
   const [allSales, setAllSales] = useState(DEFAULT_SALES_DUMMY_DATA);
   const [selectedSale, setSelectedSale] = useState({});
   const [filterText, setFilterText] = useState("");
+
   const [createOrEditSaleOpen, setCreateOrEditSaleOpen] = useState(false);
+  const [deleteSaleModalOpen, setDeleteSaleModalOpen] = useState(false);
 
   const handleCreateSale = (newSale) => {
     setAllSales([...allSales, newSale]);
@@ -240,6 +243,11 @@ const DashBoard = ({ auth }) => {
         handleUpdateSale={handleUpdateSale}
         handleCreateSale={handleCreateSale}
       />
+      <DeleteSale
+        deleteSaleModalOpen={deleteSaleModalOpen}
+        setDeleteSaleModalOpen={setDeleteSaleModalOpen}
+        handleDeleteSale={() => handleDeleteSale(selectedSale?.id)}
+      />
       <Layout auth={auth}>
         <StyledDashBoard>
           <div className="table_management_heading">
@@ -253,7 +261,10 @@ const DashBoard = ({ auth }) => {
             />
             <Button
               size="small"
-              onClick={() => setCreateOrEditSaleOpen(true)}
+              onClick={() => {
+                setCreateOrEditSaleOpen(true);
+                setSelectedSale({});
+              }}
               variant="contained"
             >
               ADD SALE
@@ -301,7 +312,10 @@ const DashBoard = ({ auth }) => {
                           </Button>
                           <Button
                             size="small"
-                            onClick={() => handleDeleteSale(id)}
+                            onClick={() => {
+                              setSelectedSale({ ...sale, id });
+                              setDeleteSaleModalOpen(true);
+                            }}
                           >
                             Delete
                           </Button>
