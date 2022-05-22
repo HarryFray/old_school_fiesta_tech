@@ -13,10 +13,10 @@ const StyledLayout = styled.div`
   }
 `;
 
-const Layout = ({ children, auth }) => {
+const Layout = ({ children, auth, currentUser }) => {
   return (
     <StyledLayout>
-      <TopBarNavigation auth={auth} />
+      <TopBarNavigation auth={auth} currentUser={currentUser} />
       <div className="page_content">{children}</div>
     </StyledLayout>
   );

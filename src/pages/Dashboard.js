@@ -203,7 +203,7 @@ const StyledDashBoard = styled.div`
   }
 `;
 
-const DashBoard = ({ auth }) => {
+const DashBoard = ({ auth, currentUser }) => {
   const [allSales, setAllSales] = useState(DEFAULT_SALES_DUMMY_DATA);
   const [selectedSale, setSelectedSale] = useState({});
   const [filterText, setFilterText] = useState("");
@@ -233,6 +233,8 @@ const DashBoard = ({ auth }) => {
 
   const loadingSales = false;
 
+  console.log({ currentUser });
+
   return (
     <>
       <CreateOrEditSale
@@ -248,7 +250,7 @@ const DashBoard = ({ auth }) => {
         setDeleteSaleModalOpen={setDeleteSaleModalOpen}
         handleDeleteSale={() => handleDeleteSale(selectedSale?.id)}
       />
-      <Layout auth={auth}>
+      <Layout auth={auth} currentUser={currentUser}>
         <StyledDashBoard>
           <div className="table_management_heading">
             <TextField

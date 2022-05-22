@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
+import { isEmpty } from "lodash";
 
 import Theme from "./global/Theme";
 import Typography from "./global/Typography";
@@ -21,8 +22,10 @@ const firebaseConfig = {
   measurementId: "G-GSRZEB32KP",
 };
 
+const SUPER_USERS = ["HXLkDGuh3kQZ5OWy3DRVzzJ4NmC2"];
+
 function App() {
-  const [userSignedIn, setUserSignedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -30,9 +33,12 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUserSignedIn(true);
+        setCurrentUser({
+          ...user,
+          superUser: SUPER_USERS.includes(user?.uid),
+        });
       } else {
-        setUserSignedIn(false);
+        setCurrentUser({});
       }
     });
   }, [auth]);
@@ -44,10 +50,13 @@ function App() {
           <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/auth" element={<SignIn auth={auth} />} />
-            {userSignedIn ? (
-              <Route path="/" element={<DashBoard auth={auth} />} />
-            ) : (
+            {isEmpty(currentUser) ? (
               <Route path="/" element={<UnAuthorized />} />
+            ) : (
+              <Route
+                path="/"
+                element={<DashBoard auth={auth} currentUser={currentUser} />}
+              />
             )}
           </Routes>
         </BrowserRouter>
