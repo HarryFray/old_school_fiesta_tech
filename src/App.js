@@ -22,7 +22,10 @@ const firebaseConfig = {
   measurementId: "G-GSRZEB32KP",
 };
 
-const SUPER_USERS = ["HXLkDGuh3kQZ5OWy3DRVzzJ4NmC2"];
+const SUPER_USERS = [
+  "HXLkDGuh3kQZ5OWy3DRVzzJ4NmC2",
+  "wc0eIRXBYrfiojjyokismRA9SuN2",
+];
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
