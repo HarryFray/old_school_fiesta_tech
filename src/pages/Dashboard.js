@@ -233,8 +233,6 @@ const DashBoard = ({ auth, currentUser }) => {
 
   const loadingSales = false;
 
-  console.log({ currentUser });
-
   return (
     <>
       <CreateOrEditSale
@@ -244,6 +242,7 @@ const DashBoard = ({ auth, currentUser }) => {
         selectedSale={selectedSale}
         handleUpdateSale={handleUpdateSale}
         handleCreateSale={handleCreateSale}
+        currentUser={currentUser}
       />
       <DeleteSale
         deleteSaleModalOpen={deleteSaleModalOpen}

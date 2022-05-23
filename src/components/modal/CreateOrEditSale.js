@@ -55,6 +55,7 @@ const CreateOrEditSale = ({
   selectedSale,
   handleUpdateSale,
   handleCreateSale,
+  currentUser,
 }) => {
   const { register, handleSubmit, reset } = useForm();
 
@@ -62,11 +63,15 @@ const CreateOrEditSale = ({
 
   useEffect(() => {
     if (isNewSale) {
-      reset(DEFAULT_SALE);
+      if (currentUser?.superUser) {
+        reset(DEFAULT_SALE);
+      } else {
+        reset({ ...DEFAULT_SALE, artistName: currentUser?.email });
+      }
     } else {
       reset(selectedSale);
     }
-  }, [isNewSale, reset, selectedSale]);
+  }, [isNewSale, reset, selectedSale, currentUser]);
 
   const onSubmit = (data) => {
     setSelectedSale({});
@@ -87,6 +92,7 @@ const CreateOrEditSale = ({
                 className="text_input"
                 variant="outlined"
                 size="small"
+                disabled={!currentUser?.superUser}
               />
               <TextField
                 {...register("name")}
