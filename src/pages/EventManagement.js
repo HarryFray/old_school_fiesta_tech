@@ -6,6 +6,9 @@ import Button from "@mui/material/Button";
 
 import Layout from "../global/Layout";
 
+import CreateOrEditEvent from "../components/modal/CreateOrEditEvent";
+import DeleteConfirmation from "../components/modal/DeleteConfirmation";
+
 const filteredEventsBasedOnSearchText = (events, searchText) => {
   let searchedEvents = events?.filter((event) => {
     let nameIncludedInSearch = event.eventName
@@ -143,7 +146,8 @@ const EventManagement = ({ auth, currentUser }) => {
   const [filterText, setFilterText] = useState("");
 
   const [createOrEditEventOpen, setCreateOrEditEventOpen] = useState(false);
-  const [deleteEventModalOpen, setDeleteEventModalOpen] = useState(false);
+  const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
+    useState(false);
 
   const handleCreateEvent = (newEvent) => {
     setAllEvents([...allEvents, newEvent]);
@@ -168,93 +172,110 @@ const EventManagement = ({ auth, currentUser }) => {
   const loadingEvents = false;
 
   return (
-    <Layout auth={auth} currentUser={currentUser}>
-      <StyledEventManagement>
-        <div className="table_management_heading">
-          <TextField
-            label="Search"
-            className="filter_text_input"
-            variant="outlined"
-            size="small"
-            value={filterText}
-            onChange={(e) => setFilterText(e.target.value)}
-          />
-          <h1>Event Management</h1>
-          <Button
-            size="small"
-            onClick={() => {
-              setCreateOrEditEventOpen(true);
-              setSelectedEvent({});
-            }}
-            variant="contained"
-          >
-            Create Event
-          </Button>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th className="small_col">Event Name</th>
-              <th className="small_col">Date Occuring</th>
-              <th className="large_col">Artists</th>
-              <th className="fixed_action_col">Action</th>
-            </tr>
-          </thead>
-          {Boolean(filteredEvents?.length && !loadingEvents) && (
-            <tbody>
-              {filteredEvents?.map((event, id) => {
-                const { eventName, dateOccuring, artists } = event;
+    <>
+      <CreateOrEditEvent
+        createOrEditEventOpen={createOrEditEventOpen}
+        setCreateOrEditEventOpen={setCreateOrEditEventOpen}
+        setSelectedEvent={setSelectedEvent}
+        selectedEvent={selectedEvent}
+        handleUpdateEvent={handleUpdateEvent}
+        handleCreateEvent={handleCreateEvent}
+        currentUser={currentUser}
+      />
 
-                return (
-                  <React.Fragment key={id}>
-                    <tr>
-                      <td>{eventName}</td>
-                      <td>{dateOccuring}</td>
-                      <td>
-                        {artists?.map((artist, id) => {
-                          return <h4 key={id}>{artist?.name}</h4>;
-                        })}
-                      </td>
-                      <td>
-                        <Button
-                          size="small"
-                          onClick={() => {
-                            setSelectedEvent({ ...Event, id });
-                            setCreateOrEditEventOpen(true);
-                          }}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          size="small"
-                          onClick={() => {
-                            setSelectedEvent({ ...Event, id });
-                            setDeleteEventModalOpen(true);
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </td>
-                    </tr>
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
+      <DeleteConfirmation
+        deleteConfirmationModalOpen={deleteConfirmationModalOpen}
+        setDeleteConfirmationModalOpen={setDeleteConfirmationModalOpen}
+        handleDeletion={() => handleDeleteEvent(selectedEvent?.id)}
+      />
+      <Layout auth={auth} currentUser={currentUser}>
+        <StyledEventManagement>
+          <div className="table_management_heading">
+            <TextField
+              label="Search"
+              className="filter_text_input"
+              variant="outlined"
+              size="small"
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+            />
+            <h1>Event Management</h1>
+            <Button
+              size="small"
+              onClick={() => {
+                setCreateOrEditEventOpen(true);
+                setSelectedEvent({});
+              }}
+              variant="contained"
+            >
+              Create Event
+            </Button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th className="small_col">Event Name</th>
+                <th className="small_col">Date Occuring</th>
+                <th className="large_col">Artists</th>
+                <th className="fixed_action_col">Action</th>
+              </tr>
+            </thead>
+            {Boolean(filteredEvents?.length && !loadingEvents) && (
+              <tbody>
+                {filteredEvents?.map((event, id) => {
+                  const { eventName, dateOccuring, artists } = event;
+
+                  return (
+                    <React.Fragment key={id}>
+                      <tr>
+                        <td>{eventName}</td>
+                        <td>{dateOccuring}</td>
+                        <td>
+                          {artists?.map((artist, id) => {
+                            return <h4 key={id}>{artist?.name}</h4>;
+                          })}
+                        </td>
+                        <td>
+                          <Button
+                            size="small"
+                            onClick={() => {
+                              setSelectedEvent({ ...event, id });
+                              setCreateOrEditEventOpen(true);
+                            }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            size="small"
+                            onClick={() => {
+                              setSelectedEvent({ ...event, id });
+                              setDeleteConfirmationModalOpen(true);
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </td>
+                      </tr>
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            )}
+          </table>
+          {Boolean(loadingEvents) && (
+            <div className="loading_icon">
+              <CircularProgress color="inherit" />
+            </div>
           )}
-        </table>
-        {Boolean(loadingEvents) && (
-          <div className="loading_icon">
-            <CircularProgress color="inherit" />
-          </div>
-        )}
-        {Boolean(!filteredEvents?.length && !loadingEvents) && (
-          <div className="empty_search_text">
-            <h2>No events available</h2>
-            <h6 className="subtitle-2">Either create a new event or STFU</h6>
-          </div>
-        )}
-      </StyledEventManagement>
-    </Layout>
+          {Boolean(!filteredEvents?.length && !loadingEvents) && (
+            <div className="empty_search_text">
+              <h2>No events available</h2>
+              <h6 className="subtitle-2">Either create a new event or STFU</h6>
+            </div>
+          )}
+        </StyledEventManagement>
+      </Layout>
+    </>
   );
 };
 

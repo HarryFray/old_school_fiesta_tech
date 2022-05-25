@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 
 import Typography from "../../global/Typography";
 
-const StyledDeleteSale = styled(Modal)`
+const StyledDeleteConfirmation = styled(Modal)`
   .MuiBox-root {
     border-radius: 4px;
     position: absolute;
@@ -33,28 +33,28 @@ const StyledDeleteSale = styled(Modal)`
   }
 `;
 
-const DeleteSale = ({
-  deleteSaleModalOpen,
-  setDeleteSaleModalOpen,
-  handleDeleteSale,
+const DeleteConfirmation = ({
+  deleteConfirmationModalOpen,
+  setDeleteConfirmationModalOpen,
+  handleDeletion,
 }) => {
   const handleClickDelete = () => {
-    setDeleteSaleModalOpen(false);
-    handleDeleteSale();
+    setDeleteConfirmationModalOpen(false);
+    handleDeletion();
   };
 
   return (
-    <StyledDeleteSale open={deleteSaleModalOpen}>
+    <StyledDeleteConfirmation open={deleteConfirmationModalOpen}>
       <Box>
         <Typography>
-          <h3>Are You Sure You Want to Delete This Sale!?</h3>
+          <h3>Are You Sure You Want to Delete!?</h3>
           <h6 className="subtitle-2">
             It's a really big deal if you do, it's not like you can just create
             a new one that is the same as this one was...
           </h6>
           <div className="buttons">
             <Button
-              onClick={() => setDeleteSaleModalOpen(false)}
+              onClick={() => setDeleteConfirmationModalOpen(false)}
               variant="outlined"
             >
               Never Mind
@@ -65,8 +65,8 @@ const DeleteSale = ({
           </div>
         </Typography>
       </Box>
-    </StyledDeleteSale>
+    </StyledDeleteConfirmation>
   );
 };
 
-export default DeleteSale;
+export default DeleteConfirmation;

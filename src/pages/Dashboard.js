@@ -5,8 +5,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 import Layout from "../global/Layout";
+
 import CreateOrEditSale from "../components/modal/CreateOrEditSale";
-import DeleteSale from "../components/modal/DeleteSale";
+import DeleteConfirmation from "../components/modal/DeleteConfirmation";
 
 const filteredSalesBasedOnSearchText = (sales, searchText) => {
   let searchedSales = sales?.filter((sale) => {
@@ -209,7 +210,8 @@ const DashBoard = ({ auth, currentUser }) => {
   const [filterText, setFilterText] = useState("");
 
   const [createOrEditSaleOpen, setCreateOrEditSaleOpen] = useState(false);
-  const [deleteSaleModalOpen, setDeleteSaleModalOpen] = useState(false);
+  const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
+    useState(false);
 
   const handleCreateSale = (newSale) => {
     setAllSales([...allSales, newSale]);
@@ -244,10 +246,10 @@ const DashBoard = ({ auth, currentUser }) => {
         handleCreateSale={handleCreateSale}
         currentUser={currentUser}
       />
-      <DeleteSale
-        deleteSaleModalOpen={deleteSaleModalOpen}
-        setDeleteSaleModalOpen={setDeleteSaleModalOpen}
-        handleDeleteSale={() => handleDeleteSale(selectedSale?.id)}
+      <DeleteConfirmation
+        deleteConfirmationModalOpen={deleteConfirmationModalOpen}
+        setDeleteConfirmationModalOpen={setDeleteConfirmationModalOpen}
+        handleDeletion={() => handleDeleteSale(selectedSale?.id)}
       />
       <Layout auth={auth} currentUser={currentUser}>
         <StyledDashBoard>
@@ -316,7 +318,7 @@ const DashBoard = ({ auth, currentUser }) => {
                             size="small"
                             onClick={() => {
                               setSelectedSale({ ...sale, id });
-                              setDeleteSaleModalOpen(true);
+                              setDeleteConfirmationModalOpen(true);
                             }}
                           >
                             Delete
