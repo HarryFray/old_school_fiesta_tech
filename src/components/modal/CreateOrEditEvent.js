@@ -10,11 +10,9 @@ import { isEmpty } from "lodash";
 import Typography from "../../global/Typography";
 
 const DEFAULT_EVENT = {
-  name: "",
-  artistName: "",
-  email: "",
-  instagramHandle: "",
-  ticketsBought: 0,
+  eventName: "",
+  dateOccuring: "",
+  artists: [],
 };
 
 const StyledCreateOrEditEvent = styled(Modal)`
@@ -32,6 +30,23 @@ const StyledCreateOrEditEvent = styled(Modal)`
       flex-direction: column;
 
       .text_input {
+        margin-top: 24px;
+      }
+    }
+
+    .artists_section {
+      margin-top: 24px;
+      border: 1px solid ${({ theme }) => theme.colors.black34};
+      padding: 12px;
+      border-radius: 4px;
+
+      .artist_inputs {
+        div:first-child {
+          margin-right: 12px;
+        }
+      }
+
+      .add_artist_button {
         margin-top: 24px;
       }
     }
@@ -84,48 +99,49 @@ const CreateOrEditEvent = ({
       <Box>
         <Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <h3>{isNewEvent ? "Add A New Event" : "Edit Existing Event"}</h3>
+            <h3>{isNewEvent ? "Create New Event" : "Edit Existing Event"}</h3>
             <div className="content_section">
               <TextField
-                {...register("artistName")}
-                label="Artist Name"
+                {...register("eventName")}
+                label="Event Name"
                 className="text_input"
                 variant="outlined"
                 size="small"
                 disabled={!currentUser?.superUser}
               />
               <TextField
-                {...register("name")}
-                label="Art sold to"
+                {...register("dateOccuring")}
+                label="Date Of Event"
                 className="text_input"
                 variant="outlined"
                 size="small"
               />
-              <TextField
-                {...register("email")}
-                label="Email"
-                className="text_input"
-                variant="outlined"
-                size="small"
-              />
-              <TextField
-                {...register("instagramHandle")}
-                label="Instagram Handle"
-                className="text_input"
-                variant="outlined"
-                size="small"
-              />
-              <TextField
-                {...register("ticketsBought")}
-                label="Tickets Bought"
-                className="text_input"
-                variant="outlined"
-                size="small"
-                type="number"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
+              <div className="artists_section">
+                <div className="artist_inputs">
+                  <h4>Artists:</h4>
+                  <TextField
+                    {...register("userName")}
+                    label="Artist Name"
+                    className="text_input"
+                    variant="outlined"
+                    size="small"
+                  />
+                  <TextField
+                    {...register("email")}
+                    label="Artist Email"
+                    className="text_input"
+                    variant="outlined"
+                    size="small"
+                  />
+                </div>
+                <Button
+                  className="add_artist_button"
+                  onClick={() => alert("add artist")}
+                  variant="outlined"
+                >
+                  Add Artist
+                </Button>
+              </div>
             </div>
             <div className="buttons">
               <Button
