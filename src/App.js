@@ -7,8 +7,10 @@ import { isEmpty } from "lodash";
 
 import Theme from "./global/Theme";
 import Typography from "./global/Typography";
-import DashBoard from "./pages/Dashboard";
 import SignIn from "./components/SignIn";
+
+import DashBoard from "./pages/Dashboard";
+import EventManagement from "./pages/EventManagement";
 import UnAuthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 
@@ -63,7 +65,9 @@ function App() {
                 />
                 <Route
                   path="events"
-                  element={<DashBoard auth={auth} currentUser={currentUser} />}
+                  element={
+                    <EventManagement auth={auth} currentUser={currentUser} />
+                  }
                 />
               </>
             )}
