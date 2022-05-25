@@ -6,35 +6,27 @@ import Button from "@mui/material/Button";
 
 import Layout from "../global/Layout";
 
-const filteredSalesBasedOnSearchText = (sales, searchText) => {
-  let searchedSales = sales?.filter((sale) => {
-    let nameIncludedInSearch = sale.name
+const filteredEventsBasedOnSearchText = (events, searchText) => {
+  let searchedEvents = events?.filter((event) => {
+    let nameIncludedInSearch = event.eventName
       .toLowerCase()
       .includes(searchText.toLowerCase());
 
-    let artistIncludedInSearch = sale.artistName
-      .toLowerCase()
-      .includes(searchText.toLowerCase());
-
-    return nameIncludedInSearch || artistIncludedInSearch;
+    return nameIncludedInSearch;
   });
-  return searchedSales;
+  return searchedEvents;
 };
 
 const DEFAULT_EVENTS_DUMMY_DATA = [
   {
-    name: "Nicholas Fray",
-    artistName: "Joey Bada$$",
-    email: "harry.fray7@gmail.com",
-    instagramHandle: "harryfray",
-    ticketsBought: 5,
+    eventName: "Summer Solstice",
+    dateOccuring: "06/20/2022",
+    artists: [{ name: "Court long name", email: "court_long@court.com" }],
   },
   {
-    name: "Cat James",
-    artistName: "Joey Bada$$",
-    email: "cat.james@gmail.com",
-    instagramHandle: "oldsolewhatever",
-    ticketsBought: 2,
+    eventName: "Winter Solstice",
+    dateOccuring: "08/05/2022",
+    artists: [{ name: "Cor s name", email: "court@court.com" }],
   },
 ];
 
@@ -73,11 +65,11 @@ const StyledEventManagement = styled.div`
         }
 
         .large_col {
-          width: 24%;
+          width: 50%;
         }
 
         .small_col {
-          width: 14%;
+          width: 20%;
         }
 
         .fixed_action_col {
@@ -146,34 +138,34 @@ const StyledEventManagement = styled.div`
 `;
 
 const EventManagement = ({ auth, currentUser }) => {
-  const [allSales, setAllSales] = useState(DEFAULT_EVENTS_DUMMY_DATA);
-  const [selectedSale, setSelectedSale] = useState({});
+  const [allEvents, setAllEvents] = useState(DEFAULT_EVENTS_DUMMY_DATA);
+  const [selectedEvent, setSelectedEvent] = useState({});
   const [filterText, setFilterText] = useState("");
 
-  const [createOrEditSaleOpen, setCreateOrEditSaleOpen] = useState(false);
-  const [deleteSaleModalOpen, setDeleteSaleModalOpen] = useState(false);
+  const [createOrEditEventOpen, setCreateOrEditEventOpen] = useState(false);
+  const [deleteEventModalOpen, setDeleteEventModalOpen] = useState(false);
 
-  const handleCreateSale = (newSale) => {
-    setAllSales([...allSales, newSale]);
+  const handleCreateEvent = (newEvent) => {
+    setAllEvents([...allEvents, newEvent]);
   };
 
-  const handleUpdateSale = (id, updatedSale) => {
-    const beforeUpdatedSales = allSales.slice(0, id);
-    const afterUpdatedSales = allSales.slice(id + 1);
+  const handleUpdateEvent = (id, updatedEvent) => {
+    const beforeUpdatedEvents = allEvents.slice(0, id);
+    const afterUpdatedEvents = allEvents.slice(id + 1);
 
-    setAllSales([...beforeUpdatedSales, updatedSale, ...afterUpdatedSales]);
+    setAllEvents([...beforeUpdatedEvents, updatedEvent, ...afterUpdatedEvents]);
   };
 
-  const handleDeleteSale = (id) => {
-    const beforeDeletedSale = allSales.slice(0, id);
-    const afterDeletedSale = allSales.slice(id + 1);
+  const handleDeleteEvent = (id) => {
+    const beforeDeletedEvent = allEvents.slice(0, id);
+    const afterDeletedEvent = allEvents.slice(id + 1);
 
-    setAllSales([...beforeDeletedSale, ...afterDeletedSale]);
+    setAllEvents([...beforeDeletedEvent, ...afterDeletedEvent]);
   };
 
-  const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
+  const filteredEvents = filteredEventsBasedOnSearchText(allEvents, filterText);
 
-  const loadingSales = false;
+  const loadingEvents = false;
 
   return (
     <Layout auth={auth} currentUser={currentUser}>
@@ -191,50 +183,44 @@ const EventManagement = ({ auth, currentUser }) => {
           <Button
             size="small"
             onClick={() => {
-              setCreateOrEditSaleOpen(true);
-              setSelectedSale({});
+              setCreateOrEditEventOpen(true);
+              setSelectedEvent({});
             }}
             variant="contained"
           >
-            ADD SALE
+            Create Event
           </Button>
         </div>
         <table>
           <thead>
             <tr>
-              <th className="large_col">Artist's Name</th>
-              <th className="large_col">Art Sold To</th>
-              <th className="large_col">Email</th>
-              <th className="large_col">Instagram</th>
-              <th className="small_col">Tickets</th>
+              <th className="small_col">Event Name</th>
+              <th className="small_col">Date Occuring</th>
+              <th className="large_col">Artists</th>
               <th className="fixed_action_col">Action</th>
             </tr>
           </thead>
-          {Boolean(filteredSales?.length && !loadingSales) && (
+          {Boolean(filteredEvents?.length && !loadingEvents) && (
             <tbody>
-              {filteredSales?.map((sale, id) => {
-                const {
-                  name,
-                  artistName,
-                  email,
-                  instagramHandle,
-                  ticketsBought,
-                } = sale;
+              {filteredEvents?.map((event, id) => {
+                const { eventName, dateOccuring, artists } = event;
 
                 return (
                   <React.Fragment key={id}>
                     <tr>
-                      <td>{artistName}</td>
-                      <td>{name}</td>
-                      <td>{email}</td>
-                      <td>{instagramHandle}</td>
-                      <td>{ticketsBought}</td>
+                      <td>{eventName}</td>
+                      <td>{dateOccuring}</td>
+                      <td>
+                        {artists?.map((artist, id) => {
+                          return <h4 key={id}>{artist?.name}</h4>;
+                        })}
+                      </td>
                       <td>
                         <Button
                           size="small"
                           onClick={() => {
-                            setSelectedSale({ ...sale, id });
-                            setCreateOrEditSaleOpen(true);
+                            setSelectedEvent({ ...Event, id });
+                            setCreateOrEditEventOpen(true);
                           }}
                         >
                           Edit
@@ -242,8 +228,8 @@ const EventManagement = ({ auth, currentUser }) => {
                         <Button
                           size="small"
                           onClick={() => {
-                            setSelectedSale({ ...sale, id });
-                            setDeleteSaleModalOpen(true);
+                            setSelectedEvent({ ...Event, id });
+                            setDeleteEventModalOpen(true);
                           }}
                         >
                           Delete
@@ -256,12 +242,12 @@ const EventManagement = ({ auth, currentUser }) => {
             </tbody>
           )}
         </table>
-        {Boolean(loadingSales) && (
+        {Boolean(loadingEvents) && (
           <div className="loading_icon">
             <CircularProgress color="inherit" />
           </div>
         )}
-        {Boolean(!filteredSales?.length && !loadingSales) && (
+        {Boolean(!filteredEvents?.length && !loadingEvents) && (
           <div className="empty_search_text">
             <h2>No events available</h2>
             <h6 className="subtitle-2">Either create a new event or STFU</h6>
