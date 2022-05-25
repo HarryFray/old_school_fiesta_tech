@@ -142,28 +142,23 @@ const EventManagement = ({ auth, currentUser }) => {
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
 
+  const db = getDatabase();
+
   useEffect(() => {
-    const dbRef = ref(getDatabase());
+    const dbRef = ref(db);
 
-    get(child(dbRef, `events`))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          const eventsSnapshot = snapshot.val();
-          const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
-
-          setAllEvents(firebaseEvents);
-        } else {
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    get(child(dbRef, `events`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        const eventsSnapshot = snapshot.val();
+        const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
+        setAllEvents(firebaseEvents);
+      } else {
+        setAllEvents([]);
+      }
+    });
   });
 
   const handleDeleteEvent = (eventName) => {
-    const db = getDatabase();
-
     remove(ref(db, `events/${eventName}`));
   };
 
