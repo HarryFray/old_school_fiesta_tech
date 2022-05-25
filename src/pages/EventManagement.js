@@ -173,7 +173,6 @@ const EventManagement = ({ auth, currentUser }) => {
         setCreateOrEditEventOpen={setCreateOrEditEventOpen}
         setSelectedEvent={setSelectedEvent}
         selectedEvent={selectedEvent}
-        currentUser={currentUser}
       />
 
       <DeleteConfirmation

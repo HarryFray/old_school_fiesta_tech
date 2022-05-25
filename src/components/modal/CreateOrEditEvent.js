@@ -78,7 +78,6 @@ const CreateOrEditEvent = ({
   setCreateOrEditEventOpen,
   setSelectedEvent,
   selectedEvent,
-  currentUser,
 }) => {
   const [artists, setArtists] = useState([{}]);
   const { register, handleSubmit, reset } = useForm();
@@ -87,17 +86,13 @@ const CreateOrEditEvent = ({
 
   useEffect(() => {
     if (isNewEvent) {
-      if (currentUser?.superUser) {
-        reset(DEFAULT_EVENT);
-      } else {
-        reset({ ...DEFAULT_EVENT, artistName: currentUser?.email });
-      }
+      reset(DEFAULT_EVENT);
     } else {
       reset(selectedEvent);
     }
-  }, [isNewEvent, reset, selectedEvent, currentUser]);
+  }, [isNewEvent, reset, selectedEvent]);
 
-  const onSubmit = (data) => {
+  const updateOrCreateEvent = (data) => {
     setSelectedEvent({});
     setCreateOrEditEventOpen(false);
 
@@ -110,7 +105,7 @@ const CreateOrEditEvent = ({
     <StyledCreateOrEditEvent open={createOrEditEventOpen}>
       <Box>
         <Typography>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(updateOrCreateEvent)}>
             <h3>{isNewEvent ? "Create New Event" : "Edit Existing Event"}</h3>
             <div className="content_section">
               <TextField
