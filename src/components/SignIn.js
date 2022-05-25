@@ -72,7 +72,7 @@ const SignIn = ({ auth }) => {
 
   const handleUserSignIn = (auth, email, password) => {
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => navigate("/"))
+      .then(() => navigate("/dashboard"))
       .catch(({ message }) => {
         if (!email || !password) {
           setErrorText("Please enter a password and email");

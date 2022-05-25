@@ -260,6 +260,7 @@ const DashBoard = ({ auth, currentUser }) => {
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
             />
+            <h1>Summer Solstice</h1>
             <Button
               size="small"
               onClick={() => {

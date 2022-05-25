@@ -35,14 +35,21 @@ const StyledTypography = styled.div`
   }
 
   a {
-    color: ${({ theme }) => theme.colors.primary};
     font-style: normal;
     font-weight: bold;
     font-size: 18px;
     line-height: 16px;
     letter-spacing: 0.5px;
-    text-decoration-line: underline;
+    text-decoration-line: none;
     text-transform: capitalize;
+
+    :visited {
+      color: ${({ theme }) => theme.colors.black};
+    }
+
+    :hover {
+      color: ${({ theme }) => theme.colors.primary};
+    }
   }
 
   .subtitle {

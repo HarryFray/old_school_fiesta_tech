@@ -52,14 +52,20 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="*" element={<NotFound />} />
-            <Route path="/auth" element={<SignIn auth={auth} />} />
+            <Route path="auth" element={<SignIn auth={auth} />} />
             {isEmpty(currentUser) ? (
               <Route path="/" element={<UnAuthorized />} />
             ) : (
-              <Route
-                path="/"
-                element={<DashBoard auth={auth} currentUser={currentUser} />}
-              />
+              <>
+                <Route
+                  path="dashboard"
+                  element={<DashBoard auth={auth} currentUser={currentUser} />}
+                />
+                <Route
+                  path="events"
+                  element={<DashBoard auth={auth} currentUser={currentUser} />}
+                />
+              </>
             )}
           </Routes>
         </BrowserRouter>
