@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import { isEmpty } from "lodash";
+
+import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import Theme from "./global/Theme";
 import Typography from "./global/Typography";

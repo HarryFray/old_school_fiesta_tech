@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
+import { getDatabase, ref, set, create } from "firebase/database";
 
 import Typography from "../../global/Typography";
 
@@ -84,8 +85,6 @@ const CreateOrEditEvent = ({
   const [artists, setArtists] = useState([{}]);
   const { register, handleSubmit, reset, getValues } = useForm();
 
-  console.log(getValues());
-
   const isNewEvent = isEmpty(selectedEvent);
 
   useEffect(() => {
@@ -103,7 +102,10 @@ const CreateOrEditEvent = ({
   const onSubmit = (data) => {
     setSelectedEvent({});
     setCreateOrEditEventOpen(false);
-    isNewEvent ? handleCreateEvent(data) : handleUpdateEvent(data?.id, data);
+
+    const db = getDatabase();
+
+    set(ref(db, `events/${data.eventName}`), data);
   };
 
   return (

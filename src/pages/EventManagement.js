@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { getDatabase, ref, child, get } from "firebase/database";
 
 import Layout from "../global/Layout";
-
 import CreateOrEditEvent from "../components/modal/CreateOrEditEvent";
 import DeleteConfirmation from "../components/modal/DeleteConfirmation";
 
@@ -148,6 +148,26 @@ const EventManagement = ({ auth, currentUser }) => {
   const [createOrEditEventOpen, setCreateOrEditEventOpen] = useState(false);
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
+
+  useEffect(() => {
+    const dbRef = ref(getDatabase());
+
+    get(child(dbRef, `events`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const eventsSnapshot = snapshot.val();
+          const party = Object.keys(eventsSnapshot).map((key) => {
+            return eventsSnapshot[key];
+          });
+          console.log({ party });
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  });
 
   const handleCreateEvent = (newEvent) => {
     setAllEvents([...allEvents, newEvent]);
