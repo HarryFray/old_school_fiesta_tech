@@ -17,7 +17,7 @@ const NotFound = () => {
       <h2>This page does not exist</h2>
       <h6 className="subtitle-2">
         Go back to the{" "}
-        <Link to="/" className="link">
+        <Link to="/dashboard" className="link">
           home page
         </Link>{" "}
         page porfavor

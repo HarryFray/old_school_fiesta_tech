@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import Modal from "@mui/material/Modal";
@@ -12,7 +12,6 @@ import Typography from "../../global/Typography";
 const DEFAULT_EVENT = {
   eventName: "",
   dateOccuring: "",
-  artists: [],
 };
 
 const StyledCreateOrEditEvent = styled(Modal)`
@@ -40,14 +39,24 @@ const StyledCreateOrEditEvent = styled(Modal)`
       padding: 12px;
       border-radius: 4px;
 
-      .artist_inputs {
-        div:first-child {
-          margin-right: 12px;
+      .artists_inputs {
+        .artist_inputs {
+          div:first-child {
+            margin-right: 12px;
+          }
+          .text_input {
+            margin-top: 12px;
+          }
         }
       }
 
-      .add_artist_button {
-        margin-top: 24px;
+      .manage_artists_buttons {
+        display: flex;
+        justify-content: space-between;
+
+        .add_artist_button {
+          margin-top: 24px;
+        }
       }
     }
 
@@ -72,7 +81,10 @@ const CreateOrEditEvent = ({
   handleCreateEvent,
   currentUser,
 }) => {
-  const { register, handleSubmit, reset } = useForm();
+  const [artists, setArtists] = useState([{}]);
+  const { register, handleSubmit, reset, getValues } = useForm();
+
+  console.log(getValues());
 
   const isNewEvent = isEmpty(selectedEvent);
 
@@ -117,30 +129,45 @@ const CreateOrEditEvent = ({
                 size="small"
               />
               <div className="artists_section">
-                <div className="artist_inputs">
-                  <h4>Artists:</h4>
-                  <TextField
-                    {...register("userName")}
-                    label="Artist Name"
-                    className="text_input"
-                    variant="outlined"
-                    size="small"
-                  />
-                  <TextField
-                    {...register("email")}
-                    label="Artist Email"
-                    className="text_input"
-                    variant="outlined"
-                    size="small"
-                  />
+                <h4>Artists:</h4>
+                <div className="artists_inputs">
+                  {artists.map((_, i) => {
+                    return (
+                      <div className="artist_inputs" key={i}>
+                        <TextField
+                          {...register(`artist_name_${i}`)}
+                          label="Name"
+                          className="text_input"
+                          variant="outlined"
+                          size="small"
+                        />
+                        <TextField
+                          {...register(`artist_email_${i}`)}
+                          label="Email"
+                          className="text_input"
+                          variant="outlined"
+                          size="small"
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
-                <Button
-                  className="add_artist_button"
-                  onClick={() => alert("add artist")}
-                  variant="outlined"
-                >
-                  Add Artist
-                </Button>
+                <div className="manage_artists_buttons">
+                  <Button
+                    className="add_artist_button"
+                    onClick={() => setArtists(artists.slice(1))}
+                    variant="outlined"
+                  >
+                    Delete Artist
+                  </Button>
+                  <Button
+                    className="add_artist_button"
+                    onClick={() => setArtists([...artists, {}])}
+                    variant="outlined"
+                  >
+                    Add Artist
+                  </Button>
+                </div>
               </div>
             </div>
             <div className="buttons">
