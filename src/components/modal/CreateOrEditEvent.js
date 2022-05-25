@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
-import { getDatabase, ref, set, create } from "firebase/database";
+import { getDatabase, ref, set } from "firebase/database";
 
 import Typography from "../../global/Typography";
 
@@ -78,12 +78,10 @@ const CreateOrEditEvent = ({
   setCreateOrEditEventOpen,
   setSelectedEvent,
   selectedEvent,
-  handleUpdateEvent,
-  handleCreateEvent,
   currentUser,
 }) => {
   const [artists, setArtists] = useState([{}]);
-  const { register, handleSubmit, reset, getValues } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   const isNewEvent = isEmpty(selectedEvent);
 
@@ -105,7 +103,7 @@ const CreateOrEditEvent = ({
 
     const db = getDatabase();
 
-    set(ref(db, `events/${data.eventName}`), data);
+    set(ref(db, `events/${data?.eventName}`), data);
   };
 
   return (
@@ -117,11 +115,11 @@ const CreateOrEditEvent = ({
             <div className="content_section">
               <TextField
                 {...register("eventName")}
-                label="Event Name"
+                label="Event Name (once created this can not be changed)"
                 className="text_input"
                 variant="outlined"
                 size="small"
-                disabled={!currentUser?.superUser}
+                disabled={!isNewEvent}
               />
               <TextField
                 {...register("dateOccuring")}

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { getDatabase, ref, child, get } from "firebase/database";
+import { getDatabase, ref, child, get, remove } from "firebase/database";
 
 import Layout from "../global/Layout";
 import CreateOrEditEvent from "../components/modal/CreateOrEditEvent";
@@ -20,18 +20,11 @@ const filteredEventsBasedOnSearchText = (events, searchText) => {
   return searchedEvents;
 };
 
-const DEFAULT_EVENTS_DUMMY_DATA = [
-  {
-    eventName: "Summer Solstice",
-    dateOccuring: "06/20/2022",
-    artists: [{ name: "Court long name", email: "court_long@court.com" }],
-  },
-  {
-    eventName: "Winter Solstice",
-    dateOccuring: "08/05/2022",
-    artists: [{ name: "Cor s name", email: "court@court.com" }],
-  },
-];
+const firebaseObjectToArray = (object) => {
+  return Object.keys(object).map((key) => {
+    return object[key];
+  });
+};
 
 const StyledEventManagement = styled.div`
   height: 100%;
@@ -141,7 +134,7 @@ const StyledEventManagement = styled.div`
 `;
 
 const EventManagement = ({ auth, currentUser }) => {
-  const [allEvents, setAllEvents] = useState(DEFAULT_EVENTS_DUMMY_DATA);
+  const [allEvents, setAllEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState({});
   const [filterText, setFilterText] = useState("");
 
@@ -156,10 +149,9 @@ const EventManagement = ({ auth, currentUser }) => {
       .then((snapshot) => {
         if (snapshot.exists()) {
           const eventsSnapshot = snapshot.val();
-          const party = Object.keys(eventsSnapshot).map((key) => {
-            return eventsSnapshot[key];
-          });
-          console.log({ party });
+          const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
+
+          setAllEvents(firebaseEvents);
         } else {
           console.log("No data available");
         }
@@ -169,22 +161,10 @@ const EventManagement = ({ auth, currentUser }) => {
       });
   });
 
-  const handleCreateEvent = (newEvent) => {
-    setAllEvents([...allEvents, newEvent]);
-  };
+  const handleDeleteEvent = (eventName) => {
+    const db = getDatabase();
 
-  const handleUpdateEvent = (id, updatedEvent) => {
-    const beforeUpdatedEvents = allEvents.slice(0, id);
-    const afterUpdatedEvents = allEvents.slice(id + 1);
-
-    setAllEvents([...beforeUpdatedEvents, updatedEvent, ...afterUpdatedEvents]);
-  };
-
-  const handleDeleteEvent = (id) => {
-    const beforeDeletedEvent = allEvents.slice(0, id);
-    const afterDeletedEvent = allEvents.slice(id + 1);
-
-    setAllEvents([...beforeDeletedEvent, ...afterDeletedEvent]);
+    remove(ref(db, `events/${eventName}`));
   };
 
   const filteredEvents = filteredEventsBasedOnSearchText(allEvents, filterText);
@@ -198,15 +178,13 @@ const EventManagement = ({ auth, currentUser }) => {
         setCreateOrEditEventOpen={setCreateOrEditEventOpen}
         setSelectedEvent={setSelectedEvent}
         selectedEvent={selectedEvent}
-        handleUpdateEvent={handleUpdateEvent}
-        handleCreateEvent={handleCreateEvent}
         currentUser={currentUser}
       />
 
       <DeleteConfirmation
         deleteConfirmationModalOpen={deleteConfirmationModalOpen}
         setDeleteConfirmationModalOpen={setDeleteConfirmationModalOpen}
-        handleDeletion={() => handleDeleteEvent(selectedEvent?.id)}
+        handleDeletion={() => handleDeleteEvent(selectedEvent?.eventName)}
       />
       <Layout auth={auth} currentUser={currentUser}>
         <StyledEventManagement>
