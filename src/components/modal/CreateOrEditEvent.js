@@ -131,9 +131,9 @@ const CreateOrEditEvent = ({
                 size="small"
               />
               <div className="current_event_switch">
-                <Switch {...register("currentEvent")} />
+                <Switch {...register("activeEvent")} />
                 <h4>{`${
-                  getValues("currentEvent") ? "This is" : "Make this"
+                  getValues("activeEvent") ? "This is" : "Make this"
                 } the current event `}</h4>
               </div>
               <div className="artists_section">

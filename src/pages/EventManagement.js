@@ -211,7 +211,7 @@ const EventManagement = ({ auth, currentUser }) => {
             {Boolean(filteredEvents?.length && !loadingEvents) && (
               <tbody>
                 {filteredEvents?.map((event, id) => {
-                  const { eventName, dateOccuring, artists, currentEvent } =
+                  const { eventName, dateOccuring, artists, activeEvent } =
                     event;
 
                   return (
@@ -219,7 +219,7 @@ const EventManagement = ({ auth, currentUser }) => {
                       <tr>
                         <td>{eventName}</td>
                         <td>{dateOccuring}</td>
-                        <td className="bold">{String(currentEvent)}</td>
+                        <td className="bold">{String(activeEvent)}</td>
                         <td>
                           {artists?.map((artist, id) => {
                             return <h4 key={id}>{artist?.name}</h4>;

@@ -134,7 +134,7 @@ const StyledDashBoard = styled.div`
 `;
 
 const DashBoard = ({ auth, currentUser }) => {
-  const [currentEventName, setCurrentEventName] = useState("");
+  const [activeEventName, setActiveEventName] = useState("");
   const [allSales, setAllSales] = useState([]);
 
   const [selectedSale, setSelectedSale] = useState({});
@@ -146,6 +146,7 @@ const DashBoard = ({ auth, currentUser }) => {
 
   const db = getDatabase();
 
+  // GETTING ACTIVE EVENT NAME
   useEffect(() => {
     const dbRef = ref(db);
 
@@ -154,19 +155,20 @@ const DashBoard = ({ auth, currentUser }) => {
         const eventsSnapshot = snapshot.val();
         const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
 
-        const currentEventName = firebaseEvents.filter(
-          (res) => res.currentEvent
+        const activeEventName = firebaseEvents.filter(
+          (res) => res.activeEvent
         )[0]?.eventName;
 
-        setCurrentEventName(currentEventName);
+        setActiveEventName(activeEventName);
       }
     });
   });
 
+  // GETTING RELEVANT SALES FOR ACTIVE EVENT AND USER
   useEffect(() => {
     const dbRef = ref(db);
 
-    get(child(dbRef, `events/${currentEventName}/sales`)).then((snapshot) => {
+    get(child(dbRef, `events/${activeEventName}/sales`)).then((snapshot) => {
       if (snapshot.exists()) {
         const eventsSnapshot = snapshot.val();
         const firebaseEventSales = firebaseObjectToArray(eventsSnapshot);
@@ -179,7 +181,7 @@ const DashBoard = ({ auth, currentUser }) => {
   });
 
   const handleDeleteEvent = (saleUID) => {
-    remove(ref(db, `events/${currentEventName}/sales/${saleUID}`));
+    remove(ref(db, `events/${activeEventName}/sales/${saleUID}`));
   };
 
   const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
@@ -194,7 +196,7 @@ const DashBoard = ({ auth, currentUser }) => {
         setSelectedSale={setSelectedSale}
         selectedSale={selectedSale}
         currentUser={currentUser}
-        currentEventName={currentEventName}
+        activeEventName={activeEventName}
       />
       <DeleteConfirmation
         deleteConfirmationModalOpen={deleteConfirmationModalOpen}
@@ -212,7 +214,7 @@ const DashBoard = ({ auth, currentUser }) => {
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
             />
-            <h1>{currentEventName}</h1>
+            <h1>{activeEventName}</h1>
             <Button
               size="small"
               onClick={() => {

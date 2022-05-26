@@ -55,7 +55,7 @@ const CreateOrEditSale = ({
   setSelectedSale,
   selectedSale,
   currentUser,
-  currentEventName,
+  activeEventName,
 }) => {
   const { register, handleSubmit, reset } = useForm();
 
@@ -81,16 +81,16 @@ const CreateOrEditSale = ({
 
     if (isNewSale) {
       const saleUID = push(
-        ref(db, `events/${currentEventName}/sales`),
+        ref(db, `events/${activeEventName}/sales`),
         data
       ).key;
 
-      set(ref(db, `events/${currentEventName}/sales/${saleUID}`), {
+      set(ref(db, `events/${activeEventName}/sales/${saleUID}`), {
         ...data,
         saleUID,
       });
     } else {
-      set(ref(db, `events/${currentEventName}/sales/${data.saleUID}`), data);
+      set(ref(db, `events/${activeEventName}/sales/${data.saleUID}`), data);
     }
   };
 
