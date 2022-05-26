@@ -184,7 +184,7 @@ const EventManagement = ({ auth, currentUser }) => {
         <StyledEventManagement>
           <div className="table_management_heading">
             <TextField
-              label="Search"
+              label="Search Events"
               className="filter_text_input"
               variant="outlined"
               size="small"

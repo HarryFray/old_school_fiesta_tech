@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
 import { getDatabase, ref, set } from "firebase/database";
+import Switch from "@mui/material/Switch";
 
 import Typography from "../../global/Typography";
 
@@ -31,6 +32,12 @@ const StyledCreateOrEditEvent = styled(Modal)`
 
       .text_input {
         margin-top: 24px;
+      }
+
+      .current_event_switch {
+        margin-top: 24px;
+        display: flex;
+        align-items: center;
       }
     }
 
@@ -80,7 +87,7 @@ const CreateOrEditEvent = ({
   selectedEvent,
 }) => {
   const [artists, setArtists] = useState([{}]);
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, getValues } = useForm();
 
   const isNewEvent = isEmpty(selectedEvent);
 
@@ -123,6 +130,12 @@ const CreateOrEditEvent = ({
                 variant="outlined"
                 size="small"
               />
+              <div className="current_event_switch">
+                <Switch {...register("currentEvent")} />
+                <h4>{`${
+                  getValues("currentEvent") ? "This is" : "Make this"
+                } the current event `}</h4>
+              </div>
               <div className="artists_section">
                 <h4>Artists:</h4>
                 <div className="artists_inputs">

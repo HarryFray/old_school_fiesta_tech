@@ -255,7 +255,7 @@ const DashBoard = ({ auth, currentUser }) => {
         <StyledDashBoard>
           <div className="table_management_heading">
             <TextField
-              label="Search"
+              label="Search Sales"
               className="filter_text_input"
               variant="outlined"
               size="small"
