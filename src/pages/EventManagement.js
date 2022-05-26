@@ -208,6 +208,7 @@ const EventManagement = ({ auth, currentUser }) => {
               <tr>
                 <th className="small_col">Event Name</th>
                 <th className="small_col">Date Occuring</th>
+                <th className="small_col">Current Event</th>
                 <th className="large_col">Artists</th>
                 <th className="fixed_action_col">Action</th>
               </tr>
@@ -215,13 +216,15 @@ const EventManagement = ({ auth, currentUser }) => {
             {Boolean(filteredEvents?.length && !loadingEvents) && (
               <tbody>
                 {filteredEvents?.map((event, id) => {
-                  const { eventName, dateOccuring, artists } = event;
+                  const { eventName, dateOccuring, artists, currentEvent } =
+                    event;
 
                   return (
                     <React.Fragment key={id}>
                       <tr>
                         <td>{eventName}</td>
                         <td>{dateOccuring}</td>
+                        <td className="bold">{String(currentEvent)}</td>
                         <td>
                           {artists?.map((artist, id) => {
                             return <h4 key={id}>{artist?.name}</h4>;
