@@ -3,7 +3,7 @@ import styled from "styled-components";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { getDatabase, ref, child, get } from "firebase/database";
+import { getDatabase, ref, child, get, remove } from "firebase/database";
 
 import Layout from "../global/Layout";
 import { firebaseObjectToArray } from "../utils";
@@ -172,9 +172,15 @@ const DashBoard = ({ auth, currentUser }) => {
         const firebaseEventSales = firebaseObjectToArray(eventsSnapshot);
 
         setAllSales(firebaseEventSales);
+      } else {
+        setAllSales([]);
       }
     });
   });
+
+  const handleDeleteEvent = (saleUID) => {
+    remove(ref(db, `events/${currentEventName}/sales/${saleUID}`));
+  };
 
   const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
 
@@ -193,7 +199,7 @@ const DashBoard = ({ auth, currentUser }) => {
       <DeleteConfirmation
         deleteConfirmationModalOpen={deleteConfirmationModalOpen}
         setDeleteConfirmationModalOpen={setDeleteConfirmationModalOpen}
-        handleDeletion={() => {}}
+        handleDeletion={() => handleDeleteEvent(selectedSale?.saleUID)}
       />
       <Layout auth={auth} currentUser={currentUser}>
         <StyledDashBoard>

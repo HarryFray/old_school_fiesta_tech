@@ -80,19 +80,17 @@ const CreateOrEditSale = ({
     setCreateOrEditSaleOpen(false);
 
     if (isNewSale) {
-      const newSaleKey = push(
+      const saleUID = push(
         ref(db, `events/${currentEventName}/sales`),
         data
       ).key;
 
-      console.log({ newSaleKey });
-
-      set(ref(db, `events/${currentEventName}/sales/${newSaleKey}`), {
+      set(ref(db, `events/${currentEventName}/sales/${saleUID}`), {
         ...data,
-        newSaleKey,
+        saleUID,
       });
     } else {
-      set(ref(db, `events/${currentEventName}/sales/${data.newSaleKey}`), data);
+      set(ref(db, `events/${currentEventName}/sales/${data.saleUID}`), data);
     }
   };
 
