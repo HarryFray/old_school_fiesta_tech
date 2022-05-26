@@ -8,6 +8,7 @@ import { getDatabase, ref, child, get, remove } from "firebase/database";
 import Layout from "../global/Layout";
 import CreateOrEditEvent from "../components/modal/CreateOrEditEvent";
 import DeleteConfirmation from "../components/modal/DeleteConfirmation";
+import { firebaseObjectToArray } from "../utils";
 
 const filteredEventsBasedOnSearchText = (events, searchText) => {
   let searchedEvents = events?.filter((event) => {
@@ -18,12 +19,6 @@ const filteredEventsBasedOnSearchText = (events, searchText) => {
     return nameIncludedInSearch;
   });
   return searchedEvents;
-};
-
-const firebaseObjectToArray = (object) => {
-  return Object.keys(object).map((key) => {
-    return object[key];
-  });
 };
 
 const StyledEventManagement = styled.div`

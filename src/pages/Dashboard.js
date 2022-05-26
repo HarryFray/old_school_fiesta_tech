@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { getDatabase, ref, child, get } from "firebase/database";
 
 import Layout from "../global/Layout";
+import { firebaseObjectToArray } from "../utils";
 
 import CreateOrEditSale from "../components/modal/CreateOrEditSale";
 import DeleteConfirmation from "../components/modal/DeleteConfirmation";
@@ -23,79 +25,6 @@ const filteredSalesBasedOnSearchText = (sales, searchText) => {
   });
   return searchedSales;
 };
-
-const DEFAULT_SALES_DUMMY_DATA = [
-  {
-    name: "Nicholas Fray",
-    artistName: "Joey Bada$$",
-    email: "harry.fray7@gmail.com",
-    instagramHandle: "harryfray",
-    ticketsBought: 5,
-  },
-  {
-    name: "Cat James",
-    artistName: "Joey Bada$$",
-    email: "cat.james@gmail.com",
-    instagramHandle: "oldsolewhatever",
-    ticketsBought: 2,
-  },
-  {
-    name: "Patrick long name long",
-    artistName: "Court Bada$$",
-    email: "patrick_long_name@gmail.com",
-    instagramHandle: "really long",
-    ticketsBought: 22,
-  },
-  {
-    name: "short name",
-    artistName: "Court Bada$$",
-    email: "sn7@gmail.com",
-    instagramHandle: "asdf",
-    ticketsBought: 33,
-  },
-  {
-    name: "Bill whatever....",
-    artistName: "Joey Bada$$",
-    email: "harry.fray7@gmail.com",
-    instagramHandle: "asdfasdfadsf",
-    ticketsBought: 2,
-  },
-  {
-    name: "Nicholas Fray",
-    artistName: "Joey Bada$$",
-    email: "harry.fray7@gmail.com",
-    instagramHandle: "harryfray",
-    ticketsBought: 5,
-  },
-  {
-    name: "Cat t",
-    artistName: "Joey tBada$$",
-    email: "cat.james@gtmail.com",
-    instagramHandle: "oldsoltewhatever",
-    ticketsBought: 11,
-  },
-  {
-    name: "Patrick long naqqme long",
-    artistName: "Court Badqa$$",
-    email: "patrick_long_namqe@gmail.com",
-    instagramHandle: "reqally long",
-    ticketsBought: 1,
-  },
-  {
-    name: "short naeme",
-    artistName: "Court Baeda$$",
-    email: "sn7@gmreail.com",
-    instagramHandle: "asedf",
-    ticketsBought: 1,
-  },
-  {
-    name: "Bill whrratever....",
-    artistName: "Joey Badra$$",
-    email: "harsrsy.fray7@gmail.com",
-    instagramHandle: "asddfadsf",
-    ticketsBought: 456,
-  },
-];
 
 const StyledDashBoard = styled.div`
   height: 100%;
@@ -205,7 +134,9 @@ const StyledDashBoard = styled.div`
 `;
 
 const DashBoard = ({ auth, currentUser }) => {
-  const [allSales, setAllSales] = useState(DEFAULT_SALES_DUMMY_DATA);
+  const [currentEventName, setCurrentEventName] = useState("");
+  const [allSales, setAllSales] = useState([]);
+
   const [selectedSale, setSelectedSale] = useState({});
   const [filterText, setFilterText] = useState("");
 
@@ -213,23 +144,37 @@ const DashBoard = ({ auth, currentUser }) => {
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
 
-  const handleCreateSale = (newSale) => {
-    setAllSales([...allSales, newSale]);
-  };
+  const db = getDatabase();
 
-  const handleUpdateSale = (id, updatedSale) => {
-    const beforeUpdatedSales = allSales.slice(0, id);
-    const afterUpdatedSales = allSales.slice(id + 1);
+  useEffect(() => {
+    const dbRef = ref(db);
 
-    setAllSales([...beforeUpdatedSales, updatedSale, ...afterUpdatedSales]);
-  };
+    get(child(dbRef, `events`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        const eventsSnapshot = snapshot.val();
+        const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
 
-  const handleDeleteSale = (id) => {
-    const beforeDeletedSale = allSales.slice(0, id);
-    const afterDeletedSale = allSales.slice(id + 1);
+        const currentEventName = firebaseEvents.filter(
+          (res) => res.currentEvent
+        )[0]?.eventName;
 
-    setAllSales([...beforeDeletedSale, ...afterDeletedSale]);
-  };
+        setCurrentEventName(currentEventName);
+      }
+    });
+  });
+
+  useEffect(() => {
+    const dbRef = ref(db);
+
+    get(child(dbRef, `events/${currentEventName}/sales`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        const eventsSnapshot = snapshot.val();
+        const firebaseEventSales = firebaseObjectToArray(eventsSnapshot);
+
+        setAllSales(firebaseEventSales);
+      }
+    });
+  });
 
   const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
 
@@ -242,14 +187,13 @@ const DashBoard = ({ auth, currentUser }) => {
         setCreateOrEditSaleOpen={setCreateOrEditSaleOpen}
         setSelectedSale={setSelectedSale}
         selectedSale={selectedSale}
-        handleUpdateSale={handleUpdateSale}
-        handleCreateSale={handleCreateSale}
         currentUser={currentUser}
+        currentEventName={currentEventName}
       />
       <DeleteConfirmation
         deleteConfirmationModalOpen={deleteConfirmationModalOpen}
         setDeleteConfirmationModalOpen={setDeleteConfirmationModalOpen}
-        handleDeletion={() => handleDeleteSale(selectedSale?.id)}
+        handleDeletion={() => {}}
       />
       <Layout auth={auth} currentUser={currentUser}>
         <StyledDashBoard>
@@ -262,7 +206,7 @@ const DashBoard = ({ auth, currentUser }) => {
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
             />
-            <h1>Summer Solstice</h1>
+            <h1>{currentEventName}</h1>
             <Button
               size="small"
               onClick={() => {

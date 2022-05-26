@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
+import { getDatabase, ref, push, set } from "firebase/database";
 
 import Typography from "../../global/Typography";
 
@@ -53,9 +54,8 @@ const CreateOrEditSale = ({
   setCreateOrEditSaleOpen,
   setSelectedSale,
   selectedSale,
-  handleUpdateSale,
-  handleCreateSale,
   currentUser,
+  currentEventName,
 }) => {
   const { register, handleSubmit, reset } = useForm();
 
@@ -73,17 +73,34 @@ const CreateOrEditSale = ({
     }
   }, [isNewSale, reset, selectedSale, currentUser]);
 
-  const onSubmit = (data) => {
+  const db = getDatabase();
+
+  const updateOrCreateSale = (data) => {
     setSelectedSale({});
     setCreateOrEditSaleOpen(false);
-    isNewSale ? handleCreateSale(data) : handleUpdateSale(data?.id, data);
+
+    if (isNewSale) {
+      const newSaleKey = push(
+        ref(db, `events/${currentEventName}/sales`),
+        data
+      ).key;
+
+      console.log({ newSaleKey });
+
+      set(ref(db, `events/${currentEventName}/sales/${newSaleKey}`), {
+        ...data,
+        newSaleKey,
+      });
+    } else {
+      set(ref(db, `events/${currentEventName}/sales/${data.newSaleKey}`), data);
+    }
   };
 
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
       <Box>
         <Typography>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(updateOrCreateSale)}>
             <h3>{isNewSale ? "Add A New Sale" : "Edit Existing Sale"}</h3>
             <div className="content_section">
               <TextField
