@@ -60,7 +60,9 @@ const CreateOrEditSale = ({
   const { register, handleSubmit, reset } = useForm();
 
   const isNewSale = isEmpty(selectedSale);
+  const db = getDatabase();
 
+  // MANAGES SALE FIELDS ON OPENING MODAL BASED ON USER ACCESS AND NEW/EDIT
   useEffect(() => {
     if (isNewSale) {
       if (currentUser?.superUser) {
@@ -72,8 +74,6 @@ const CreateOrEditSale = ({
       reset(selectedSale);
     }
   }, [isNewSale, reset, selectedSale, currentUser]);
-
-  const db = getDatabase();
 
   const updateOrCreateSale = (data) => {
     setSelectedSale({});
