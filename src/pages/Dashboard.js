@@ -171,9 +171,17 @@ const DashBoard = ({ auth, currentUser }) => {
     get(child(dbRef, `events/${activeEventName}/sales`)).then((snapshot) => {
       if (snapshot.exists()) {
         const eventsSnapshot = snapshot.val();
-        const firebaseEventSales = firebaseObjectToArray(eventsSnapshot);
+        const allFirebaseEventSales = firebaseObjectToArray(eventsSnapshot);
 
-        setAllSales(firebaseEventSales);
+        if (currentUser?.superUser) {
+          setAllSales(allFirebaseEventSales);
+        } else {
+          const eventSalesForCurrentUser = allFirebaseEventSales.filter(
+            ({ artistName }) => artistName === currentUser?.email
+          );
+
+          setAllSales(eventSalesForCurrentUser);
+        }
       } else {
         setAllSales([]);
       }

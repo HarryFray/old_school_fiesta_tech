@@ -22,7 +22,7 @@ const StyledTopBarNavigation = styled.div`
   }
 `;
 
-const TopBarNavigation = ({ auth }) => {
+const TopBarNavigation = ({ auth, currentUser }) => {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
@@ -35,12 +35,16 @@ const TopBarNavigation = ({ auth }) => {
     <StyledTopBarNavigation>
       <h1>Old_Sol_Fiesta</h1>
       <div className="navigation">
-        <h3>
-          <Link to="/events">Event Management</Link>
-        </h3>
-        <h3>
-          <Link to="/dashboard">Dashboard</Link>
-        </h3>
+        {currentUser?.superUser && (
+          <>
+            <h3>
+              <Link to="/events">Event Management</Link>
+            </h3>
+            <h3>
+              <Link to="/dashboard">Dashboard</Link>
+            </h3>
+          </>
+        )}
         <Button onClick={handleSignOut} variant="outlined">
           Sign Out
         </Button>
