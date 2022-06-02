@@ -10,6 +10,7 @@ import { getDatabase, ref, set } from "firebase/database";
 import Switch from "@mui/material/Switch";
 
 import Typography from "../../global/Typography";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const DEFAULT_EVENT = {
   eventName: "",
@@ -85,6 +86,7 @@ const CreateOrEditEvent = ({
   setCreateOrEditEventOpen,
   setSelectedEvent,
   selectedEvent,
+  auth,
 }) => {
   const [artists, setArtists] = useState([{}]);
   const { register, handleSubmit, reset, getValues } = useForm();
@@ -114,6 +116,21 @@ const CreateOrEditEvent = ({
     }
   }, [isNewEvent, reset, selectedEvent]);
 
+  const handleCreateUsers = (users) => {
+    const DEFAULT_USER_PASSWORD = "5678OldSolFiesta!";
+
+    users.forEach(({ email }) => {
+      createUserWithEmailAndPassword(auth, email, DEFAULT_USER_PASSWORD)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log("New user created: ", user);
+        })
+        .catch((error) => {
+          console.log("Error on signUp", error);
+        });
+    });
+  };
+
   const mergeArtistEmailsAndNames = (data) => {
     const artists = [];
 
@@ -138,9 +155,12 @@ const CreateOrEditEvent = ({
     setCreateOrEditEventOpen(false);
 
     const db = getDatabase();
+    const artistArray = mergeArtistEmailsAndNames(data);
+
+    handleCreateUsers(artistArray);
 
     const cleanEventData = {
-      artists: mergeArtistEmailsAndNames(data),
+      artists: artistArray,
       activeEvent: data?.activeEvent,
       dateOccuring: data?.dateOccuring,
       eventName: data?.eventName,

@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import {
-  // createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -85,17 +82,6 @@ const SignIn = ({ auth }) => {
         }
       });
   };
-
-  // const handleCreateUser = (auth, email, password) => {
-  //   createUserWithEmailAndPassword(auth, email, password)
-  //     .then((userCredential) => {
-  //       const user = userCredential.user;
-  //       console.log("New user created: ", user);
-  //     })
-  //     .catch((error) => {
-  //       console.log("Error on signUp", error);
-  //     });
-  // };
 
   return (
     <StyledSignIn>
