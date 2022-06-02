@@ -215,7 +215,7 @@ const EventManagement = ({ auth, currentUser }) => {
                     event;
 
                   const artistNamesString = artists
-                    .map((artist) => `${artist?.name},`)
+                    ?.map((artist) => `${artist?.name},`)
                     .join(" ")
                     .replace(/,\s*$/, "");
 

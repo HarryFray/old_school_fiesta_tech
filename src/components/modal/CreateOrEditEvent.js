@@ -212,7 +212,7 @@ const CreateOrEditEvent = ({
               <div className="artists_section">
                 <h4>Artists:</h4>
                 <div className="artists_inputs">
-                  {artistEditFields.map((_, i) => {
+                  {artistEditFields?.map((_, i) => {
                     return (
                       <div className="artist_inputs" key={i}>
                         <TextField
