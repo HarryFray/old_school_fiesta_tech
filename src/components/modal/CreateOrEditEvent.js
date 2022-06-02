@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -90,7 +90,7 @@ const CreateOrEditEvent = ({
   auth,
 }) => {
   const [artists, setArtists] = useState([{}]);
-  const { register, handleSubmit, reset, getValues } = useForm();
+  const { register, handleSubmit, reset, getValues, control } = useForm();
 
   const isNewEvent = isEmpty(selectedEvent);
 
@@ -193,7 +193,22 @@ const CreateOrEditEvent = ({
                 size="small"
               />
               <div className="current_event_switch">
-                <Switch {...register("activeEvent")} />
+                <Controller
+                  control={control}
+                  name="activeEvent"
+                  render={({
+                    field: { onChange, onBlur, value, name, ref },
+                    fieldState: { invalid, isTouched, isDirty, error },
+                    formState,
+                  }) => (
+                    <Switch
+                      onBlur={onBlur} // notify when input is touched
+                      onChange={onChange} // send value to hook form
+                      checked={value}
+                      inputRef={ref}
+                    />
+                  )}
+                />
                 <h4>
                   {getValues("activeEvent")
                     ? "This is the current event"
