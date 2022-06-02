@@ -64,12 +64,14 @@ function App() {
                   path="dashboard"
                   element={<DashBoard auth={auth} currentUser={currentUser} />}
                 />
-                <Route
-                  path="events"
-                  element={
-                    <EventManagement auth={auth} currentUser={currentUser} />
-                  }
-                />
+                {currentUser?.superUser && (
+                  <Route
+                    path="events"
+                    element={
+                      <EventManagement auth={auth} currentUser={currentUser} />
+                    }
+                  />
+                )}
               </>
             )}
           </Routes>

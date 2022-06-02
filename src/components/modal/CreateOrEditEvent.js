@@ -33,6 +33,7 @@ const StyledCreateOrEditEvent = styled(Modal)`
 
       .text_input {
         margin-top: 24px;
+        min-width: 260px;
       }
 
       .current_event_switch {
@@ -193,9 +194,11 @@ const CreateOrEditEvent = ({
               />
               <div className="current_event_switch">
                 <Switch {...register("activeEvent")} />
-                <h4>{`${
-                  getValues("activeEvent") ? "This is" : "Make this"
-                } the current event `}</h4>
+                <h4>
+                  {getValues("activeEvent")
+                    ? "This is the current event"
+                    : "Make this the current event"}
+                </h4>
               </div>
               <div className="artists_section">
                 <h4>Artists:</h4>
