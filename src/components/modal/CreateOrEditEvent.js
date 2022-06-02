@@ -10,7 +10,6 @@ import { getDatabase, ref, set } from "firebase/database";
 import Switch from "@mui/material/Switch";
 
 import Typography from "../../global/Typography";
-import { firebaseObjectToArray } from "../../utils";
 
 const DEFAULT_EVENT = {
   eventName: "",
@@ -107,14 +106,13 @@ const CreateOrEditEvent = ({
     if (isNewEvent) {
       reset(DEFAULT_EVENT);
     } else {
-      console.log(selectedEvent?.artists);
-
+      setArtists(selectedEvent?.artists);
       reset({
         ...selectedEvent,
         ...convertArtistsArrayToObject(selectedEvent?.artists),
       });
     }
-  }, [isNewEvent, reset, selectedEvent, artists]);
+  }, [isNewEvent, reset, selectedEvent]);
 
   const mergeArtistEmailsAndNames = (data) => {
     const artists = [];
@@ -122,7 +120,7 @@ const CreateOrEditEvent = ({
     for (const [key, value] of Object.entries(data)) {
       const artistIndex = Number(key.slice(-1));
 
-      if (!isNaN(artistIndex) && key.includes("artist")) {
+      if (!isNaN(artistIndex) && key.includes("artist") && value.length) {
         if (key.includes("name")) {
           artists[artistIndex] = { ...artists[artistIndex], name: value };
         } else if (key.includes("email")) {
@@ -147,8 +145,6 @@ const CreateOrEditEvent = ({
       dateOccuring: data?.dateOccuring,
       eventName: data?.eventName,
     };
-
-    console.log({ cleanEventData });
 
     set(ref(db, `events/${data?.eventName}`), cleanEventData);
   };
