@@ -90,6 +90,10 @@ const StyledTypography = styled.div`
     margin: 40px 0 30px;
   }
 
+  .error_text {
+    color: ${({ theme }) => theme.colors.error};
+  }
+
   .bold {
     font-weight: bold;
   }

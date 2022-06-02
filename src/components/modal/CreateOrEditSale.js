@@ -102,23 +102,23 @@ const CreateOrEditSale = ({
             <h3>{isNewSale ? "Add A New Sale" : "Edit Existing Sale"}</h3>
             <div className="content_section">
               <TextField
-                {...register("artistName")}
-                label="Artist Name"
+                {...register("artistName", { required: true })}
+                label="Artist Name*"
                 className="text_input"
                 variant="outlined"
                 size="small"
                 disabled={!currentUser?.superUser}
               />
               <TextField
-                {...register("name")}
-                label="Art sold to"
+                {...register("name", { required: true })}
+                label="Art sold to*"
                 className="text_input"
                 variant="outlined"
                 size="small"
               />
               <TextField
-                {...register("email")}
-                label="Email"
+                {...register("email", { required: true })}
+                label="Email*"
                 className="text_input"
                 variant="outlined"
                 size="small"
@@ -131,8 +131,8 @@ const CreateOrEditSale = ({
                 size="small"
               />
               <TextField
-                {...register("ticketsBought")}
-                label="Tickets Bought"
+                {...register("ticketsBought", { required: true, min: 1 })}
+                label="Tickets Bought (must be greater than 0)"
                 className="text_input"
                 variant="outlined"
                 size="small"
