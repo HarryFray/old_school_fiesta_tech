@@ -223,16 +223,18 @@ const DashBoard = ({ auth, currentUser }) => {
               onChange={(e) => setFilterText(e.target.value)}
             />
             <h1>{activeEventName}</h1>
-            <Button
-              size="small"
-              onClick={() => {
-                setCreateOrEditSaleOpen(true);
-                setSelectedSale({});
-              }}
-              variant="contained"
-            >
-              ADD SALE
-            </Button>
+            {activeEventName && (
+              <Button
+                size="small"
+                onClick={() => {
+                  setCreateOrEditSaleOpen(true);
+                  setSelectedSale({});
+                }}
+                variant="contained"
+              >
+                ADD SALE
+              </Button>
+            )}
           </div>
           <table>
             <thead>
