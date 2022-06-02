@@ -73,7 +73,6 @@ const StyledEventManagement = styled.div`
       tr {
         td {
           border-bottom: 0.5px solid ${({ theme }) => theme.colors.black34};
-
           padding: 0 0 0 20px;
 
           :first-child {
@@ -215,6 +214,11 @@ const EventManagement = ({ auth, currentUser }) => {
                   const { eventName, dateOccuring, artists, activeEvent } =
                     event;
 
+                  const artistNamesString = artists
+                    .map((artist) => `${artist?.name},`)
+                    .join(" ")
+                    .replace(/,\s*$/, "");
+
                   return (
                     <React.Fragment key={id}>
                       <tr>
@@ -222,9 +226,7 @@ const EventManagement = ({ auth, currentUser }) => {
                         <td>{dateOccuring}</td>
                         <td className="bold">{String(activeEvent)}</td>
                         <td>
-                          {artists?.map((artist, id) => {
-                            return <h4 key={id}>{artist?.name}</h4>;
-                          })}
+                          <h4>{artistNamesString}</h4>
                         </td>
                         <td>
                           <Button
