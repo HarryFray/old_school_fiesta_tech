@@ -10,6 +10,7 @@ import { getDatabase, ref, set } from "firebase/database";
 import Switch from "@mui/material/Switch";
 
 import Typography from "../../global/Typography";
+import { firebaseObjectToArray } from "../../utils";
 
 const DEFAULT_EVENT = {
   eventName: "",
@@ -92,20 +93,64 @@ const CreateOrEditEvent = ({
   const isNewEvent = isEmpty(selectedEvent);
 
   useEffect(() => {
+    const convertArtistsArrayToObject = (data) => {
+      const artists = {};
+
+      data.forEach((artist, i) => {
+        artists[`artist_name_${i}`] = artist.name;
+        artists[`artist_email_${i}`] = artist.email;
+      });
+
+      return artists;
+    };
+
     if (isNewEvent) {
       reset(DEFAULT_EVENT);
     } else {
-      reset(selectedEvent);
+      console.log(selectedEvent?.artists);
+
+      reset({
+        ...selectedEvent,
+        ...convertArtistsArrayToObject(selectedEvent?.artists),
+      });
     }
-  }, [isNewEvent, reset, selectedEvent]);
+  }, [isNewEvent, reset, selectedEvent, artists]);
+
+  const mergeArtistEmailsAndNames = (data) => {
+    const artists = [];
+
+    for (const [key, value] of Object.entries(data)) {
+      const artistIndex = Number(key.slice(-1));
+
+      if (!isNaN(artistIndex) && key.includes("artist")) {
+        if (key.includes("name")) {
+          artists[artistIndex] = { ...artists[artistIndex], name: value };
+        } else if (key.includes("email")) {
+          artists[artistIndex] = { ...artists[artistIndex], email: value };
+        }
+      }
+    }
+
+    return artists;
+  };
 
   const updateOrCreateEvent = (data) => {
     setSelectedEvent({});
+    setArtists([{}]);
     setCreateOrEditEventOpen(false);
 
     const db = getDatabase();
 
-    set(ref(db, `events/${data?.eventName}`), data);
+    const cleanEventData = {
+      artists: mergeArtistEmailsAndNames(data),
+      activeEvent: data?.activeEvent,
+      dateOccuring: data?.dateOccuring,
+      eventName: data?.eventName,
+    };
+
+    console.log({ cleanEventData });
+
+    set(ref(db, `events/${data?.eventName}`), cleanEventData);
   };
 
   return (
