@@ -12,9 +12,50 @@ import Switch from "@mui/material/Switch";
 import Typography from "../../global/Typography";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
-const DEFAULT_EVENT = {
-  eventName: "",
-  dateOccuring: "",
+const handleCreateUsers = (users, auth) => {
+  const DEFAULT_USER_PASSWORD = "5678OldSolFiesta!";
+
+  users.forEach(({ email }) => {
+    createUserWithEmailAndPassword(auth, email, DEFAULT_USER_PASSWORD)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("New user created: ", user);
+      })
+      .catch((error) => {
+        console.log("Error on signUp", error);
+      });
+  });
+};
+
+const mergeArtistEmailsAndNames = (data) => {
+  const artists = [];
+
+  for (const [key, value] of Object.entries(data)) {
+    const artistIndex = Number(key.slice(-1));
+
+    if (!isNaN(artistIndex) && key.includes("artist") && value.length) {
+      if (key.includes("name")) {
+        artists[artistIndex] = { ...artists[artistIndex], name: value };
+      } else if (key.includes("email")) {
+        artists[artistIndex] = { ...artists[artistIndex], email: value };
+      }
+    }
+  }
+
+  return artists;
+};
+
+const convertArtistsArrayToObject = (data) => {
+  if (!data) return;
+
+  const artists = {};
+
+  data.forEach((artist, i) => {
+    artists[`artist_name_${i}`] = artist.name;
+    artists[`artist_email_${i}`] = artist.email;
+  });
+
+  return artists;
 };
 
 const StyledCreateOrEditEvent = styled(Modal)`
@@ -89,27 +130,22 @@ const CreateOrEditEvent = ({
   selectedEvent,
   auth,
 }) => {
-  const [artists, setArtists] = useState([{}]);
+  const [artistEditFields, setArtistEditFields] = useState([{}]);
+
   const { register, handleSubmit, reset, getValues, control } = useForm();
 
   const isNewEvent = isEmpty(selectedEvent);
 
   useEffect(() => {
-    const convertArtistsArrayToObject = (data) => {
-      const artists = {};
-
-      data.forEach((artist, i) => {
-        artists[`artist_name_${i}`] = artist.name;
-        artists[`artist_email_${i}`] = artist.email;
-      });
-
-      return artists;
-    };
-
     if (isNewEvent) {
-      reset(DEFAULT_EVENT);
+      reset({
+        eventName: "",
+        dateOccuring: "",
+        activeEvent: false,
+      });
     } else {
-      setArtists(selectedEvent?.artists);
+      if (selectedEvent?.artists) setArtistEditFields(selectedEvent?.artists);
+
       reset({
         ...selectedEvent,
         ...convertArtistsArrayToObject(selectedEvent?.artists),
@@ -117,57 +153,26 @@ const CreateOrEditEvent = ({
     }
   }, [isNewEvent, reset, selectedEvent]);
 
-  const handleCreateUsers = (users) => {
-    const DEFAULT_USER_PASSWORD = "5678OldSolFiesta!";
-
-    users.forEach(({ email }) => {
-      createUserWithEmailAndPassword(auth, email, DEFAULT_USER_PASSWORD)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log("New user created: ", user);
-        })
-        .catch((error) => {
-          console.log("Error on signUp", error);
-        });
-    });
-  };
-
-  const mergeArtistEmailsAndNames = (data) => {
-    const artists = [];
-
-    for (const [key, value] of Object.entries(data)) {
-      const artistIndex = Number(key.slice(-1));
-
-      if (!isNaN(artistIndex) && key.includes("artist") && value.length) {
-        if (key.includes("name")) {
-          artists[artistIndex] = { ...artists[artistIndex], name: value };
-        } else if (key.includes("email")) {
-          artists[artistIndex] = { ...artists[artistIndex], email: value };
-        }
-      }
-    }
-
-    return artists;
-  };
-
   const updateOrCreateEvent = (data) => {
-    setSelectedEvent({});
-    setArtists([{}]);
-    setCreateOrEditEventOpen(false);
-
     const db = getDatabase();
     const artistArray = mergeArtistEmailsAndNames(data);
 
-    handleCreateUsers(artistArray);
+    const { activeEvent, dateOccuring, eventName, sales = false } = data;
 
-    const cleanEventData = {
+    const relevantEventData = {
       artists: artistArray,
-      activeEvent: data?.activeEvent,
-      dateOccuring: data?.dateOccuring,
-      eventName: data?.eventName,
+      activeEvent,
+      dateOccuring,
+      eventName,
+      sales,
     };
 
-    set(ref(db, `events/${data?.eventName}`), cleanEventData);
+    set(ref(db, `events/${data?.eventName}`), relevantEventData).then(() => {
+      setSelectedEvent({});
+      setArtistEditFields([{}]);
+      setCreateOrEditEventOpen(false);
+      handleCreateUsers(artistArray, auth);
+    });
   };
 
   return (
@@ -194,20 +199,9 @@ const CreateOrEditEvent = ({
               />
               <div className="current_event_switch">
                 <Controller
-                  control={control}
                   name="activeEvent"
-                  render={({
-                    field: { onChange, onBlur, value, name, ref },
-                    fieldState: { invalid, isTouched, isDirty, error },
-                    formState,
-                  }) => (
-                    <Switch
-                      onBlur={onBlur} // notify when input is touched
-                      onChange={onChange} // send value to hook form
-                      checked={value}
-                      inputRef={ref}
-                    />
-                  )}
+                  control={control}
+                  render={({ field }) => <Switch {...field} />}
                 />
                 <h4>
                   {getValues("activeEvent")
@@ -218,7 +212,7 @@ const CreateOrEditEvent = ({
               <div className="artists_section">
                 <h4>Artists:</h4>
                 <div className="artists_inputs">
-                  {artists.map((_, i) => {
+                  {artistEditFields.map((_, i) => {
                     return (
                       <div className="artist_inputs" key={i}>
                         <TextField
@@ -242,14 +236,18 @@ const CreateOrEditEvent = ({
                 <div className="manage_artists_buttons">
                   <Button
                     className="add_artist_button"
-                    onClick={() => setArtists(artists.slice(1))}
+                    onClick={() =>
+                      setArtistEditFields(artistEditFields.slice(1))
+                    }
                     variant="outlined"
                   >
                     Delete Artist
                   </Button>
                   <Button
                     className="add_artist_button"
-                    onClick={() => setArtists([...artists, {}])}
+                    onClick={() =>
+                      setArtistEditFields([...artistEditFields, {}])
+                    }
                     variant="outlined"
                   >
                     Add Artist
