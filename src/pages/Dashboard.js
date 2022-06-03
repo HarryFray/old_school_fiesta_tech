@@ -4,6 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { getDatabase, ref, child, get, remove } from "firebase/database";
+import copy from "copy-to-clipboard";
 
 import Layout from "../global/Layout";
 import { firebaseObjectToArray } from "../utils";
@@ -26,6 +27,14 @@ const filteredSalesBasedOnSearchText = (sales, searchText) => {
   return searchedSales;
 };
 
+const getAllEmailsSoldToo = (allSales) => {
+  const uniqueEmails = {};
+
+  allSales.forEach(({ email }) => (uniqueEmails[email] = email));
+
+  return Object.keys(uniqueEmails);
+};
+
 const StyledDashBoard = styled.div`
   height: 100%;
   width: 100%;
@@ -37,6 +46,12 @@ const StyledDashBoard = styled.div`
 
     .filter_text_input {
       width: 180px;
+    }
+
+    .buttons {
+      button:first-child {
+        margin-right: 12px;
+      }
     }
   }
 
@@ -190,6 +205,10 @@ const DashBoard = ({ auth, currentUser }) => {
 
   const handleDeleteEvent = (saleUID) => {
     remove(ref(db, `events/${activeEventName}/sales/${saleUID}`));
+
+    var x = getAllEmailsSoldToo(allSales);
+
+    alert(x);
   };
 
   const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
@@ -233,16 +252,25 @@ const DashBoard = ({ auth, currentUser }) => {
             />
             <h1>{activeEventName}</h1>
             {activeEventName && (
-              <Button
-                size="small"
-                onClick={() => {
-                  setCreateOrEditSaleOpen(true);
-                  setSelectedSale({});
-                }}
-                variant="contained"
-              >
-                ADD SALE
-              </Button>
+              <div className="buttons">
+                <Button
+                  size="small"
+                  onClick={() => copy(getAllEmailsSoldToo(allSales))}
+                  variant="outlined"
+                >
+                  COPY EMAILS
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    setCreateOrEditSaleOpen(true);
+                    setSelectedSale({});
+                  }}
+                  variant="contained"
+                >
+                  ADD SALE
+                </Button>
+              </div>
             )}
           </div>
           <table>
