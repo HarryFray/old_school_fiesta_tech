@@ -131,15 +131,22 @@ const CreateOrEditSale = ({
                 size="small"
               />
               <TextField
+                {...register("costOfSale")}
+                label="Cost Of Sale"
+                className="text_input"
+                variant="outlined"
+                size="small"
+                type="number"
+                step="0.01"
+              />
+              <TextField
                 {...register("ticketsBought", { required: true, min: 1 })}
                 label="Tickets Bought (must be greater than 0)"
                 className="text_input"
                 variant="outlined"
                 size="small"
                 type="number"
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                InputLabelProps={{ shrink: true }}
               />
             </div>
             <div className="buttons">

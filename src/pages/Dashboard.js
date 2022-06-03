@@ -194,6 +194,15 @@ const DashBoard = ({ auth, currentUser }) => {
 
   const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
 
+  const totalTicketsSold = filteredSales.reduce(
+    (acc, cur) => acc + Number(cur.ticketsBought),
+    0
+  );
+  const totalSales = filteredSales.reduce(
+    (acc, cur) => acc + Number(cur.costOfSale),
+    0
+  );
+
   const loadingSales = false;
 
   return (
@@ -243,7 +252,8 @@ const DashBoard = ({ auth, currentUser }) => {
                 <th className="large_col">Art Sold To</th>
                 <th className="large_col">Email</th>
                 <th className="large_col">Instagram</th>
-                <th className="small_col">Tickets</th>
+                <th className="large_col">{`Sales: $${totalSales}.00`}</th>
+                <th className="small_col">{`Tickets: ${totalTicketsSold}`}</th>
                 <th className="fixed_action_col">Action</th>
               </tr>
             </thead>
@@ -255,6 +265,7 @@ const DashBoard = ({ auth, currentUser }) => {
                     artistName,
                     email,
                     instagramHandle,
+                    costOfSale,
                     ticketsBought,
                   } = sale;
 
@@ -265,6 +276,7 @@ const DashBoard = ({ auth, currentUser }) => {
                         <td>{name}</td>
                         <td>{email}</td>
                         <td>{instagramHandle}</td>
+                        <td>{costOfSale ? `$${costOfSale}.00` : ""}</td>
                         <td>{ticketsBought}</td>
                         <td>
                           <Button
