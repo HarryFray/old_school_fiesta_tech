@@ -265,7 +265,7 @@ const CreateOrEditEvent = ({
               >
                 Never Mind
               </Button>
-              <Button variant="contained" type="submit">
+              <Button variant="contained" type="submit" size="small">
                 {isNewEvent ? "Create Event" : "Update Event"}
               </Button>
             </div>

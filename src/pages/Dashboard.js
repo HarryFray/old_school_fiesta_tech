@@ -49,6 +49,9 @@ const StyledDashBoard = styled.div`
     }
 
     .buttons {
+      display: flex;
+      align-items: end;
+      
       button:first-child {
         margin-right: 12px;
       }

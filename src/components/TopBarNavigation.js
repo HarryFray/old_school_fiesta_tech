@@ -33,7 +33,8 @@ const TopBarNavigation = ({ auth, currentUser }) => {
 
   return (
     <StyledTopBarNavigation>
-      <h1>Old_Sol_Fiesta</h1>
+      <h1>Old Sol Fiesta</h1>
+      <h4>{`Welcome: ${currentUser?.email}`}</h4>
       <div className="navigation">
         {currentUser?.superUser && (
           <>
@@ -45,7 +46,7 @@ const TopBarNavigation = ({ auth, currentUser }) => {
             </h3>
           </>
         )}
-        <Button onClick={handleSignOut} variant="outlined">
+        <Button onClick={handleSignOut} variant="outlined" size="small">
           Sign Out
         </Button>
       </div>
