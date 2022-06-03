@@ -51,7 +51,7 @@ const StyledDashBoard = styled.div`
     .buttons {
       display: flex;
       align-items: end;
-      
+
       button:first-child {
         margin-right: 12px;
       }
@@ -96,7 +96,7 @@ const StyledDashBoard = styled.div`
       tr {
         td {
           border-bottom: 0.5px solid ${({ theme }) => theme.colors.black34};
-
+          overflow-wrap: anywhere;
           padding: 0 0 0 20px;
 
           :first-child {
@@ -104,7 +104,6 @@ const StyledDashBoard = styled.div`
           }
 
           :last-child {
-            display: flex;
             padding: 0;
           }
         }
@@ -280,10 +279,10 @@ const DashBoard = ({ auth, currentUser }) => {
             <thead>
               <tr>
                 <th className="large_col">Artist's Name</th>
-                <th className="large_col">Art Sold To</th>
+                <th className="small_col">Art Sold To</th>
                 <th className="large_col">Email</th>
-                <th className="large_col">Instagram</th>
-                <th className="large_col">{`Sales: $${totalSales}.00`}</th>
+                <th className="small_col">Instagram</th>
+                <th className="small_col">{`Sales: $${totalSales}.00`}</th>
                 <th className="small_col">{`Tickets: ${totalTicketsSold}`}</th>
                 <th className="fixed_action_col">Action</th>
               </tr>
@@ -310,24 +309,26 @@ const DashBoard = ({ auth, currentUser }) => {
                         <td>{costOfSale ? `$${costOfSale}.00` : ""}</td>
                         <td>{ticketsBought}</td>
                         <td>
-                          <Button
-                            size="small"
-                            onClick={() => {
-                              setSelectedSale({ ...sale, id });
-                              setCreateOrEditSaleOpen(true);
-                            }}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            size="small"
-                            onClick={() => {
-                              setSelectedSale({ ...sale, id });
-                              setDeleteConfirmationModalOpen(true);
-                            }}
-                          >
-                            Delete
-                          </Button>
+                          <div className="action_buttons">
+                            <Button
+                              size="small"
+                              onClick={() => {
+                                setSelectedSale({ ...sale, id });
+                                setCreateOrEditSaleOpen(true);
+                              }}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              size="small"
+                              onClick={() => {
+                                setSelectedSale({ ...sale, id });
+                                setDeleteConfirmationModalOpen(true);
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     </React.Fragment>
