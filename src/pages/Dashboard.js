@@ -207,10 +207,6 @@ const DashBoard = ({ auth, currentUser }) => {
 
   const handleDeleteEvent = (saleUID) => {
     remove(ref(db, `events/${activeEventName}/sales/${saleUID}`));
-
-    var x = getAllEmailsSoldToo(allSales);
-
-    alert(x);
   };
 
   const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
