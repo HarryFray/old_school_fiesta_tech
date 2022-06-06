@@ -39,6 +39,9 @@ const TopBarNavigation = ({ auth, currentUser }) => {
         {currentUser?.superUser && (
           <>
             <h3>
+              <Link to="/lottery">Lottery</Link>
+            </h3>
+            <h3>
               <Link to="/events">Event Management</Link>
             </h3>
             <h3>

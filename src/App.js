@@ -11,6 +11,7 @@ import Typography from "./global/Typography";
 import SignIn from "./components/SignIn";
 
 import DashBoard from "./pages/Dashboard";
+import Lottery from "./pages/Lottery";
 import EventManagement from "./pages/EventManagement";
 import UnAuthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
@@ -65,12 +66,23 @@ function App() {
                   element={<DashBoard auth={auth} currentUser={currentUser} />}
                 />
                 {currentUser?.superUser && (
-                  <Route
-                    path="events"
-                    element={
-                      <EventManagement auth={auth} currentUser={currentUser} />
-                    }
-                  />
+                  <>
+                    <Route
+                      path="events"
+                      element={
+                        <EventManagement
+                          auth={auth}
+                          currentUser={currentUser}
+                        />
+                      }
+                    />
+                    <Route
+                      path="lottery"
+                      element={
+                        <Lottery auth={auth} currentUser={currentUser} />
+                      }
+                    />
+                  </>
                 )}
               </>
             )}
