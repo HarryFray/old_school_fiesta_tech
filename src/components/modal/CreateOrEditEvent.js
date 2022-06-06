@@ -142,6 +142,7 @@ const CreateOrEditEvent = ({
         eventName: "",
         dateOccuring: "",
         activeEvent: false,
+        lockedEvent: false,
       });
     } else {
       if (selectedEvent?.artists) setArtistEditFields(selectedEvent?.artists);
@@ -157,11 +158,18 @@ const CreateOrEditEvent = ({
     const db = getDatabase();
     const artistArray = mergeArtistEmailsAndNames(data);
 
-    const { activeEvent, dateOccuring, eventName, sales = false } = data;
+    const {
+      activeEvent,
+      lockedEvent,
+      dateOccuring,
+      eventName,
+      sales = false,
+    } = data;
 
     const relevantEventData = {
       artists: artistArray,
       activeEvent,
+      lockedEvent,
       dateOccuring,
       eventName,
       sales,
@@ -201,12 +209,28 @@ const CreateOrEditEvent = ({
                 <Controller
                   name="activeEvent"
                   control={control}
-                  render={({ field }) => <Switch {...field} />}
+                  render={({ field }) => (
+                    <Switch checked={field?.value} {...field} />
+                  )}
                 />
                 <h4>
                   {getValues("activeEvent")
                     ? "This is the current event"
                     : "Make this the current event"}
+                </h4>
+              </div>
+              <div className="current_event_switch">
+                <Controller
+                  name="lockedEvent"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch checked={field?.value} {...field} />
+                  )}
+                />
+                <h4>
+                  {getValues("lockedEvent")
+                    ? "This event is locked"
+                    : "Lock this event"}
                 </h4>
               </div>
               <div className="artists_section">

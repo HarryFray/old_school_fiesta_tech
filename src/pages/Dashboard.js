@@ -152,7 +152,7 @@ const StyledDashBoard = styled.div`
 `;
 
 const DashBoard = ({ auth, currentUser }) => {
-  const [activeEventName, setActiveEventName] = useState("");
+  const [activeEvent, setActiveEvent] = useState("");
   const [allSales, setAllSales] = useState([]);
 
   const [selectedSale, setSelectedSale] = useState({});
@@ -173,11 +173,9 @@ const DashBoard = ({ auth, currentUser }) => {
         const eventsSnapshot = snapshot.val();
         const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
 
-        const activeEventName = firebaseEvents.filter(
-          (res) => res.activeEvent
-        )[0]?.eventName;
+        const activeEvent = firebaseEvents.filter((res) => res.activeEvent)[0];
 
-        setActiveEventName(activeEventName);
+        setActiveEvent(activeEvent);
       }
     });
   });
@@ -186,28 +184,30 @@ const DashBoard = ({ auth, currentUser }) => {
   useEffect(() => {
     const dbRef = ref(db);
 
-    get(child(dbRef, `events/${activeEventName}/sales`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        const eventsSnapshot = snapshot.val();
-        const allFirebaseEventSales = firebaseObjectToArray(eventsSnapshot);
+    get(child(dbRef, `events/${activeEvent?.eventName}/sales`)).then(
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const eventsSnapshot = snapshot.val();
+          const allFirebaseEventSales = firebaseObjectToArray(eventsSnapshot);
 
-        if (currentUser?.superUser) {
-          setAllSales(allFirebaseEventSales);
+          if (currentUser?.superUser) {
+            setAllSales(allFirebaseEventSales);
+          } else {
+            const eventSalesForCurrentUser = allFirebaseEventSales.filter(
+              ({ artistName }) => artistName === currentUser?.email
+            );
+
+            setAllSales(eventSalesForCurrentUser);
+          }
         } else {
-          const eventSalesForCurrentUser = allFirebaseEventSales.filter(
-            ({ artistName }) => artistName === currentUser?.email
-          );
-
-          setAllSales(eventSalesForCurrentUser);
+          setAllSales([]);
         }
-      } else {
-        setAllSales([]);
       }
-    });
+    );
   });
 
   const handleDeleteEvent = (saleUID) => {
-    remove(ref(db, `events/${activeEventName}/sales/${saleUID}`));
+    remove(ref(db, `events/${activeEvent?.eventName}/sales/${saleUID}`));
   };
 
   const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
@@ -231,7 +231,7 @@ const DashBoard = ({ auth, currentUser }) => {
         setSelectedSale={setSelectedSale}
         selectedSale={selectedSale}
         currentUser={currentUser}
-        activeEventName={activeEventName}
+        activeEventName={activeEvent?.eventName}
       />
       <DeleteConfirmation
         deleteConfirmationModalOpen={deleteConfirmationModalOpen}
@@ -249,8 +249,8 @@ const DashBoard = ({ auth, currentUser }) => {
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
             />
-            <h1>{activeEventName}</h1>
-            {activeEventName && (
+            <h1>{activeEvent?.eventName}</h1>
+            {activeEvent?.eventName && (
               <div className="buttons">
                 <Button
                   size="small"
@@ -266,6 +266,7 @@ const DashBoard = ({ auth, currentUser }) => {
                     setSelectedSale({});
                   }}
                   variant="contained"
+                  disabled={activeEvent?.lockedEvent}
                 >
                   ADD SALE
                 </Button>

@@ -135,7 +135,8 @@ const StyledLottery = styled.div`
 `;
 
 const Lottery = ({ auth, currentUser }) => {
-  const [activeEventName, setActiveEventName] = useState("");
+  const [activeEvent, setActiveEvent] = useState("");
+
   const [allTicketsSold, setAllTicketsSold] = useState([]);
   const [winners, setWinners] = useState([]);
 
@@ -150,11 +151,9 @@ const Lottery = ({ auth, currentUser }) => {
         const eventsSnapshot = snapshot.val();
         const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
 
-        const activeEventName = firebaseEvents.filter(
-          (res) => res.activeEvent
-        )[0]?.eventName;
+        const activeEvent = firebaseEvents.filter((res) => res.activeEvent)[0];
 
-        setActiveEventName(activeEventName);
+        setActiveEvent(activeEvent);
       }
     });
   });
@@ -163,20 +162,22 @@ const Lottery = ({ auth, currentUser }) => {
   useEffect(() => {
     const dbRef = ref(db);
 
-    get(child(dbRef, `events/${activeEventName}/sales`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        const eventsSnapshot = snapshot.val();
-        const allFirebaseEventSales = firebaseObjectToArray(eventsSnapshot);
+    get(child(dbRef, `events/${activeEvent?.eventName}/sales`)).then(
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const eventsSnapshot = snapshot.val();
+          const allFirebaseEventSales = firebaseObjectToArray(eventsSnapshot);
 
-        const allTicketsSold = getAllTicketsSoldFromSales(
-          allFirebaseEventSales
-        );
+          const allTicketsSold = getAllTicketsSoldFromSales(
+            allFirebaseEventSales
+          );
 
-        setAllTicketsSold(allTicketsSold);
-      } else {
-        setAllTicketsSold([]);
+          setAllTicketsSold(allTicketsSold);
+        } else {
+          setAllTicketsSold([]);
+        }
       }
-    });
+    );
   });
 
   const handleSelectWinner = () => {
@@ -197,13 +198,14 @@ const Lottery = ({ auth, currentUser }) => {
     <Layout auth={auth} currentUser={currentUser}>
       <StyledLottery>
         <div className="table_management_heading">
-          <h1>{activeEventName}</h1>
-          {activeEventName && (
+          <h1>{activeEvent?.eventName}</h1>
+          {activeEvent?.eventName && (
             <div className="buttons">
               <Button
                 size="small"
                 onClick={handleSelectWinner}
                 variant="contained"
+                disabled={!activeEvent?.lockedEvent}
               >
                 Randomly Select Winner!
               </Button>
@@ -253,8 +255,8 @@ const Lottery = ({ auth, currentUser }) => {
         </table>
         {Boolean(!winners?.length) && (
           <div className="empty_search_text">
-            <h2>{`No winners selected yet for "${activeEventName}"`}</h2>
-            <h6 className="subtitle-2">{`Please lock "${activeEventName}" and select winners once event is complete (winners can not be selected untill event is locked)`}</h6>
+            <h2>{`No winners selected yet for "${activeEvent?.eventName}"`}</h2>
+            <h6 className="subtitle-2">{`Please lock "${activeEvent?.eventName}" and select winners once event is complete (winners can not be selected untill event is locked)`}</h6>
           </div>
         )}
       </StyledLottery>

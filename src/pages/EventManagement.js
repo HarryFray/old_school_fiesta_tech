@@ -11,10 +11,12 @@ import DeleteConfirmation from "../components/modal/DeleteConfirmation";
 import { firebaseObjectToArray } from "../utils";
 
 const filteredEventsBasedOnSearchText = (events, searchText) => {
+  if (!events?.length) return [];
+
   let searchedEvents = events?.filter((event) => {
-    let nameIncludedInSearch = event.eventName
-      .toLowerCase()
-      .includes(searchText.toLowerCase());
+    let nameIncludedInSearch = event?.eventName
+      ?.toLowerCase()
+      ?.includes(searchText?.toLowerCase());
 
     return nameIncludedInSearch;
   });
