@@ -8,6 +8,7 @@ import copy from "copy-to-clipboard";
 
 import Layout from "../global/Layout";
 import { firebaseObjectToArray } from "../utils";
+import useWindowSize from "../hooks/useWindowSize";
 
 import CreateOrEditSale from "../components/modal/CreateOrEditSale";
 import DeleteConfirmation from "../components/modal/DeleteConfirmation";
@@ -128,7 +129,7 @@ const StyledDashBoard = styled.div`
     }
   }
 
-  @media (max-width: ${({ theme }) => theme.breakPoints.small}) {
+  @media (max-width: ${({ theme }) => theme.breakPoints.medium}) {
     margin: 0 20px 0 0;
 
     table {
@@ -151,9 +152,30 @@ const StyledDashBoard = styled.div`
       }
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakPoints.small}) {
+    .sale_cards {
+      .sale_card {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        padding: 8px;
+        border: 1px solid ${({ theme }) => theme.colors.black60};
+        border-radius: 4px;
+
+        .action_buttons {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
 `;
 
 const DashBoard = ({ auth, currentUser }) => {
+  const { isSmall } = useWindowSize();
+
   const [activeEvent, setActiveEvent] = useState("");
   const [allSales, setAllSales] = useState([]);
 
@@ -280,24 +302,75 @@ const DashBoard = ({ auth, currentUser }) => {
               </div>
             )}
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th className="large_col">Artist's Name</th>
-                <th className="small_col">Art Sold To</th>
-                <th className="large_col">Email</th>
-                <th className="small_col">Instagram</th>
-                <th className="small_col">{`Sales: $${totalSales}.00`}</th>
-                <th className="small_col">{`Tickets: ${totalTicketsSold}`}</th>
-                <th className="fixed_action_col">Action</th>
-              </tr>
-            </thead>
-            {Boolean(filteredSales?.length && !loadingSales) && (
-              <tbody>
+          {!isSmall ? (
+            <table>
+              <thead>
+                <tr>
+                  <th className="large_col">Artist's Name</th>
+                  <th className="small_col">Art Sold To</th>
+                  <th className="large_col">Email</th>
+                  <th className="small_col">Instagram</th>
+                  <th className="small_col">{`Sales: $${totalSales}.00`}</th>
+                  <th className="small_col">{`Tickets: ${totalTicketsSold}`}</th>
+                  <th className="fixed_action_col">Action</th>
+                </tr>
+              </thead>
+              {Boolean(filteredSales?.length && !loadingSales) && (
+                <tbody>
+                  {filteredSales?.map((sale, id) => {
+                    const {
+                      name,
+                      artistName,
+                      email,
+                      instagramHandle,
+                      costOfSale,
+                      ticketsBought,
+                    } = sale;
+
+                    return (
+                      <React.Fragment key={id}>
+                        <tr>
+                          <td>{artistName}</td>
+                          <td>{name}</td>
+                          <td>{email}</td>
+                          <td>{instagramHandle}</td>
+                          <td>{costOfSale ? `$${costOfSale}.00` : ""}</td>
+                          <td>{ticketsBought}</td>
+                          <td>
+                            <div className="action_buttons">
+                              <Button
+                                size="small"
+                                onClick={() => {
+                                  setSelectedSale({ ...sale, id });
+                                  setCreateOrEditSaleOpen(true);
+                                }}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                size="small"
+                                onClick={() => {
+                                  setSelectedSale({ ...sale, id });
+                                  setDeleteConfirmationModalOpen(true);
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      </React.Fragment>
+                    );
+                  })}
+                </tbody>
+              )}
+            </table>
+          ) : (
+            Boolean(filteredSales?.length && !loadingSales) && (
+              <div className="sale_cards">
                 {filteredSales?.map((sale, id) => {
                   const {
                     name,
-                    artistName,
                     email,
                     instagramHandle,
                     costOfSale,
@@ -305,43 +378,55 @@ const DashBoard = ({ auth, currentUser }) => {
                   } = sale;
 
                   return (
-                    <React.Fragment key={id}>
-                      <tr>
-                        <td>{artistName}</td>
-                        <td>{name}</td>
-                        <td>{email}</td>
-                        <td>{instagramHandle}</td>
-                        <td>{costOfSale ? `$${costOfSale}.00` : ""}</td>
-                        <td>{ticketsBought}</td>
-                        <td>
-                          <div className="action_buttons">
-                            <Button
-                              size="small"
-                              onClick={() => {
-                                setSelectedSale({ ...sale, id });
-                                setCreateOrEditSaleOpen(true);
-                              }}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              size="small"
-                              onClick={() => {
-                                setSelectedSale({ ...sale, id });
-                                setDeleteConfirmationModalOpen(true);
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    </React.Fragment>
+                    <div key={id} className="sale_card">
+                      <div>
+                        <h5 className="caption">
+                          <span className="bold">Name: </span>
+                          {name}
+                        </h5>
+                        <h5 className="caption">
+                          <span className="bold">Email: </span>
+                          {email}
+                        </h5>
+                        <h5 className="caption">
+                          <span className="bold">Insta: </span>
+                          {instagramHandle}
+                        </h5>
+                        <h5 className="caption">
+                          <span className="bold">Cost: </span>
+                          {costOfSale ? "$" + costOfSale + ".00" : ""}
+                        </h5>
+                        <h5 className="caption">
+                          <span className="bold">Tickets: </span>
+                          {ticketsBought}
+                        </h5>
+                      </div>
+                      <div className="action_buttons">
+                        <Button
+                          size="small"
+                          onClick={() => {
+                            setSelectedSale({ ...sale, id });
+                            setDeleteConfirmationModalOpen(true);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          size="small"
+                          onClick={() => {
+                            setSelectedSale({ ...sale, id });
+                            setCreateOrEditSaleOpen(true);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                      </div>
+                    </div>
                   );
                 })}
-              </tbody>
-            )}
-          </table>
+              </div>
+            )
+          )}
           {Boolean(loadingSales) && (
             <div className="loading_icon">
               <CircularProgress color="inherit" />

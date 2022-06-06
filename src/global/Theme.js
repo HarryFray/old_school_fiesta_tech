@@ -41,4 +41,6 @@ const Theme = ({ children }) => {
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 };
 
+export const { breakPoints, colors, layers } = theme;
+
 export default Theme;
