@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { getDatabase, ref, child, get, remove } from "firebase/database";
+import { getDatabase, ref, child, get } from "firebase/database";
+import { random } from "lodash";
 
 import Layout from "../global/Layout";
 import { firebaseObjectToArray } from "../utils";
 
-import DeleteConfirmation from "../components/modal/DeleteConfirmation";
+const getAllTicketsSoldFromSales = (allSales) => {
+  const allTicketsSold = [];
+
+  allSales.forEach((sale) => {
+    for (let ticket = 0; ticket < Number(sale?.ticketsBought); ticket++) {
+      allTicketsSold.push(sale);
+    }
+  });
+
+  return allTicketsSold;
+};
 
 const StyledLottery = styled.div`
   height: 100%;
@@ -61,7 +71,7 @@ const StyledLottery = styled.div`
         }
 
         .fixed_action_col {
-          width: 120px;
+          width: 60px;
         }
       }
     }
@@ -126,13 +136,8 @@ const StyledLottery = styled.div`
 
 const Lottery = ({ auth, currentUser }) => {
   const [activeEventName, setActiveEventName] = useState("");
-  const [allSales, setAllSales] = useState([]);
-
-  const [selectedSale, setSelectedSale] = useState({});
-  const [filterText, setFilterText] = useState("");
-
-  const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
-    useState(false);
+  const [allTicketsSold, setAllTicketsSold] = useState([]);
+  const [winners, setWinners] = useState([]);
 
   const db = getDatabase();
 
@@ -154,7 +159,7 @@ const Lottery = ({ auth, currentUser }) => {
     });
   });
 
-  // GETTING RELEVANT SALES FOR ACTIVE EVENT AND USER
+  // GETTING ALL SALES FOR EVENT AND CONVERTING TO TOTAL TICEKTS SOLD
   useEffect(() => {
     const dbRef = ref(db);
 
@@ -163,100 +168,97 @@ const Lottery = ({ auth, currentUser }) => {
         const eventsSnapshot = snapshot.val();
         const allFirebaseEventSales = firebaseObjectToArray(eventsSnapshot);
 
-        setAllSales(allFirebaseEventSales);
+        const allTicketsSold = getAllTicketsSoldFromSales(
+          allFirebaseEventSales
+        );
+
+        setAllTicketsSold(allTicketsSold);
       } else {
-        setAllSales([]);
+        setAllTicketsSold([]);
       }
     });
   });
 
-  const handleDeleteEvent = (saleUID) => {
-    remove(ref(db, `events/${activeEventName}/sales/${saleUID}`));
+  const handleSelectWinner = () => {
+    const randomWinnerInt = random(0, allTicketsSold?.length);
+    const newWinner = allTicketsSold[randomWinnerInt];
+
+    setWinners([...winners, newWinner]);
+  };
+
+  const handleDeleteWinner = (winnerID) => {
+    const winnersBeforeDelted = winners.slice(0, winnerID);
+    const winnersAfterDelted = winners.slice(winnerID + 1);
+
+    setWinners([...winnersBeforeDelted, ...winnersAfterDelted]);
   };
 
   return (
-    <>
-      <DeleteConfirmation
-        deleteConfirmationModalOpen={deleteConfirmationModalOpen}
-        setDeleteConfirmationModalOpen={setDeleteConfirmationModalOpen}
-        handleDeletion={() => handleDeleteEvent(selectedSale?.saleUID)}
-      />
-      <Layout auth={auth} currentUser={currentUser}>
-        <StyledLottery>
-          <div className="table_management_heading">
-            <h1>{activeEventName}</h1>
-            {activeEventName && (
-              <div className="buttons">
-                <Button
-                  size="small"
-                  onClick={() => alert("winner selected")}
-                  variant="contained"
-                >
-                  Randomly Select Winner!
-                </Button>
-              </div>
-            )}
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th className="large_col">Winner Order</th>
-                <th className="small_col">Name</th>
-                <th className="large_col">Email</th>
-                <th className="small_col">Instagram</th>
-                <th className="small_col">Artist Bought From</th>
-              </tr>
-            </thead>
-            {Boolean([]?.length) && (
-              <tbody>
-                {[]?.map((sale, id) => {
-                  const {
-                    name,
-                    artistName,
-                    email,
-                    instagramHandle,
-                    costOfSale,
-                    ticketsBought,
-                  } = sale;
-
-                  return (
-                    <React.Fragment key={id}>
-                      <tr>
-                        <td>{artistName}</td>
-                        <td>{name}</td>
-                        <td>{email}</td>
-                        <td>{instagramHandle}</td>
-                        <td>{costOfSale ? `$${costOfSale}.00` : ""}</td>
-                        <td>{ticketsBought}</td>
-                        <td>
-                          <div className="action_buttons">
-                            <Button
-                              size="small"
-                              onClick={() => {
-                                setSelectedSale({ ...sale, id });
-                                setDeleteConfirmationModalOpen(true);
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    </React.Fragment>
-                  );
-                })}
-              </tbody>
-            )}
-          </table>
-          {Boolean(![]?.length) && (
-            <div className="empty_search_text">
-              <h2>{`No winners selected yet for "${activeEventName}"`}</h2>
-              <h6 className="subtitle-2">{`Please lock "${activeEventName}" and select winners once event is complete (winners can not be selected untill event is locked)`}</h6>
+    <Layout auth={auth} currentUser={currentUser}>
+      <StyledLottery>
+        <div className="table_management_heading">
+          <h1>{activeEventName}</h1>
+          {activeEventName && (
+            <div className="buttons">
+              <Button
+                size="small"
+                onClick={handleSelectWinner}
+                variant="contained"
+              >
+                Randomly Select Winner!
+              </Button>
             </div>
           )}
-        </StyledLottery>
-      </Layout>
-    </>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th className="fixed_action_col">Order</th>
+              <th className="small_col">Name</th>
+              <th className="large_col">Email</th>
+              <th className="small_col">Instagram</th>
+              <th className="large_col">Artist Bought From</th>
+              <th className="fixed_action_col">Action</th>
+            </tr>
+          </thead>
+          {Boolean(winners?.length) && (
+            <tbody>
+              {winners?.map((sale, id) => {
+                const { name, email, instagramHandle, artistName } = sale;
+
+                return (
+                  <React.Fragment key={id}>
+                    <tr>
+                      <td>{id}</td>
+                      <td>{name}</td>
+                      <td>{email}</td>
+                      <td>{instagramHandle}</td>
+                      <td>{artistName}</td>
+                      <td>
+                        <div className="action_buttons">
+                          <Button
+                            size="small"
+                            onClick={() => handleDeleteWinner(id)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+          )}
+        </table>
+        {Boolean(!winners?.length) && (
+          <div className="empty_search_text">
+            <h2>{`No winners selected yet for "${activeEventName}"`}</h2>
+            <h6 className="subtitle-2">{`Please lock "${activeEventName}" and select winners once event is complete (winners can not be selected untill event is locked)`}</h6>
+          </div>
+        )}
+      </StyledLottery>
+    </Layout>
   );
 };
 
