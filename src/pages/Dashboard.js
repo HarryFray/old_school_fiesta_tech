@@ -40,6 +40,7 @@ const StyledDashBoard = styled.div`
   width: 100%;
 
   .table_management_heading {
+    height: 40px;
     margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
@@ -162,12 +163,15 @@ const DashBoard = ({ auth, currentUser }) => {
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
 
+  const [loadingSales, setLoadingSales] = useState(true);
+
   const db = getDatabase();
 
   // GETTING ACTIVE EVENT NAME
   useEffect(() => {
-    const dbRef = ref(db);
+    setLoadingSales(true);
 
+    const dbRef = ref(db);
     get(child(dbRef, `events`)).then((snapshot) => {
       if (snapshot.exists()) {
         const eventsSnapshot = snapshot.val();
@@ -176,9 +180,13 @@ const DashBoard = ({ auth, currentUser }) => {
         const activeEvent = firebaseEvents.filter((res) => res.activeEvent)[0];
 
         setActiveEvent(activeEvent);
+        setTimeout(() => setLoadingSales(false), 1000);
+      } else {
+        setActiveEvent([]);
+        setTimeout(() => setLoadingSales(false), 1000);
       }
     });
-  });
+  }, [setLoadingSales, setActiveEvent, db]);
 
   // GETTING RELEVANT SALES FOR ACTIVE EVENT AND USER
   useEffect(() => {
@@ -220,8 +228,6 @@ const DashBoard = ({ auth, currentUser }) => {
     (acc, cur) => acc + Number(cur.costOfSale),
     0
   );
-
-  const loadingSales = false;
 
   return (
     <>

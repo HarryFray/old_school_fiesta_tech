@@ -28,6 +28,7 @@ const StyledEventManagement = styled.div`
   width: 100%;
 
   .table_management_heading {
+    height: 40px;
     margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
@@ -139,9 +140,13 @@ const EventManagement = ({ auth, currentUser }) => {
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
 
+  const [loadingEvents, setLoadingEvents] = useState(true);
+
   const db = getDatabase();
 
   useEffect(() => {
+    setLoadingEvents(true);
+
     const dbRef = ref(db);
 
     get(child(dbRef, `events`)).then((snapshot) => {
@@ -149,19 +154,20 @@ const EventManagement = ({ auth, currentUser }) => {
         const eventsSnapshot = snapshot.val();
         const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
         setAllEvents(firebaseEvents);
+
+        setTimeout(() => setLoadingEvents(false), 1000);
       } else {
         setAllEvents([]);
+        setTimeout(() => setLoadingEvents(false), 1000);
       }
     });
-  });
+  }, [setLoadingEvents, db]);
 
   const handleDeleteEvent = (eventName) => {
     remove(ref(db, `events/${eventName}`));
   };
 
   const filteredEvents = filteredEventsBasedOnSearchText(allEvents, filterText);
-
-  const loadingEvents = false;
 
   return (
     <>

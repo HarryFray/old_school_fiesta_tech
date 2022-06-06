@@ -198,6 +198,7 @@ const Lottery = ({ auth, currentUser }) => {
     <Layout auth={auth} currentUser={currentUser}>
       <StyledLottery>
         <div className="table_management_heading">
+          <h1>Lottery</h1>
           <h1>{activeEvent?.eventName}</h1>
           {activeEvent?.eventName && (
             <div className="buttons">
