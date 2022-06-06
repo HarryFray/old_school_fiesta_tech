@@ -24,9 +24,11 @@ const StyledLottery = styled.div`
   width: 100%;
 
   .table_management_heading {
+    height: 40px;
     margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
+    align-items: end;
 
     .filter_text_input {
       width: 180px;

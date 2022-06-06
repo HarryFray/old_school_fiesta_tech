@@ -32,6 +32,7 @@ const StyledEventManagement = styled.div`
     margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
+    align-items: end;
 
     .filter_text_input {
       width: 180px;
