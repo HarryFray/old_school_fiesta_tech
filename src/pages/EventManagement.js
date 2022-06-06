@@ -99,6 +99,7 @@ const StyledEventManagement = styled.div`
 
     h6 {
       margin: 8px 0 0 0;
+      text-align: center;
     }
   }
 

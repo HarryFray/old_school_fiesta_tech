@@ -95,6 +95,7 @@ const StyledLottery = styled.div`
 
     h6 {
       margin: 8px 0 0 0;
+      text-align: center;
     }
   }
 
@@ -199,13 +200,11 @@ const Lottery = ({ auth, currentUser }) => {
           <table>
             <thead>
               <tr>
-                <th className="large_col">Artist's Name</th>
-                <th className="small_col">Art Sold To</th>
+                <th className="large_col">Winner Order</th>
+                <th className="small_col">Name</th>
                 <th className="large_col">Email</th>
                 <th className="small_col">Instagram</th>
-                <th className="small_col">{`Sales: 00`}</th>
-                <th className="small_col">{`Tickets`}</th>
-                <th className="fixed_action_col">Action</th>
+                <th className="small_col">Artist Bought From</th>
               </tr>
             </thead>
             {Boolean([]?.length) && (
@@ -252,7 +251,7 @@ const Lottery = ({ auth, currentUser }) => {
           {Boolean(![]?.length) && (
             <div className="empty_search_text">
               <h2>{`No winners selected yet for "${activeEventName}"`}</h2>
-              <h6 className="subtitle-2">{`Please lock "${activeEventName}" and select winners once event is complete`}</h6>
+              <h6 className="subtitle-2">{`Please lock "${activeEventName}" and select winners once event is complete (winners can not be selected untill event is locked)`}</h6>
             </div>
           )}
         </StyledLottery>
