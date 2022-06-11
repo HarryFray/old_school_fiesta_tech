@@ -177,8 +177,8 @@ const CreateOrEditEvent = ({
     };
 
     const nameOfEventExists = Boolean(
-      allEvents.find(
-        (event) => event?.eventName.toLowerCase() === eventName.toLowerCase()
+      allEvents?.find(
+        (event) => event?.eventName?.toLowerCase() === eventName?.toLowerCase()
       )
     );
 
