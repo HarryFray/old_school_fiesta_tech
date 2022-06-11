@@ -279,7 +279,7 @@ const DashBoard = ({ auth, currentUser }) => {
     setTimeout(() => setLoadingSales(false), 1000);
   }, [createOrEditSaleOpen]);
 
-  const handleDeleteEvent = (saleUID) => {
+  const handleDeleteSale = (saleUID) => {
     remove(ref(db, `events/${activeEvent?.eventName}/sales/${saleUID}`));
   };
 
@@ -307,7 +307,7 @@ const DashBoard = ({ auth, currentUser }) => {
       <DeleteConfirmation
         deleteConfirmationModalOpen={deleteConfirmationModalOpen}
         setDeleteConfirmationModalOpen={setDeleteConfirmationModalOpen}
-        handleDeletion={() => handleDeleteEvent(selectedSale?.saleUID)}
+        handleDeletion={() => handleDeleteSale(selectedSale?.saleUID)}
       />
       <Layout auth={auth} currentUser={currentUser}>
         <StyledDashBoard>
