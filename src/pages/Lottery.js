@@ -183,7 +183,7 @@ const Lottery = ({ auth, currentUser }) => {
   });
 
   const handleSelectWinner = () => {
-    const randomWinnerInt = random(0, allTicketsSold?.length);
+    const randomWinnerInt = random(0, allTicketsSold?.length - 1);
     const newWinner = allTicketsSold[randomWinnerInt];
 
     setWinners([...winners, newWinner]);
@@ -234,7 +234,7 @@ const Lottery = ({ auth, currentUser }) => {
                 return (
                   <React.Fragment key={id}>
                     <tr>
-                      <td>{id}</td>
+                      <td>{id + 1}</td>
                       <td>{name}</td>
                       <td>{email}</td>
                       <td>{instagramHandle}</td>
