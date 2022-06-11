@@ -11,6 +11,12 @@ const StyledLayout = styled.div`
   .page_content {
     padding: 24px;
   }
+
+  @media (max-width: ${({ theme }) => theme.breakPoints.small}) {
+    .page_content {
+      padding: 12px;
+    }
+  }
 `;
 
 const Layout = ({ children, auth, currentUser }) => {

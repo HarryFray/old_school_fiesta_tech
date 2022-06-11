@@ -154,6 +154,37 @@ const StyledDashBoard = styled.div`
   }
 
   @media (max-width: ${({ theme }) => theme.breakPoints.small}) {
+    .table_management_heading {
+      flex-direction: column;
+      height: unset;
+
+      .title_and_stats {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+
+        h1 {
+          width: 100%;
+        }
+
+        .mobile_stats {
+          min-width: 110px;
+        }
+      }
+
+      .filter_text_input {
+        margin-bottom: 12px;
+        width: 100%;
+      }
+
+      .buttons {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
     .sale_cards {
       .sale_card {
         display: flex;
@@ -270,6 +301,15 @@ const DashBoard = ({ auth, currentUser }) => {
       <Layout auth={auth} currentUser={currentUser}>
         <StyledDashBoard>
           <div className="table_management_heading">
+            {isSmall && (
+              <div className="title_and_stats">
+                <h1>{activeEvent?.eventName}</h1>
+                <div className="mobile_stats">
+                  <h5 className="small_col">{`Sales: $${totalSales}.00`}</h5>
+                  <h5 className="small_col">{`Tickets: ${totalTicketsSold}`}</h5>
+                </div>
+              </div>
+            )}
             <TextField
               label="Search Sales"
               className="filter_text_input"
@@ -278,7 +318,7 @@ const DashBoard = ({ auth, currentUser }) => {
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
             />
-            <h1>{activeEvent?.eventName}</h1>
+            {!isSmall && <h1>{activeEvent?.eventName}</h1>}
             {activeEvent?.eventName && (
               <div className="buttons">
                 <Button
