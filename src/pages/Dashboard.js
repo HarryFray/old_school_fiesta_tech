@@ -167,6 +167,7 @@ const StyledDashBoard = styled.div`
 
         h1 {
           width: 100%;
+          margin-right: 12px;
         }
 
         .mobile_stats {

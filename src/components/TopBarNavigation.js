@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+import useWindowSize from "../hooks/useWindowSize";
+
 const StyledTopBarNavigation = styled.div`
   background: ${({ theme }) => theme.colors.black12};
   display: flex;
@@ -20,10 +22,19 @@ const StyledTopBarNavigation = styled.div`
       margin-left: 12px;
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakPoints.xSmall}) {
+    padding: 12px;
+
+    .mobile_heading {
+    }
+  }
 `;
 
 const TopBarNavigation = ({ auth, currentUser }) => {
   const navigate = useNavigate();
+
+  const { isSmall } = useWindowSize();
 
   const handleSignOut = () => {
     signOut(auth).then(() => {
@@ -33,8 +44,17 @@ const TopBarNavigation = ({ auth, currentUser }) => {
 
   return (
     <StyledTopBarNavigation>
-      <h1>Old Sol Fiesta</h1>
-      <h4>{`Welcome: ${currentUser?.email}`}</h4>
+      {isSmall ? (
+        <div className="mobile_heading">
+          <h2>Old Sol Fiesta</h2>
+          <h5>{`${currentUser?.email}`}</h5>
+        </div>
+      ) : (
+        <>
+          <h1>Old Sol Fiesta</h1>
+          <h4>{`Welcome: ${currentUser?.email}`}</h4>
+        </>
+      )}
       <div className="navigation">
         {currentUser?.superUser && (
           <>
