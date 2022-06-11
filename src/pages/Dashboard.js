@@ -187,7 +187,7 @@ const StyledDashBoard = styled.div`
     }
 
     .sale_cards {
-      height: calc(100vh - 240px);
+      height: calc(100vh - 300px);
       overflow: scroll;
 
       .sale_card {

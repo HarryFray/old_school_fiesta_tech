@@ -55,7 +55,7 @@ const StyledCreateOrEditSale = styled(Modal)`
       background: ${({ theme }) => theme.colors.white};
 
       form {
-        padding: 24px;
+        padding: 72px 24px 24px 24px;
       }
     }
   }
