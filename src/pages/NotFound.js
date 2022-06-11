@@ -16,9 +16,9 @@ const NotFound = () => {
     <StyledNotFound>
       <h2>This page does not exist</h2>
       <h6 className="subtitle-2">
-        Go back to the{" "}
+        Go back to your{" "}
         <Link to="/dashboard" className="link">
-          home page
+          dashboard
         </Link>{" "}
         page porfavor
       </h6>
