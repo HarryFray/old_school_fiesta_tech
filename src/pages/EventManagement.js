@@ -162,7 +162,7 @@ const EventManagement = ({ auth, currentUser }) => {
         setTimeout(() => setLoadingEvents(false), 1000);
       }
     });
-  }, [setLoadingEvents, db]);
+  }, [setLoadingEvents, db, createOrEditEventOpen]);
 
   const handleDeleteEvent = (eventName) => {
     remove(ref(db, `events/${eventName}`));
@@ -254,6 +254,7 @@ const EventManagement = ({ auth, currentUser }) => {
                               setSelectedEvent({ ...event, id });
                               setDeleteConfirmationModalOpen(true);
                             }}
+                            disabled
                           >
                             Delete
                           </Button>

@@ -135,6 +135,7 @@ const CreateOrEditEvent = ({
   const { register, handleSubmit, reset, getValues, control } = useForm();
 
   const isNewEvent = isEmpty(selectedEvent);
+  const db = getDatabase();
 
   useEffect(() => {
     if (isNewEvent) {
@@ -155,7 +156,6 @@ const CreateOrEditEvent = ({
   }, [isNewEvent, reset, selectedEvent]);
 
   const updateOrCreateEvent = (data) => {
-    const db = getDatabase();
     const artistArray = mergeArtistEmailsAndNames(data);
 
     const {
