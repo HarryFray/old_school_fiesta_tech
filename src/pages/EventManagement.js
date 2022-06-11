@@ -214,6 +214,7 @@ const EventManagement = ({ auth, currentUser }) => {
                 <th className="small_col">Event Name</th>
                 <th className="small_col">Date Occuring</th>
                 <th className="small_col">Current Event</th>
+                <th className="small_col">Event Locked</th>
                 <th className="large_col">Artists</th>
                 <th className="fixed_action_col">Action</th>
               </tr>
@@ -221,8 +222,13 @@ const EventManagement = ({ auth, currentUser }) => {
             {Boolean(filteredEvents?.length && !loadingEvents) && (
               <tbody>
                 {filteredEvents?.map((event, id) => {
-                  const { eventName, dateOccuring, artists, activeEvent } =
-                    event;
+                  const {
+                    eventName,
+                    dateOccuring,
+                    artists,
+                    activeEvent,
+                    lockedEvent,
+                  } = event;
 
                   const artistNamesString = artists
                     ?.map((artist) => `${artist?.name},`)
@@ -235,6 +241,8 @@ const EventManagement = ({ auth, currentUser }) => {
                         <td>{eventName}</td>
                         <td>{dateOccuring}</td>
                         <td className="bold">{String(activeEvent)}</td>
+                        <td className="bold">{String(lockedEvent)}</td>
+
                         <td>
                           <h4>{artistNamesString}</h4>
                         </td>
