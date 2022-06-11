@@ -47,6 +47,18 @@ const StyledCreateOrEditSale = styled(Modal)`
       }
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakPoints.xSmall}) {
+    .MuiBox-root {
+      width: 100vw;
+      height: 100vh;
+      background: ${({ theme }) => theme.colors.white};
+
+      form {
+        padding: 24px;
+      }
+    }
+  }
 `;
 
 const CreateOrEditSale = ({
