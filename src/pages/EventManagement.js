@@ -178,6 +178,7 @@ const EventManagement = ({ auth, currentUser }) => {
         setSelectedEvent={setSelectedEvent}
         selectedEvent={selectedEvent}
         auth={auth}
+        allEvents={allEvents}
       />
 
       <DeleteConfirmation

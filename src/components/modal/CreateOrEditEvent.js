@@ -129,6 +129,7 @@ const CreateOrEditEvent = ({
   setSelectedEvent,
   selectedEvent,
   auth,
+  allEvents,
 }) => {
   const [artistEditFields, setArtistEditFields] = useState([{}]);
 
@@ -175,6 +176,16 @@ const CreateOrEditEvent = ({
       sales,
     };
 
+    if (!eventName) {
+      alert("CREATING AN EVENT WITHOUT A NAME WILL DESTROY THE DB");
+      return;
+    }
+
+    if (Boolean(allEvents.find((event) => event?.eventName === eventName))) {
+      alert("THIS EVENT EXISTS ALREADY CHOOSE A DIFFERENT NAME");
+      return;
+    }
+
     set(ref(db, `events/${data?.eventName}`), relevantEventData).then(() => {
       setSelectedEvent({});
       setArtistEditFields([{}]);
@@ -191,7 +202,7 @@ const CreateOrEditEvent = ({
             <h3>{isNewEvent ? "Create New Event" : "Edit Existing Event"}</h3>
             <div className="content_section">
               <TextField
-                {...register("eventName")}
+                {...register("eventName", { required: true })}
                 label="Event Name (once created this can not be changed)"
                 className="text_input"
                 variant="outlined"
