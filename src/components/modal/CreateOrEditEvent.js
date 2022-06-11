@@ -176,12 +176,18 @@ const CreateOrEditEvent = ({
       sales,
     };
 
+    const nameOfEventExists = Boolean(
+      allEvents.find(
+        (event) => event?.eventName.toLowerCase() === eventName.toLowerCase()
+      )
+    );
+
     if (!eventName) {
       alert("CREATING AN EVENT WITHOUT A NAME WILL DESTROY THE DB");
       return;
     }
 
-    if (Boolean(allEvents.find((event) => event?.eventName === eventName))) {
+    if (isNewEvent && nameOfEventExists) {
       alert("THIS EVENT EXISTS ALREADY CHOOSE A DIFFERENT NAME");
       return;
     }
