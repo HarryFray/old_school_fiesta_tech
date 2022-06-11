@@ -31,6 +31,18 @@ const StyledDeleteConfirmation = styled(Modal)`
       }
     }
   }
+
+  @media (max-width: ${({ theme }) => theme.breakPoints.xSmall}) {
+    .MuiBox-root {
+      width: 100vw;
+      height: 100vh;
+      background: ${({ theme }) => theme.colors.white};
+
+      > div {
+        padding: 24px;
+      }
+    }
+  }
 `;
 
 const DeleteConfirmation = ({
