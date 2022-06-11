@@ -272,6 +272,11 @@ const DashBoard = ({ auth, currentUser }) => {
     );
   });
 
+  useEffect(() => {
+    setLoadingSales(true);
+    setTimeout(() => setLoadingSales(false), 1000);
+  }, [createOrEditSaleOpen]);
+
   const handleDeleteEvent = (saleUID) => {
     remove(ref(db, `events/${activeEvent?.eventName}/sales/${saleUID}`));
   };
