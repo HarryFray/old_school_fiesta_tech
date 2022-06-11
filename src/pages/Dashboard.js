@@ -187,6 +187,9 @@ const StyledDashBoard = styled.div`
     }
 
     .sale_cards {
+      height: calc(100vh - 240px);
+      overflow: scroll;
+
       .sale_card {
         display: flex;
         justify-content: space-between;
