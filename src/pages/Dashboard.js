@@ -272,7 +272,9 @@ const DashBoard = ({ auth, currentUser }) => {
     );
   });
 
+  // manage view for cleaner mobile experience 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setLoadingSales(true);
     setTimeout(() => setLoadingSales(false), 1000);
   }, [createOrEditSaleOpen]);
