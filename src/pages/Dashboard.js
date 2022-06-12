@@ -260,7 +260,7 @@ const DashBoard = ({ auth, currentUser }) => {
             setAllSales(allFirebaseEventSales);
           } else {
             const eventSalesForCurrentUser = allFirebaseEventSales.filter(
-              ({ artistName }) => artistName === currentUser?.email
+              ({ artistName }) => artistName === currentUser?.displayName
             );
 
             setAllSales(eventSalesForCurrentUser);
@@ -272,7 +272,7 @@ const DashBoard = ({ auth, currentUser }) => {
     );
   });
 
-  // manage view for cleaner mobile experience 
+  // manage view for cleaner mobile experience
   useEffect(() => {
     window.scrollTo(0, 0);
     setLoadingSales(true);

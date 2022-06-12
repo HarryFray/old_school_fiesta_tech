@@ -80,7 +80,7 @@ const CreateOrEditSale = ({
       if (currentUser?.superUser) {
         reset(DEFAULT_SALE);
       } else {
-        reset({ ...DEFAULT_SALE, artistName: currentUser?.email });
+        reset({ ...DEFAULT_SALE, artistName: currentUser?.displayName });
       }
     } else {
       reset(selectedSale);
