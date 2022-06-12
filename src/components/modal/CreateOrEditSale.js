@@ -10,14 +10,6 @@ import { getDatabase, ref, push, set } from "firebase/database";
 
 import Typography from "../../global/Typography";
 
-const DEFAULT_SALE = {
-  name: "",
-  artistName: "",
-  email: "",
-  instagramHandle: "",
-  ticketsBought: 0,
-};
-
 const StyledCreateOrEditSale = styled(Modal)`
   .MuiBox-root {
     border-radius: 4px;
@@ -78,9 +70,9 @@ const CreateOrEditSale = ({
   useEffect(() => {
     if (isNewSale) {
       if (currentUser?.superUser) {
-        reset(DEFAULT_SALE);
+        reset({});
       } else {
-        reset({ ...DEFAULT_SALE, artistName: currentUser?.displayName });
+        reset({ artistName: currentUser?.displayName });
       }
     } else {
       reset(selectedSale);
