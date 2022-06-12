@@ -225,7 +225,7 @@ const DashBoard = ({ auth, currentUser }) => {
 
   const db = getDatabase();
 
-  // GETTING ACTIVE EVENT NAME
+  // GETTING ACTIVE EVENT
   useEffect(() => {
     setLoadingSales(true);
 
