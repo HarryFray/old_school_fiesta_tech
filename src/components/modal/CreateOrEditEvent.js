@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 import Typography from "../../global/Typography";
 
-const handleCreateUsers = (artists, auth, navigate) => {
+const createUsersAndLogOut = (artists, auth, navigate) => {
   const DEFAULT_USER_PASSWORD = "5678OldSolFiesta!";
 
   Promise.all(
@@ -43,11 +43,7 @@ const handleCreateUsers = (artists, auth, navigate) => {
           console.log("Error on signUp", error);
         });
     })
-  ).then(() => {
-    signOut(auth).then(() => {
-      navigate("/auth");
-    });
-  });
+  ).then(() => signOut(auth).then(() => navigate("/auth")));
 };
 
 const mergeArtistEmailsAndNames = (data) => {
@@ -221,7 +217,7 @@ const CreateOrEditEvent = ({
       setSelectedEvent({});
       setArtistEditFields([{}]);
       setCreateOrEditEventOpen(false);
-      handleCreateUsers(artistArray, auth, navigate);
+      createUsersAndLogOut(artistArray, auth, navigate);
     });
   };
 
