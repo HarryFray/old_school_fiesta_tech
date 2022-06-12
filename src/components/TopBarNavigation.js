@@ -48,15 +48,17 @@ const TopBarNavigation = ({ auth, currentUser }) => {
         <div className="mobile_heading">
           <h2>Old Sol Fiesta</h2>
           <h5>
-            {currentUser?.superUser ? "Super User" : currentUser?.displayName}
+            {`What up ${
+              currentUser?.superUser ? "Super User" : currentUser?.displayName
+            }`}
           </h5>
         </div>
       ) : (
         <>
           <h1>Old Sol Fiesta</h1>
           <h4>
-            {`Welcome ${
-              currentUser?.superUser ? "Super User" : currentUser?.displayName
+            {`What up ${
+              currentUser?.superUser ? "SuperUser" : currentUser?.displayName
             }`}
           </h4>
         </>
