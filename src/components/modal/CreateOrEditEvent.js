@@ -11,7 +11,7 @@ import Switch from "@mui/material/Switch";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
-  signOut,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +19,7 @@ import Typography from "../../global/Typography";
 
 const createUsersAndLogOut = (artists, auth, navigate) => {
   const DEFAULT_USER_PASSWORD = "5678OldSolFiesta!";
+  const DEFAULT_SUPER_USER_EMAIL = "catjameswork@gmail.com";
 
   Promise.all(
     artists.map(async (artist) => {
@@ -43,7 +44,13 @@ const createUsersAndLogOut = (artists, auth, navigate) => {
           console.log("Error on signUp", error);
         });
     })
-  ).then(() => signOut(auth).then(() => navigate("/auth")));
+  ).then(() =>
+    signInWithEmailAndPassword(
+      auth,
+      DEFAULT_SUPER_USER_EMAIL,
+      DEFAULT_USER_PASSWORD
+    ).then(() => navigate("/events"))
+  );
 };
 
 const mergeArtistEmailsAndNames = (data) => {
