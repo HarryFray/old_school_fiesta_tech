@@ -357,7 +357,9 @@ const DashBoard = ({ auth, currentUser }) => {
             <table>
               <thead>
                 <tr>
-                  <th className="large_col">Artist's Name</th>
+                  {currentUser?.superUser && (
+                    <th className="large_col">Artist's Name</th>
+                  )}
                   <th className="small_col">Art Sold To</th>
                   <th className="large_col">Email</th>
                   <th className="small_col">Instagram</th>
@@ -381,7 +383,7 @@ const DashBoard = ({ auth, currentUser }) => {
                     return (
                       <React.Fragment key={id}>
                         <tr>
-                          <td>{artistName}</td>
+                          {currentUser?.superUser && <td>{artistName}</td>}
                           <td>{name}</td>
                           <td>{email}</td>
                           <td>{instagramHandle}</td>

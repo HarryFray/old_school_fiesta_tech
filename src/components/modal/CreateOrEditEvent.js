@@ -8,26 +8,45 @@ import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
 import { getDatabase, ref, set } from "firebase/database";
 import Switch from "@mui/material/Switch";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signOut,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 import Typography from "../../global/Typography";
 
-const handleCreateUsers = (users, auth) => {
+const handleCreateUsers = (artists, auth, navigate) => {
   const DEFAULT_USER_PASSWORD = "5678OldSolFiesta!";
 
-  users.forEach(({ email, name }) => {
-    createUserWithEmailAndPassword(auth, email, DEFAULT_USER_PASSWORD)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("New user created: ", user);
+  Promise.all(
+    artists.map(async (artist) => {
+      await createUserWithEmailAndPassword(
+        auth,
+        artist?.email,
+        DEFAULT_USER_PASSWORD
+      )
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+          console.log("New user created: ", user);
 
-        updateProfile(auth.currentUser, {
-          displayName: name,
+          await updateProfile(user, {
+            displayName: artist?.name,
+          })
+            .then(() => {
+              console.log("Updated username to: ", artist?.name);
+            })
+            .catch(() => console.log("Error updating user name"));
+        })
+        .catch((error) => {
+          console.log("Error on signUp", error);
         });
-      })
-      .catch((error) => {
-        console.log("Error on signUp", error);
-      });
+    })
+  ).then(() => {
+    signOut(auth).then(() => {
+      navigate("/auth");
+    });
   });
 };
 
@@ -139,6 +158,8 @@ const CreateOrEditEvent = ({
 
   const { register, handleSubmit, reset, getValues, control } = useForm();
 
+  const navigate = useNavigate();
+
   const isNewEvent = isEmpty(selectedEvent);
   const db = getDatabase();
 
@@ -200,7 +221,7 @@ const CreateOrEditEvent = ({
       setSelectedEvent({});
       setArtistEditFields([{}]);
       setCreateOrEditEventOpen(false);
-      handleCreateUsers(artistArray, auth);
+      handleCreateUsers(artistArray, auth, navigate);
     });
   };
 
