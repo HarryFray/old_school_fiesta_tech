@@ -47,12 +47,18 @@ const TopBarNavigation = ({ auth, currentUser }) => {
       {isSmall ? (
         <div className="mobile_heading">
           <h2>Old Sol Fiesta</h2>
-          <h5>{`${currentUser?.email}`}</h5>
+          <h5>
+            {currentUser?.superUser ? "Super User" : currentUser?.displayName}
+          </h5>
         </div>
       ) : (
         <>
           <h1>Old Sol Fiesta</h1>
-          <h4>{`Welcome: ${currentUser?.email}`}</h4>
+          <h4>
+            {`Welcome ${
+              currentUser?.superUser ? "Super User" : currentUser?.displayName
+            }`}
+          </h4>
         </>
       )}
       <div className="navigation">

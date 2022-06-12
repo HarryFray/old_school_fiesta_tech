@@ -8,18 +8,22 @@ import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
 import { getDatabase, ref, set } from "firebase/database";
 import Switch from "@mui/material/Switch";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import Typography from "../../global/Typography";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const handleCreateUsers = (users, auth) => {
   const DEFAULT_USER_PASSWORD = "5678OldSolFiesta!";
 
-  users.forEach(({ email }) => {
+  users.forEach(({ email, name }) => {
     createUserWithEmailAndPassword(auth, email, DEFAULT_USER_PASSWORD)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log("New user created: ", user);
+
+        updateProfile(auth.currentUser, {
+          displayName: name,
+        });
       })
       .catch((error) => {
         console.log("Error on signUp", error);
