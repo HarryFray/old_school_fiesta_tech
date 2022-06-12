@@ -224,12 +224,12 @@ const DashBoard = ({ auth, currentUser }) => {
   const [loadingSales, setLoadingSales] = useState(true);
 
   const db = getDatabase();
+  const dbRef = ref(db);
 
   // GETTING ACTIVE EVENT
   useEffect(() => {
     setLoadingSales(true);
 
-    const dbRef = ref(db);
     get(child(dbRef, `events`)).then((snapshot) => {
       if (snapshot.exists()) {
         const eventsSnapshot = snapshot.val();
@@ -244,12 +244,10 @@ const DashBoard = ({ auth, currentUser }) => {
         setTimeout(() => setLoadingSales(false), 1000);
       }
     });
-  }, [setLoadingSales, setActiveEvent, db]);
+  }, [setLoadingSales, setActiveEvent, dbRef]);
 
   // GETTING RELEVANT SALES FOR ACTIVE EVENT AND USER
   useEffect(() => {
-    const dbRef = ref(db);
-
     get(child(dbRef, `events/${activeEvent?.eventName}/sales`)).then(
       (snapshot) => {
         if (snapshot.exists()) {
