@@ -187,7 +187,7 @@ const StyledDashBoard = styled.div`
     }
 
     .sale_cards {
-      height: calc(100vh - 240px);
+      height: calc(${({ screenheight }) => screenheight}px - 240px);
       overflow: scroll;
 
       .sale_card {
@@ -292,6 +292,9 @@ const DashBoard = ({ auth, currentUser }) => {
     0
   );
 
+  // DEALS WITH IOS NAVIGATION BOTTOM BAR
+  const screenHeight = String(document.documentElement.clientHeight);
+
   return (
     <>
       <CreateOrEditSale
@@ -308,7 +311,7 @@ const DashBoard = ({ auth, currentUser }) => {
         handleDeletion={() => handleDeleteSale(selectedSale?.saleUID)}
       />
       <Layout auth={auth} currentUser={currentUser}>
-        <StyledDashBoard>
+        <StyledDashBoard screenheight={screenHeight}>
           <div className="table_management_heading">
             {isSmall && (
               <div className="title_and_stats">
