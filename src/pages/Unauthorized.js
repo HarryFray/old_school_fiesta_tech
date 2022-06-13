@@ -17,8 +17,8 @@ const UnAuthorized = () => {
       <h2>My person! You need to log in</h2>
       <h6 className="subtitle-2">
         Go back to the{" "}
-        <Link to="auth" className="link">
-          /auth
+        <Link to="/" className="link">
+          log in
         </Link>{" "}
         page porfavor
       </h6>

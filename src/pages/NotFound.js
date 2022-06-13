@@ -14,7 +14,7 @@ const StyledNotFound = styled.div`
 const NotFound = () => {
   return (
     <StyledNotFound>
-      <h2>This page does not exist</h2>
+      <h2>This page does not exist for you</h2>
       <h6 className="subtitle-2">
         Go back to your{" "}
         <Link to="/dashboard" className="link">

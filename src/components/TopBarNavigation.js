@@ -38,7 +38,7 @@ const TopBarNavigation = ({ auth, currentUser }) => {
 
   const handleSignOut = () => {
     signOut(auth).then(() => {
-      navigate("/auth");
+      navigate("/");
     });
   };
 

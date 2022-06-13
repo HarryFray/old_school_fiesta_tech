@@ -55,12 +55,14 @@ function App() {
       <Typography>
         <BrowserRouter>
           <Routes>
-            <Route path="*" element={<NotFound />} />
-            <Route path="auth" element={<SignIn auth={auth} />} />
             {isEmpty(currentUser) ? (
-              <Route path="/" element={<UnAuthorized />} />
+              <>
+                <Route path="*" element={<UnAuthorized />} />
+                <Route path="/" element={<SignIn auth={auth} />} />
+              </>
             ) : (
               <>
+                <Route path="*" element={<NotFound />} />
                 <Route
                   path="dashboard"
                   element={<DashBoard auth={auth} currentUser={currentUser} />}
