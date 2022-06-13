@@ -5,6 +5,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
+import osfBackground from "../images/osf-background.png";
+
 const StyledSignIn = styled.div`
   background: white;
   height: 100vh;
@@ -13,10 +15,27 @@ const StyledSignIn = styled.div`
   align-items: center;
   justify-content: center;
 
+  #bg {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+  }
+  #bg img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    min-width: 50%;
+    min-height: 50%;
+  }
+
   .login_card {
     position: absolute;
     display: flex;
-    background: white;
     flex-direction: column;
     padding: 24px;
     border-radius: 4px;
@@ -42,6 +61,7 @@ const StyledSignIn = styled.div`
     button,
     .input {
       margin-top: 28px;
+      background: whitesmoke;
     }
   }
 
@@ -85,8 +105,15 @@ const SignIn = ({ auth }) => {
 
   return (
     <StyledSignIn>
+      <div id="bg">
+        <img
+          src={osfBackground}
+          alt="Old Sol Fiesta Background"
+          width="500"
+          height="600"
+        />
+      </div>
       <div className="login_card">
-        <h1>Old Sol Fiesta</h1>
         <TextField
           className="input"
           id="outlined-basic"
