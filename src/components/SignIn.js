@@ -38,8 +38,6 @@ const StyledSignIn = styled.div`
     display: flex;
     flex-direction: column;
     padding: 24px;
-    border-radius: 4px;
-    border: 1px solid lightgray;
     justify-content: center;
     align-items: center;
 
@@ -48,7 +46,7 @@ const StyledSignIn = styled.div`
     }
 
     h5 {
-      color: ${({ theme }) => theme.colors.error};
+      color: ${({ theme }) => theme.colors.black};
       position: absolute;
       bottom: 68px;
       left: 26px;
