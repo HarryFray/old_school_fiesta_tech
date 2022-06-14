@@ -19,6 +19,7 @@ const StyledTopBarNavigation = styled.div`
 
   .logo_and_text {
     display: flex;
+    align-items: center;
 
     img {
       margin-right: 4px;
