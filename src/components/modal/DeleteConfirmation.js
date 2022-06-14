@@ -14,7 +14,8 @@ const StyledDeleteConfirmation = styled(Modal)`
     top: 50%;
     padding: 24px;
     transform: translate(-50%, -50%);
-    background-color: ${({ theme }) => theme.colors.white};
+    background: ${({ theme }) => theme.palette.primary.light};
+
     max-width: 450px;
 
     h6 {
@@ -36,7 +37,7 @@ const StyledDeleteConfirmation = styled(Modal)`
     .MuiBox-root {
       width: 100vw;
       height: 100vh;
-      background: ${({ theme }) => theme.colors.white};
+      background: ${({ theme }) => theme.palette.primary.light};
 
       > div {
         padding: 72px 24px 24px 24px;

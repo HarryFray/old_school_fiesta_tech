@@ -40,6 +40,10 @@ const StyledDashBoard = styled.div`
   height: 100%;
   width: 100%;
 
+  h1 {
+    color: ${({ theme }) => theme.palette.primary.main};
+  }
+
   .table_management_heading {
     height: 40px;
     margin-bottom: 12px;
@@ -66,7 +70,7 @@ const StyledDashBoard = styled.div`
     table-layout: fixed;
 
     thead {
-      background: ${({ theme }) => theme.colors.black12};
+      background: ${({ theme }) => theme.palette.secondary.light};
 
       tr {
         th {
@@ -98,7 +102,8 @@ const StyledDashBoard = styled.div`
     tbody {
       tr {
         td {
-          border-bottom: 0.5px solid ${({ theme }) => theme.colors.black34};
+          border-bottom: 0.5px solid
+            ${({ theme }) => theme.palette.secondary.main};
           overflow-wrap: anywhere;
           padding: 0 0 0 20px;
 
@@ -195,7 +200,8 @@ const StyledDashBoard = styled.div`
         justify-content: space-between;
         margin-bottom: 12px;
         padding: 8px;
-        border: 1px solid ${({ theme }) => theme.colors.black60};
+        border: 1px solid ${({ theme }) => theme.palette.primary.main};
+        background: ${({ theme }) => theme.palette.secondary.light};
         border-radius: 4px;
 
         .action_buttons {

@@ -8,11 +8,18 @@ import { Link } from "react-router-dom";
 import useWindowSize from "../hooks/useWindowSize";
 
 const StyledTopBarNavigation = styled.div`
-  background: ${({ theme }) => theme.colors.black12};
+  background: ${({ theme }) => theme.palette.secondary.light};
+  border-bottom: 1px solid ${({ theme }) => theme.palette.primary.main};
+
+
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 24px;
+
+  h1 {
+    color: ${({ theme }) => theme.palette.primary.dark};
+  }
 
   .navigation {
     display: flex;
@@ -27,6 +34,7 @@ const StyledTopBarNavigation = styled.div`
     padding: 12px;
 
     .mobile_heading {
+      color: ${({ theme }) => theme.palette.primary.dark};
     }
   }
 `;

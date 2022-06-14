@@ -18,7 +18,7 @@ const StyledCreateOrEditSale = styled(Modal)`
     top: 50%;
     padding: 24px;
     transform: translate(-50%, -50%);
-    background-color: ${({ theme }) => theme.colors.white};
+    background: ${({ theme }) => theme.palette.primary.light};
 
     .content_section {
       display: flex;
@@ -44,7 +44,7 @@ const StyledCreateOrEditSale = styled(Modal)`
     .MuiBox-root {
       width: 100vw;
       height: 100vh;
-      background: ${({ theme }) => theme.colors.white};
+      background: ${({ theme }) => theme.palette.primary.light};
 
       form {
         padding: 72px 24px 24px 24px;

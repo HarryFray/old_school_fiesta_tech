@@ -114,6 +114,7 @@ const SignIn = ({ auth }) => {
       <div className="login_card">
         <TextField
           className="input"
+          color="secondary"
           id="outlined-basic"
           label="Enter email"
           variant="outlined"
@@ -123,6 +124,7 @@ const SignIn = ({ auth }) => {
         />
         <TextField
           className="input"
+          color="secondary"
           id="outlined-basic"
           label="Enter Password"
           variant="outlined"
@@ -134,6 +136,7 @@ const SignIn = ({ auth }) => {
         <Button
           onClick={() => handleUserSignIn(auth, email, password)}
           variant="outlined"
+          color="secondary"
         >
           Sign In
         </Button>

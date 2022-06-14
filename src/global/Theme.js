@@ -1,7 +1,11 @@
 import React from "react";
 import { ThemeProvider } from "styled-components";
+import {
+  createTheme,
+  ThemeProvider as ThemeProviderMUI,
+} from "@mui/material/styles";
 
-export const theme = {
+export const customTheme = {
   colors: {
     primary: "#1460AA",
     primaryLight: "#588DDC",
@@ -37,10 +41,31 @@ export const theme = {
   },
 };
 
+const materialUITheme = createTheme({
+  palette: {
+    primary: {
+      light: "#E8DDCF",
+      main: "#BB6341",
+      dark: "#993B27",
+      contrastText: "#fff",
+    },
+    secondary: {
+      light: "#D3D2C6",
+      main: "#485D66",
+      dark: "#000000",
+      contrastText: "#000000",
+    },
+  },
+});
+
 const Theme = ({ children }) => {
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+  return (
+    <ThemeProvider theme={{ ...customTheme, ...materialUITheme }}>
+      <ThemeProviderMUI theme={materialUITheme}>{children}</ThemeProviderMUI>
+    </ThemeProvider>
+  );
 };
 
-export const { breakPoints, colors, layers } = theme;
+export const { breakPoints, colors, layers } = customTheme;
 
 export default Theme;
