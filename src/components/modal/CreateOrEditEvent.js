@@ -30,18 +30,18 @@ const createUsersAndLogOut = (artists, auth, navigate) => {
       )
         .then(async (userCredential) => {
           const user = userCredential.user;
-          console.log("New user created: ", user);
+          console.log("New user created");
 
           await updateProfile(user, {
             displayName: artist?.name,
           })
             .then(() => {
-              console.log("Updated username to: ", artist?.name);
+              console.log("Updated username");
             })
-            .catch(() => console.log("Error updating user name"));
+            .catch(() => console.log("Error updating username"));
         })
         .catch((error) => {
-          console.log("Error on signUp", error);
+          console.log("Error on signup", error);
         });
     })
   ).then(() =>
