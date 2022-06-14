@@ -276,9 +276,12 @@ const DashBoard = ({ auth, currentUser }) => {
     );
   });
 
-  // manage view for cleaner mobile experience
+  // manage loading and scroll for cleaner mobile experience
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    if (createOrEditSaleOpen || deleteConfirmationModalOpen) return;
+
     setLoadingSales(true);
     setTimeout(() => setLoadingSales(false), 1000);
   }, [createOrEditSaleOpen, deleteConfirmationModalOpen]);
