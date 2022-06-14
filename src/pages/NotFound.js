@@ -5,10 +5,19 @@ import { Link } from "react-router-dom";
 const StyledNotFound = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 100px 0 0 0;
   width: 100%;
+  height: 100vh;
   align-items: center;
-  justify-content: center;
+  background: ${({ theme }) => theme.palette.primary.light};
+
+  h2 {
+    margin-top: 100px;
+  }
+
+  h2,
+  h6 {
+    text-align: center;
+  }
 `;
 
 const NotFound = () => {
@@ -16,7 +25,7 @@ const NotFound = () => {
     <StyledNotFound>
       <h2>This page does not exist for you</h2>
       <h6 className="subtitle-2">
-        Go back to your{" "}
+        Go back to the{" "}
         <Link to="/dashboard" className="link">
           dashboard
         </Link>{" "}

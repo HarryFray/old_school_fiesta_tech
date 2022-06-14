@@ -5,10 +5,19 @@ import { Link } from "react-router-dom";
 const StyledUnAuthorized = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 100px 0 0 0;
   width: 100%;
+  height: 100vh;
   align-items: center;
-  justify-content: center;
+  background: ${({ theme }) => theme.palette.primary.light};
+
+  h2 {
+    margin-top: 100px;
+  }
+
+  h2,
+  h6 {
+    text-align: center;
+  }
 `;
 
 const UnAuthorized = () => {
