@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { isEmpty } from "lodash";
+import { isEmpty, differenceWith, isEqual } from "lodash";
 import { getDatabase, ref, set } from "firebase/database";
 import Switch from "@mui/material/Switch";
 import {
@@ -224,7 +224,14 @@ const CreateOrEditEvent = ({
       setSelectedEvent({});
       setArtistEditFields([{}]);
       setCreateOrEditEventOpen(false);
-      createUsersAndLogOut(artistArray, auth, navigate);
+
+      const artistsCreatedOrUpdated = Boolean(
+        differenceWith(artistArray, artistEditFields, isEqual).length
+      );
+
+      if (artistsCreatedOrUpdated) {
+        createUsersAndLogOut(artistArray, auth, navigate);
+      }
     });
   };
 
