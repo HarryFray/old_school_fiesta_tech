@@ -20,6 +20,10 @@ const StyledCreateOrEditSale = styled(Modal)`
     transform: translate(-50%, -50%);
     background: ${({ theme }) => theme.palette.primary.light};
 
+    h3 {
+      color: ${({ theme }) => theme.palette.primary.dark};
+    }
+
     .content_section {
       display: flex;
       flex-direction: column;
@@ -103,7 +107,7 @@ const CreateOrEditSale = ({
       <Box>
         <Typography>
           <form onSubmit={handleSubmit(updateOrCreateSale)}>
-            <h3>{isNewSale ? "Add A New Sale" : "Edit Existing Sale"}</h3>
+            <h3 className="bold">{isNewSale ? "Add A New Sale" : "Edit Existing Sale"}</h3>
             <div className="content_section">
               <TextField
                 {...register("artistName", { required: true })}

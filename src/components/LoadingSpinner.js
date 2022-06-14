@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-import faveIcon from "../images/favicon.ico";
+import Logo from "../images/Logo.ico";
 
 const StyledLoadingSpinner = styled.div`
   img {
     animation: rotation 2s infinite linear;
+    height: 44px;
+    width: 44px;
   }
 
   @keyframes rotation {
@@ -21,7 +23,7 @@ const StyledLoadingSpinner = styled.div`
 const LoadingSpinner = () => {
   return (
     <StyledLoadingSpinner>
-      <img src={faveIcon} alt="Loading Spinner" width="36" height="36" />
+      <img src={Logo} alt="Loading Spinner" />
     </StyledLoadingSpinner>
   );
 };

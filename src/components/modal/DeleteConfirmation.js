@@ -15,8 +15,11 @@ const StyledDeleteConfirmation = styled(Modal)`
     padding: 24px;
     transform: translate(-50%, -50%);
     background: ${({ theme }) => theme.palette.primary.light};
-
     max-width: 450px;
+
+    h3 {
+      color: ${({ theme }) => theme.palette.primary.dark};
+    }
 
     h6 {
       margin-top: 12px;
@@ -60,7 +63,7 @@ const DeleteConfirmation = ({
     <StyledDeleteConfirmation open={deleteConfirmationModalOpen}>
       <Box>
         <Typography>
-          <h3>Are You Sure You Want to Delete!?</h3>
+          <h3 className="bold">Are You Sure You Want to Delete!?</h3>
           <h6 className="subtitle-2">
             It's a really big deal if you do, it's not like you can just create
             a new one that is the same as this one was...
