@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { getDatabase, ref, child, get, remove } from "firebase/database";
@@ -9,6 +8,7 @@ import copy from "copy-to-clipboard";
 import Layout from "../global/Layout";
 import { firebaseObjectToArray } from "../utils";
 import useWindowSize from "../hooks/useWindowSize";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 import CreateOrEditSale from "../components/modal/CreateOrEditSale";
 import DeleteConfirmation from "../components/modal/DeleteConfirmation";
@@ -489,7 +489,7 @@ const DashBoard = ({ auth, currentUser }) => {
           )}
           {Boolean(loadingSales) && (
             <div className="loading_icon">
-              <CircularProgress color="inherit" />
+              <LoadingSpinner />
             </div>
           )}
           {Boolean(!filteredSales?.length && !loadingSales) && (
