@@ -281,7 +281,7 @@ const DashBoard = ({ auth, currentUser }) => {
     window.scrollTo(0, 0);
     setLoadingSales(true);
     setTimeout(() => setLoadingSales(false), 1000);
-  }, [createOrEditSaleOpen]);
+  }, [createOrEditSaleOpen, deleteConfirmationModalOpen]);
 
   const handleDeleteSale = (saleUID) => {
     remove(ref(db, `events/${activeEvent?.eventName}/sales/${saleUID}`));
