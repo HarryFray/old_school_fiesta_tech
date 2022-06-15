@@ -18,15 +18,12 @@ import { useNavigate } from "react-router-dom";
 import Typography from "../../global/Typography";
 
 const createUsersAndLogOut = (artists, auth, navigate) => {
-  const DEFAULT_USER_PASSWORD = "5678OldSolFiesta!";
-  const DEFAULT_SUPER_USER_EMAIL = "catjameswork@gmail.com";
-
   Promise.all(
     artists.map(async (artist) => {
       await createUserWithEmailAndPassword(
         auth,
         artist?.email,
-        DEFAULT_USER_PASSWORD
+        process.env.REACT_APP_DEFAULT_USER_PASSWORD
       )
         .then(async (userCredential) => {
           const user = userCredential.user;
@@ -47,8 +44,8 @@ const createUsersAndLogOut = (artists, auth, navigate) => {
   ).then(() =>
     signInWithEmailAndPassword(
       auth,
-      DEFAULT_SUPER_USER_EMAIL,
-      DEFAULT_USER_PASSWORD
+      process.env.REACT_APP_DEFAULT_SUPER_USER_EMAIL,
+      process.env.REACT_APP_DEFAULT_USER_PASSWORD
     ).then(() => navigate("/events"))
   );
 };

@@ -26,9 +26,9 @@ const firebaseConfig = {
   measurementId: "G-GSRZEB32KP",
 };
 
-const SUPER_USERS_ID = [
-  "HXLkDGuh3kQZ5OWy3DRVzzJ4NmC2",
-  "wc0eIRXBYrfiojjyokismRA9SuN2",
+const SUPER_USERS_IDS = [
+  process.env.REACT_APP_SUPER_USER_ID_1,
+  process.env.REACT_APP_SUPER_USER_ID_2,
 ];
 
 function App() {
@@ -42,7 +42,7 @@ function App() {
       if (user) {
         setCurrentUser({
           ...user,
-          superUser: SUPER_USERS_ID.includes(user?.uid),
+          superUser: SUPER_USERS_IDS.includes(user?.uid),
         });
       } else {
         setCurrentUser({});
