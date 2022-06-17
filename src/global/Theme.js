@@ -7,12 +7,6 @@ import {
 
 export const customTheme = {
   colors: {
-    primary: "#1460AA",
-    primaryLight: "#588DDC",
-    primaryDark: "#00377A",
-    secondary: "#00838F",
-    secondaryLight: "#4FB3BF",
-    secondaryDark: "#005662",
     error: "#B00020",
     errorBackground: "#FAF0F2",
     success: "#2E7D32",
@@ -25,13 +19,6 @@ export const customTheme = {
     black60: "rgba(0, 0, 0, 0.6)",
     black34: "rgba(0, 0, 0, 0.34)",
     black12: "rgba(0, 0, 0, 0.12)",
-    lightGrey: "#F2F2F2",
-    primary24: "#4C86BE",
-    primary12: "#E3ECF5",
-    primary4: "#F6F9FC",
-    background: "#FAFAFA",
-    adBackground: "#E8FBFE",
-    loading: "#f0f0f0",
   },
   breakPoints: {
     xSmall: "600px",
