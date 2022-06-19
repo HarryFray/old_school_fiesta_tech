@@ -16,14 +16,14 @@ import EventManagement from "./pages/EventManagement";
 import UnAuthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAXx9TD8ryWSwhWGj1bvlbqdQ9iquaP8nU",
-  authDomain: "old-school-fiesta.firebaseapp.com",
-  projectId: "old-school-fiesta",
-  storageBucket: "old-school-fiesta.appspot.com",
-  messagingSenderId: "195620709873",
-  appId: "1:195620709873:web:2d4fdb7fcf752f49e09050",
-  measurementId: "G-GSRZEB32KP",
+const FIRE_BASE_CONFIG = {
+  apiKey: process.env.REACT_APP_FB_API_KEY,
+  authDomain: process.env.REACT_APP_FB_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FB_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FB_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FB_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FB_APP_ID,
+  measurementId: process.env.REACT_APP_FB_MEASUREMENT_ID,
 };
 
 const SUPER_USERS_IDS = [
@@ -34,7 +34,7 @@ const SUPER_USERS_IDS = [
 function App() {
   const [currentUser, setCurrentUser] = useState({});
 
-  const app = initializeApp(firebaseConfig);
+  const app = initializeApp(FIRE_BASE_CONFIG);
   const auth = getAuth(app);
 
   useEffect(() => {
