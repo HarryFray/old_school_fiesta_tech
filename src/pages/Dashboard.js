@@ -4,6 +4,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { getDatabase, ref, child, get, remove } from "firebase/database";
 import copy from "copy-to-clipboard";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 import Layout from "../global/Layout";
 import { firebaseObjectToArray } from "../utils";
@@ -12,6 +14,10 @@ import LoadingSpinner from "../components/LoadingSpinner";
 
 import CreateOrEditSale from "../components/modal/CreateOrEditSale";
 import DeleteConfirmation from "../components/modal/DeleteConfirmation";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const filteredSalesBasedOnSearchText = (sales, searchText) => {
   let searchedSales = sales?.filter((sale) => {
@@ -26,25 +32,6 @@ const filteredSalesBasedOnSearchText = (sales, searchText) => {
     return nameIncludedInSearch || artistIncludedInSearch;
   });
   return searchedSales;
-};
-
-const getAllEmailsSoldToo = (allSales) => {
-  const uniqueEmails = {};
-
-  allSales.forEach(({ email }) => (uniqueEmails[email] = email));
-
-  return Object.keys(uniqueEmails);
-};
-
-const getAllIntaHandlesSoldTo = (allSales) => {
-  const uniqueIntaHandles = {};
-
-  allSales.forEach(
-    ({ instagramHandle }) =>
-      (uniqueIntaHandles[instagramHandle] = instagramHandle)
-  );
-
-  return Object.keys(uniqueIntaHandles);
 };
 
 const StyledDashBoard = styled.div`
@@ -243,6 +230,7 @@ const DashBoard = ({ auth, currentUser }) => {
     useState(false);
 
   const [loadingSales, setLoadingSales] = useState(true);
+  const [snackBarMessage, setSnackBarMessage] = useState("");
 
   const db = getDatabase();
   const dbRef = ref(db);
@@ -316,6 +304,31 @@ const DashBoard = ({ auth, currentUser }) => {
     0
   );
 
+  const getAllEmailsSoldToo = (allSales) => {
+    setSnackBarMessage("Copied all emails of clients you sold to :)");
+
+    const uniqueEmails = {};
+
+    allSales.forEach(({ email }) => (uniqueEmails[email] = email));
+
+    return Object.keys(uniqueEmails);
+  };
+
+  const getAllIntaHandlesSoldTo = (allSales) => {
+    setSnackBarMessage(
+      "Copied all Instagram handles of clients you sold to ;)"
+    );
+
+    const uniqueIntaHandles = {};
+
+    allSales.forEach(
+      ({ instagramHandle }) =>
+        (uniqueIntaHandles[instagramHandle] = instagramHandle)
+    );
+
+    return Object.keys(uniqueIntaHandles);
+  };
+
   // DEALS WITH IOS NAVIGATION BOTTOM BAR
   const screenHeight = String(document.documentElement.clientHeight);
 
@@ -334,6 +347,15 @@ const DashBoard = ({ auth, currentUser }) => {
         setDeleteConfirmationModalOpen={setDeleteConfirmationModalOpen}
         handleDeletion={() => handleDeleteSale(selectedSale?.saleUID)}
       />
+      <Snackbar
+        open={Boolean(snackBarMessage)}
+        autoHideDuration={3000}
+        onClose={() => setSnackBarMessage("")}
+      >
+        <Alert severity="success" sx={{ width: "100%" }}>
+          {snackBarMessage}
+        </Alert>
+      </Snackbar>
       <Layout auth={auth} currentUser={currentUser}>
         <StyledDashBoard screenheight={screenHeight}>
           <div className="table_management_heading">
