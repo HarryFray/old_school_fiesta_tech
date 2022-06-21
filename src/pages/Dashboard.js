@@ -36,6 +36,17 @@ const getAllEmailsSoldToo = (allSales) => {
   return Object.keys(uniqueEmails);
 };
 
+const getAllIntaHandlesSoldTo = (allSales) => {
+  const uniqueIntaHandles = {};
+
+  allSales.forEach(
+    ({ instagramHandle }) =>
+      (uniqueIntaHandles[instagramHandle] = instagramHandle)
+  );
+
+  return Object.keys(uniqueIntaHandles);
+};
+
 const StyledDashBoard = styled.div`
   height: 100%;
   width: 100%;
@@ -59,8 +70,12 @@ const StyledDashBoard = styled.div`
       display: flex;
       align-items: end;
 
-      button:first-child {
+      button {
         margin-right: 12px;
+      }
+
+      button:last-child {
+        margin-right: 0;
       }
     }
   }
@@ -187,7 +202,7 @@ const StyledDashBoard = styled.div`
 
       .buttons {
         width: 100%;
-        justify-content: space-between;
+        justify-content: flex-end;
       }
     }
 
@@ -342,6 +357,13 @@ const DashBoard = ({ auth, currentUser }) => {
             {!isSmall && <h1>{activeEvent?.eventName}</h1>}
             {activeEvent?.eventName && (
               <div className="buttons">
+                <Button
+                  size="small"
+                  onClick={() => copy(getAllIntaHandlesSoldTo(allSales))}
+                  variant="outlined"
+                >
+                  COPY INSTAS
+                </Button>
                 <Button
                   size="small"
                   onClick={() => copy(getAllEmailsSoldToo(allSales))}
