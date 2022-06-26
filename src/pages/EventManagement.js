@@ -7,7 +7,7 @@ import { getDatabase, ref, child, get, remove } from "firebase/database";
 
 import Layout from "../global/Layout";
 import CreateOrEditEvent from "../components/modal/CreateOrEditEvent";
-import DeleteConfirmation from "../components/modal/DeleteConfirmation";
+import ConfirmationModal from "../components/modal/Confirmation";
 import { firebaseObjectToArray } from "../utils";
 
 const filteredEventsBasedOnSearchText = (events, searchText) => {
@@ -181,10 +181,10 @@ const EventManagement = ({ auth, currentUser }) => {
         allEvents={allEvents}
       />
 
-      <DeleteConfirmation
-        deleteConfirmationModalOpen={deleteConfirmationModalOpen}
-        setDeleteConfirmationModalOpen={setDeleteConfirmationModalOpen}
-        handleDeletion={() => handleDeleteEvent(selectedEvent?.eventName)}
+      <ConfirmationModal
+        confirmationModalModalOpen={deleteConfirmationModalOpen}
+        setConfirmationModalModalOpen={setDeleteConfirmationModalOpen}
+        confirmationAction={() => handleDeleteEvent(selectedEvent?.eventName)}
       />
       <Layout auth={auth} currentUser={currentUser}>
         <StyledEventManagement>

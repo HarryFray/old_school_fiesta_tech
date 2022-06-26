@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 
 import Typography from "../../global/Typography";
 
-const StyledDeleteConfirmation = styled(Modal)`
+const StyledConfirmationModal = styled(Modal)`
   .MuiBox-root {
     border-radius: 4px;
     position: absolute;
@@ -49,28 +49,29 @@ const StyledDeleteConfirmation = styled(Modal)`
   }
 `;
 
-const DeleteConfirmation = ({
-  deleteConfirmationModalOpen,
-  setDeleteConfirmationModalOpen,
-  handleDeletion,
+// DEFAULTS TO DELETE CONFIRMATION MODAL WHEN TITLE/TEXT ARE NOT PASSED
+const ConfirmationModal = ({
+  confirmationModalModalOpen,
+  setConfirmationModalModalOpen,
+  confirmationAction,
+  title = "Are You Sure You Want to Delete!?",
+  text = `It's a really big deal if you do, it's not like
+   you can just create a new one that is the same as this one was...`,
 }) => {
   const handleClickDelete = () => {
-    setDeleteConfirmationModalOpen(false);
-    handleDeletion();
+    setConfirmationModalModalOpen(false);
+    confirmationAction();
   };
 
   return (
-    <StyledDeleteConfirmation open={deleteConfirmationModalOpen}>
+    <StyledConfirmationModal open={confirmationModalModalOpen}>
       <Box>
         <Typography>
-          <h3 className="bold">Are You Sure You Want to Delete!?</h3>
-          <h6 className="subtitle-2">
-            It's a really big deal if you do, it's not like you can just create
-            a new one that is the same as this one was...
-          </h6>
+          <h3 className="bold">{title}</h3>
+          <h6 className="subtitle-2">{text}</h6>
           <div className="buttons">
             <Button
-              onClick={() => setDeleteConfirmationModalOpen(false)}
+              onClick={() => setConfirmationModalModalOpen(false)}
               variant="outlined"
             >
               Never Mind
@@ -81,8 +82,8 @@ const DeleteConfirmation = ({
           </div>
         </Typography>
       </Box>
-    </StyledDeleteConfirmation>
+    </StyledConfirmationModal>
   );
 };
 
-export default DeleteConfirmation;
+export default ConfirmationModal;

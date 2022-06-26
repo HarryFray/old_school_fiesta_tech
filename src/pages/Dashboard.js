@@ -13,7 +13,7 @@ import useWindowSize from "../hooks/useWindowSize";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 import CreateOrEditSale from "../components/modal/CreateOrEditSale";
-import DeleteConfirmation from "../components/modal/DeleteConfirmation";
+import ConfirmationModal from "../components/modal/Confirmation";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -342,10 +342,10 @@ const DashBoard = ({ auth, currentUser }) => {
         currentUser={currentUser}
         activeEventName={activeEvent?.eventName}
       />
-      <DeleteConfirmation
-        deleteConfirmationModalOpen={deleteConfirmationModalOpen}
-        setDeleteConfirmationModalOpen={setDeleteConfirmationModalOpen}
-        handleDeletion={() => handleDeleteSale(selectedSale?.saleUID)}
+      <ConfirmationModal
+        confirmationModalModalOpen={deleteConfirmationModalOpen}
+        setConfirmationModalModalOpen={setDeleteConfirmationModalOpen}
+        confirmationAction={() => handleDeleteSale(selectedSale?.saleUID)}
       />
       <Snackbar
         open={Boolean(snackBarMessage)}
