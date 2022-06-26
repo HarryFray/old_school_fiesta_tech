@@ -95,6 +95,10 @@ const StyledDashBoard = styled.div`
           width: 14%;
         }
 
+        .xSmall_col {
+          width: 4%;
+        }
+
         .fixed_action_col {
           width: 120px;
         }
@@ -214,6 +218,7 @@ const StyledDashBoard = styled.div`
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          align-items: end;
         }
       }
     }
@@ -415,6 +420,7 @@ const DashBoard = ({ auth, currentUser }) => {
             <table>
               <thead>
                 <tr>
+                  <th className="xSmall_col">#</th>
                   {currentUser?.superUser && (
                     <th className="large_col">Artist's Name</th>
                   )}
@@ -441,6 +447,7 @@ const DashBoard = ({ auth, currentUser }) => {
                     return (
                       <React.Fragment key={id}>
                         <tr>
+                          <td>{id + 1}</td>
                           {currentUser?.superUser && <td>{artistName}</td>}
                           <td>{name}</td>
                           <td>{email}</td>
@@ -513,17 +520,10 @@ const DashBoard = ({ auth, currentUser }) => {
                         </h5>
                       </div>
                       <div className="action_buttons">
+                        <h3 className="caption">{`# ${id + 1}`}</h3>
                         <Button
                           size="small"
-                          onClick={() => {
-                            setSelectedSale({ ...sale, id });
-                            setDeleteConfirmationModalOpen(true);
-                          }}
-                        >
-                          Delete
-                        </Button>
-                        <Button
-                          size="small"
+                          variant="outlined"
                           onClick={() => {
                             setSelectedSale({ ...sale, id });
                             setCreateOrEditSaleOpen(true);
@@ -531,6 +531,15 @@ const DashBoard = ({ auth, currentUser }) => {
                         >
                           Edit
                         </Button>
+                        {/* <Button
+                          size="small"
+                          onClick={() => {
+                            setSelectedSale({ ...sale, id });
+                            setDeleteConfirmationModalOpen(true);
+                          }}
+                        >
+                          Delete
+                        </Button> */}
                       </div>
                     </div>
                   );
