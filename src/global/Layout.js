@@ -32,6 +32,7 @@ const StyledLayout = styled.div`
 `;
 
 const Layout = ({ children, auth, currentUser }) => {
+  // TODO NICK: NOT CURRENTLY UTILIZED (SIMPLE GLOABAL STATE REQUIRED)
   const [snackBarConfig, setSnackBarConfig] = useState(DEFAULT_SNACKBAR);
 
   return (
