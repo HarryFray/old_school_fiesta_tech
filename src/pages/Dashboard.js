@@ -106,6 +106,7 @@ const StyledDashBoard = styled.div`
     }
 
     tbody {
+      // TODO NICK: REQUIRED FOR TABLE SCROLL (INCOMPLETE)
       // height: calc(100vh - 200px);
       // position: absolute;
       // overflow: scroll;
