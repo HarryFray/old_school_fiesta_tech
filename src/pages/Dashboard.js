@@ -102,6 +102,10 @@ const StyledDashBoard = styled.div`
     }
 
     tbody {
+      // height: calc(100vh - 200px);
+      // position: absolute;
+      // overflow: scroll;
+
       tr {
         td {
           border-bottom: 0.5px solid
