@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter } from "react-router-dom";
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { isEmpty } from "lodash";
 
 import { initializeApp } from "firebase/app";
@@ -13,8 +12,6 @@ import SignIn from "./components/SignIn";
 import DashBoard from "./pages/Dashboard";
 import Lottery from "./pages/Lottery";
 import EventManagement from "./pages/EventManagement";
-import UnAuthorized from "./pages/Unauthorized";
-import NotFound from "./pages/NotFound";
 
 const FIRE_BASE_CONFIG = {
   apiKey: process.env.REACT_APP_FB_API_KEY,
@@ -57,12 +54,15 @@ function App() {
           <Routes>
             {isEmpty(currentUser) ? (
               <>
-                <Route path="*" element={<UnAuthorized />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
                 <Route path="/" element={<SignIn auth={auth} />} />
               </>
             ) : (
               <>
-                <Route path="*" element={<NotFound />} />
+                <Route
+                  path="*"
+                  element={<Navigate to="/dashboard" replace />}
+                />
                 <Route
                   path="dashboard"
                   element={<DashBoard auth={auth} currentUser={currentUser} />}
