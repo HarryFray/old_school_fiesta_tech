@@ -18,6 +18,7 @@ const StyledLayout = styled.div`
 
   .page_content {
     padding: 24px;
+    background: ${({ theme }) => theme.palette.primary.light};
   }
 
   @media (max-width: ${({ theme }) => theme.breakPoints.small}) {
