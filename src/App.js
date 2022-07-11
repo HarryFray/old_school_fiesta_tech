@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import { isEmpty } from "lodash";
+import { Provider } from "react-redux";
 
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+import store from "./redux/store";
 import Theme from "./global/Theme";
 import Typography from "./global/Typography";
 import SignIn from "./components/SignIn";
@@ -48,50 +50,54 @@ function App() {
   }, [auth]);
 
   return (
-    <Theme>
-      <Typography>
-        <BrowserRouter>
-          <Routes>
-            {isEmpty(currentUser) ? (
-              <>
-                <Route path="*" element={<Navigate to="/" replace />} />
-                <Route path="/" element={<SignIn auth={auth} />} />
-              </>
-            ) : (
-              <>
-                <Route
-                  path="*"
-                  element={<Navigate to="/dashboard" replace />}
-                />
-                <Route
-                  path="dashboard"
-                  element={<DashBoard auth={auth} currentUser={currentUser} />}
-                />
-                {currentUser?.superUser && (
-                  <>
-                    <Route
-                      path="events"
-                      element={
-                        <EventManagement
-                          auth={auth}
-                          currentUser={currentUser}
-                        />
-                      }
-                    />
-                    <Route
-                      path="lottery"
-                      element={
-                        <Lottery auth={auth} currentUser={currentUser} />
-                      }
-                    />
-                  </>
-                )}
-              </>
-            )}
-          </Routes>
-        </BrowserRouter>
-      </Typography>
-    </Theme>
+    <Provider store={store}>
+      <Theme>
+        <Typography>
+          <BrowserRouter>
+            <Routes>
+              {isEmpty(currentUser) ? (
+                <>
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                  <Route path="/" element={<SignIn auth={auth} />} />
+                </>
+              ) : (
+                <>
+                  <Route
+                    path="*"
+                    element={<Navigate to="/dashboard" replace />}
+                  />
+                  <Route
+                    path="dashboard"
+                    element={
+                      <DashBoard auth={auth} currentUser={currentUser} />
+                    }
+                  />
+                  {currentUser?.superUser && (
+                    <>
+                      <Route
+                        path="events"
+                        element={
+                          <EventManagement
+                            auth={auth}
+                            currentUser={currentUser}
+                          />
+                        }
+                      />
+                      <Route
+                        path="lottery"
+                        element={
+                          <Lottery auth={auth} currentUser={currentUser} />
+                        }
+                      />
+                    </>
+                  )}
+                </>
+              )}
+            </Routes>
+          </BrowserRouter>
+        </Typography>
+      </Theme>
+    </Provider>
   );
 }
 

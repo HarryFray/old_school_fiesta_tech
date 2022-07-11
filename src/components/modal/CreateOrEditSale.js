@@ -7,7 +7,9 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
 import { getDatabase, ref, push, set } from "firebase/database";
+import { useDispatch } from "react-redux";
 
+import { openSnackBar } from "../../redux/reducers";
 import Typography from "../../global/Typography";
 
 const StyledCreateOrEditSale = styled(Modal)`
@@ -83,6 +85,8 @@ const CreateOrEditSale = ({
     }
   }, [isNewSale, reset, selectedSale, currentUser]);
 
+  const dispatch = useDispatch();
+
   const updateOrCreateSale = (data) => {
     setSelectedSale({});
     setCreateOrEditSaleOpen(false);
@@ -96,9 +100,26 @@ const CreateOrEditSale = ({
       set(ref(db, `events/${activeEventName}/sales/${saleUID}`), {
         ...data,
         saleUID,
+      }).catch(() => {
+        dispatch(
+          openSnackBar({
+            message: "There was an issue creating your sale",
+            status: "error",
+          })
+        );
       });
     } else {
-      set(ref(db, `events/${activeEventName}/sales/${data.saleUID}`), data);
+      set(
+        ref(db, `events/${activeEventName}/sales/${data.saleUID}`),
+        data
+      ).catch(() => {
+        dispatch(
+          openSnackBar({
+            message: "There was an issue updating your sale",
+            status: "error",
+          })
+        );
+      });
     }
   };
 
@@ -107,7 +128,9 @@ const CreateOrEditSale = ({
       <Box>
         <Typography>
           <form onSubmit={handleSubmit(updateOrCreateSale)}>
-            <h3 className="bold">{isNewSale ? "Add A New Sale" : "Edit Existing Sale"}</h3>
+            <h3 className="bold">
+              {isNewSale ? "Add A New Sale" : "Edit Existing Sale"}
+            </h3>
             <div className="content_section">
               <TextField
                 {...register("artistName", { required: true })}

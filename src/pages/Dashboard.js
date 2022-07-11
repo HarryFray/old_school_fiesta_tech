@@ -4,20 +4,16 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { getDatabase, ref, child, get, remove } from "firebase/database";
 import copy from "copy-to-clipboard";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
+import { useDispatch } from "react-redux";
 
 import Layout from "../global/Layout";
 import { firebaseObjectToArray } from "../utils";
 import useWindowSize from "../hooks/useWindowSize";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { openSnackBar } from "../redux/reducers";
 
 import CreateOrEditSale from "../components/modal/CreateOrEditSale";
 import ConfirmationModal from "../components/modal/Confirmation";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 const filteredSalesBasedOnSearchText = (sales, searchText) => {
   let searchedSales = sales?.filter((sale) => {
@@ -240,7 +236,6 @@ const DashBoard = ({ auth, currentUser }) => {
     useState(false);
 
   const [loadingSales, setLoadingSales] = useState(true);
-  const [snackBarMessage, setSnackBarMessage] = useState("");
 
   const db = getDatabase();
   const dbRef = ref(db);
@@ -314,8 +309,12 @@ const DashBoard = ({ auth, currentUser }) => {
     0
   );
 
+  const dispatch = useDispatch();
+
   const getAllEmailsSoldToo = (allSales) => {
-    setSnackBarMessage("Copied all emails of clients you sold to :)");
+    dispatch(
+      openSnackBar({ message: "Copied all emails of clients you sold to :)" })
+    );
 
     const uniqueEmails = {};
 
@@ -325,8 +324,10 @@ const DashBoard = ({ auth, currentUser }) => {
   };
 
   const getAllIntaHandlesSoldTo = (allSales) => {
-    setSnackBarMessage(
-      "Copied all Instagram handles of clients you sold to ;)"
+    dispatch(
+      openSnackBar({
+        message: "Copied all Instagram handles of clients you sold to ;)",
+      })
     );
 
     const uniqueIntaHandles = {};
@@ -357,15 +358,6 @@ const DashBoard = ({ auth, currentUser }) => {
         setConfirmationModalModalOpen={setDeleteConfirmationModalOpen}
         confirmationAction={() => handleDeleteSale(selectedSale?.saleUID)}
       />
-      <Snackbar
-        open={Boolean(snackBarMessage)}
-        autoHideDuration={3000}
-        onClose={() => setSnackBarMessage("")}
-      >
-        <Alert severity="success" sx={{ width: "100%" }}>
-          {snackBarMessage}
-        </Alert>
-      </Snackbar>
       <Layout auth={auth} currentUser={currentUser}>
         <StyledDashBoard screenheight={screenHeight}>
           <div className="table_management_heading">
