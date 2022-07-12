@@ -116,6 +116,9 @@ const TopBarNavigation = ({ auth, currentUser }) => {
               <h3>
                 <Link to="/dashboard">Dashboard</Link>
               </h3>
+              <h3>
+                <Link to="/registration">registration</Link>
+              </h3>
             </>
           )}
           <Button

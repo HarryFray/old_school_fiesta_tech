@@ -14,6 +14,7 @@ import SignIn from "./components/SignIn";
 import DashBoard from "./pages/Dashboard";
 import Lottery from "./pages/Lottery";
 import EventManagement from "./pages/EventManagement";
+import Registration from "./pages/Registration";
 
 const FIRE_BASE_CONFIG = {
   apiKey: process.env.REACT_APP_FB_API_KEY,
@@ -87,6 +88,12 @@ function App() {
                         path="lottery"
                         element={
                           <Lottery auth={auth} currentUser={currentUser} />
+                        }
+                      />
+                      <Route
+                        path="registration"
+                        element={
+                          <Registration auth={auth} currentUser={currentUser} />
                         }
                       />
                     </>
