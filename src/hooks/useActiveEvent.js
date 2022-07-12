@@ -1,39 +1,38 @@
 import { useState, useEffect } from "react";
+import { getDatabase, ref, child, get } from "firebase/database";
 
-import { breakPoints } from "../global/Theme";
+import { firebaseObjectToArray } from "../utils";
 
-const useWindowSize = () => {
-  const [windowSize, setWindowSize] = useState({
-    width: undefined,
-    height: undefined,
-  });
+const useActiveEvent = () => {
+  const [activeEvent, setActiveEvent] = useState("");
+
+  const [loadingEvent, setLoadingEvent] = useState(true);
+
+  const db = getDatabase();
+  const dbRef = ref(db);
 
   useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
+    setLoadingEvent(true);
 
-    window.addEventListener("resize", handleResize);
-    handleResize();
+    get(child(dbRef, `events`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        const eventsSnapshot = snapshot.val();
+        const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
 
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+        const activeEvent = firebaseEvents.filter((res) => res.activeEvent)[0];
 
-  let isXSmall = windowSize.width <= parseInt(breakPoints.xSmall, 10);
-  let isSmall = windowSize.width <= parseInt(breakPoints.small, 10);
-  let isMedium = windowSize.width <= parseInt(breakPoints.medium, 10);
-  let isLarge = windowSize.width <= parseInt(breakPoints.large, 10);
+        const sales = firebaseObjectToArray(activeEvent?.sales);
 
-  return {
-    windowSize,
-    isXSmall,
-    isSmall,
-    isMedium,
-    isLarge,
-  };
+        setActiveEvent({ ...activeEvent, sales });
+        setTimeout(() => setLoadingEvent(false), 1000);
+      } else {
+        setActiveEvent([]);
+        setTimeout(() => setLoadingEvent(false), 1000);
+      }
+    });
+  }, [setLoadingEvent, setActiveEvent, dbRef]);
+
+  return { activeEvent, loadingEvent, setLoadingEvent };
 };
 
-export default useWindowSize;
+export default useActiveEvent;

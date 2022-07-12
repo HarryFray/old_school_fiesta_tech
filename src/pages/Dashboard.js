@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { getDatabase, ref, child, get, remove } from "firebase/database";
+import { getDatabase, ref, remove } from "firebase/database";
 import copy from "copy-to-clipboard";
 import { useDispatch } from "react-redux";
 
 import Layout from "../global/Layout";
-import { firebaseObjectToArray } from "../utils";
 import useWindowSize from "../hooks/useWindowSize";
+import useActiveEvent from "../hooks/useActiveEvent";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { openSnackBar } from "../redux/reducers";
 
@@ -225,9 +225,6 @@ const StyledDashBoard = styled.div`
 const DashBoard = ({ auth, currentUser }) => {
   const { isSmall } = useWindowSize();
 
-  const [activeEvent, setActiveEvent] = useState("");
-  const [allSales, setAllSales] = useState([]);
-
   const [selectedSale, setSelectedSale] = useState({});
   const [filterText, setFilterText] = useState("");
 
@@ -235,54 +232,11 @@ const DashBoard = ({ auth, currentUser }) => {
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
 
-  const [loadingSales, setLoadingSales] = useState(true);
-
   const db = getDatabase();
-  const dbRef = ref(db);
 
-  // GETTING ACTIVE EVENT
-  useEffect(() => {
-    setLoadingSales(true);
+  const { activeEvent, loadingEvent, setLoadingEvent } = useActiveEvent();
 
-    get(child(dbRef, `events`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        const eventsSnapshot = snapshot.val();
-        const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
-
-        const activeEvent = firebaseEvents.filter((res) => res.activeEvent)[0];
-
-        setActiveEvent(activeEvent);
-        setTimeout(() => setLoadingSales(false), 1000);
-      } else {
-        setActiveEvent([]);
-        setTimeout(() => setLoadingSales(false), 1000);
-      }
-    });
-  }, [setLoadingSales, setActiveEvent, dbRef]);
-
-  // GETTING RELEVANT SALES FOR ACTIVE EVENT AND USER
-  useEffect(() => {
-    get(child(dbRef, `events/${activeEvent?.eventName}/sales`)).then(
-      (snapshot) => {
-        if (snapshot.exists()) {
-          const eventsSnapshot = snapshot.val();
-          const allFirebaseEventSales = firebaseObjectToArray(eventsSnapshot);
-
-          if (currentUser?.superUser) {
-            setAllSales(allFirebaseEventSales);
-          } else {
-            const eventSalesForCurrentUser = allFirebaseEventSales.filter(
-              ({ artistName }) => artistName === currentUser?.displayName
-            );
-
-            setAllSales(eventSalesForCurrentUser);
-          }
-        } else {
-          setAllSales([]);
-        }
-      }
-    );
-  });
+  const allSales = activeEvent?.sales;
 
   // manage loading and scroll for cleaner mobile experience
   useEffect(() => {
@@ -290,9 +244,9 @@ const DashBoard = ({ auth, currentUser }) => {
 
     if (createOrEditSaleOpen || deleteConfirmationModalOpen) return;
 
-    setLoadingSales(true);
-    setTimeout(() => setLoadingSales(false), 1000);
-  }, [createOrEditSaleOpen, deleteConfirmationModalOpen]);
+    setLoadingEvent(true);
+    setTimeout(() => setLoadingEvent(false), 1000);
+  }, [createOrEditSaleOpen, deleteConfirmationModalOpen, setLoadingEvent]);
 
   const handleDeleteSale = (saleUID) => {
     remove(ref(db, `events/${activeEvent?.eventName}/sales/${saleUID}`));
@@ -300,11 +254,11 @@ const DashBoard = ({ auth, currentUser }) => {
 
   const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
 
-  const totalTicketsSold = filteredSales.reduce(
+  const totalTicketsSold = filteredSales?.reduce(
     (acc, cur) => acc + Number(cur.ticketsBought),
     0
   );
-  const totalSales = filteredSales.reduce(
+  const totalSales = filteredSales?.reduce(
     (acc, cur) => acc + Number(cur.costOfSale),
     0
   );
@@ -425,7 +379,7 @@ const DashBoard = ({ auth, currentUser }) => {
                   <th className="fixed_action_col">Action</th>
                 </tr>
               </thead>
-              {Boolean(filteredSales?.length && !loadingSales) && (
+              {Boolean(filteredSales?.length && !loadingEvent) && (
                 <tbody>
                   {filteredSales?.map((sale, id) => {
                     const {
@@ -477,7 +431,7 @@ const DashBoard = ({ auth, currentUser }) => {
               )}
             </table>
           ) : (
-            Boolean(filteredSales?.length && !loadingSales) && (
+            Boolean(filteredSales?.length && !loadingEvent) && (
               <div className="sale_cards">
                 {filteredSales?.map((sale, id) => {
                   const {
@@ -540,12 +494,12 @@ const DashBoard = ({ auth, currentUser }) => {
               </div>
             )
           )}
-          {Boolean(loadingSales) && (
+          {Boolean(loadingEvent) && (
             <div className="loading_icon">
               <LoadingSpinner />
             </div>
           )}
-          {Boolean(!filteredSales?.length && !loadingSales) && (
+          {Boolean(!filteredSales?.length && !loadingEvent) && (
             <div className="empty_search_text">
               <h2>No sales available</h2>
               <h6 className="subtitle-2">
