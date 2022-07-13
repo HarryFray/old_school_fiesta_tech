@@ -28,7 +28,7 @@ const StyledLayout = styled.div`
   }
 `;
 
-const Layout = ({ children, auth, currentUser }) => {
+const Layout = ({ children, auth, currentUser, hideTopBar = false }) => {
   const dispatch = useDispatch();
 
   const { open, message, status } = useSelector((state) => state.snackBar);
@@ -44,10 +44,15 @@ const Layout = ({ children, auth, currentUser }) => {
           {message}
         </Alert>
       </Snackbar>
-      <StyledLayout>
-        <TopBarNavigation auth={auth} currentUser={currentUser} />
-        <div className="page_content">{children}</div>
-      </StyledLayout>
+
+      {hideTopBar ? (
+        children
+      ) : (
+        <StyledLayout>
+          <TopBarNavigation auth={auth} currentUser={currentUser} />
+          <div className="page_content">{children}</div>
+        </StyledLayout>
+      )}
     </>
   );
 };

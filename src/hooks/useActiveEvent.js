@@ -32,7 +32,7 @@ const useActiveEvent = () => {
     });
   }, [setLoadingEvent, setActiveEvent, dbRef]);
 
-  return { activeEvent, loadingEvent, setLoadingEvent };
+  return { activeEvent, loadingEvent, setLoadingEvent, db };
 };
 
 export default useActiveEvent;
