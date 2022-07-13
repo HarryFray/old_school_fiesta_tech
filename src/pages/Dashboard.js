@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { getDatabase, ref, remove } from "firebase/database";
+import { ref, remove } from "firebase/database";
 import copy from "copy-to-clipboard";
 import { useDispatch } from "react-redux";
 
@@ -232,9 +232,7 @@ const DashBoard = ({ auth, currentUser }) => {
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
 
-  const db = getDatabase();
-
-  const { activeEvent, loadingEvent, setLoadingEvent } = useActiveEvent();
+  const { activeEvent, loadingEvent, setLoadingEvent, db } = useActiveEvent();
 
   const allSales = activeEvent?.sales;
 
@@ -305,7 +303,7 @@ const DashBoard = ({ auth, currentUser }) => {
         setSelectedSale={setSelectedSale}
         selectedSale={selectedSale}
         currentUser={currentUser}
-        activeEventName={activeEvent?.eventName}
+        activeEvent={activeEvent}
       />
       <ConfirmationModal
         confirmationModalModalOpen={deleteConfirmationModalOpen}

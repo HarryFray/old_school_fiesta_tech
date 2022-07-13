@@ -44,14 +44,13 @@ const Layout = ({ children, auth, currentUser, hideTopBar = false }) => {
           {message}
         </Alert>
       </Snackbar>
-
-      {hideTopBar ? (
-        children
-      ) : (
+      {!hideTopBar ? (
         <StyledLayout>
           <TopBarNavigation auth={auth} currentUser={currentUser} />
           <div className="page_content">{children}</div>
         </StyledLayout>
+      ) : (
+        children
       )}
     </>
   );

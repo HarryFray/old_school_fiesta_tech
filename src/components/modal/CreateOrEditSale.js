@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
 import { getDatabase, ref, push, set } from "firebase/database";
 import { useDispatch } from "react-redux";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import { openSnackBar } from "../../redux/reducers";
 import Typography from "../../global/Typography";
@@ -65,9 +66,9 @@ const CreateOrEditSale = ({
   setSelectedSale,
   selectedSale,
   currentUser,
-  activeEventName,
+  activeEvent,
 }) => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, control } = useForm();
 
   const isNewSale = isEmpty(selectedSale);
   const db = getDatabase();
@@ -93,11 +94,11 @@ const CreateOrEditSale = ({
 
     if (isNewSale) {
       const saleUID = push(
-        ref(db, `events/${activeEventName}/sales`),
+        ref(db, `events/${activeEvent?.eventName}/sales`),
         data
       ).key;
 
-      set(ref(db, `events/${activeEventName}/sales/${saleUID}`), {
+      set(ref(db, `events/${activeEvent?.eventName}/sales/${saleUID}`), {
         ...data,
         saleUID,
       })
@@ -117,7 +118,10 @@ const CreateOrEditSale = ({
           );
         });
     } else {
-      set(ref(db, `events/${activeEventName}/sales/${data.saleUID}`), data)
+      set(
+        ref(db, `events/${activeEvent?.eventName}/sales/${data.saleUID}`),
+        data
+      )
         .then(() => {
           dispatch(
             openSnackBar({
@@ -136,6 +140,12 @@ const CreateOrEditSale = ({
     }
   };
 
+  const party = activeEvent?.guests?.map((guest) => {
+    return {
+      label: guest?.name,
+    };
+  });
+
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
       <Box>
@@ -153,12 +163,21 @@ const CreateOrEditSale = ({
                 size="small"
                 disabled={!currentUser?.superUser}
               />
-              <TextField
-                {...register("name", { required: true })}
-                label="Art sold to*"
-                className="text_input"
-                variant="outlined"
-                size="small"
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <Autocomplete
+                    {...field}
+                    disablePortal
+                    options={party}
+                    size="small"
+                    className="text_input"
+                    renderInput={(params) => (
+                      <TextField {...params} label="Guest" />
+                    )}
+                  />
+                )}
               />
               <TextField
                 {...register("email", { required: true })}

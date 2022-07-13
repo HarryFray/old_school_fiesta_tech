@@ -22,8 +22,9 @@ const useActiveEvent = () => {
         const activeEvent = firebaseEvents.filter((res) => res.activeEvent)[0];
 
         const sales = firebaseObjectToArray(activeEvent?.sales);
+        const guests = firebaseObjectToArray(activeEvent?.guests);
 
-        setActiveEvent({ ...activeEvent, sales });
+        setActiveEvent({ ...activeEvent, sales, guests });
         setTimeout(() => setLoadingEvent(false), 1000);
       } else {
         setActiveEvent([]);
