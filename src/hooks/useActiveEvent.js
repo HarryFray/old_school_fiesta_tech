@@ -3,8 +3,9 @@ import { getDatabase, ref, child, get } from "firebase/database";
 
 import { firebaseObjectToArray } from "../utils";
 
-const useActiveEvent = () => {
+const useActiveEvent = ({ currentUser }) => {
   const [activeEvent, setActiveEvent] = useState("");
+  const [allSales, setAllSales] = useState([]);
 
   const [loadingEvent, setLoadingEvent] = useState(true);
 
@@ -21,10 +22,9 @@ const useActiveEvent = () => {
 
         const activeEvent = firebaseEvents.filter((res) => res.activeEvent)[0];
 
-        const sales = firebaseObjectToArray(activeEvent?.sales);
         const guests = firebaseObjectToArray(activeEvent?.guests);
 
-        setActiveEvent({ ...activeEvent, sales, guests });
+        setActiveEvent({ ...activeEvent, guests });
         setTimeout(() => setLoadingEvent(false), 1000);
       } else {
         setActiveEvent([]);
@@ -33,7 +33,36 @@ const useActiveEvent = () => {
     });
   }, [setLoadingEvent, setActiveEvent, dbRef]);
 
-  return { activeEvent, loadingEvent, setLoadingEvent, db };
+  // GETTING RELEVANT SALES FOR ACTIVE EVENT AND USER
+  useEffect(() => {
+    get(child(dbRef, `events/${activeEvent?.eventName}/sales`)).then(
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const eventsSnapshot = snapshot.val();
+          const allFirebaseEventSales = firebaseObjectToArray(eventsSnapshot);
+
+          if (currentUser?.superUser) {
+            setAllSales(allFirebaseEventSales);
+          } else {
+            const eventSalesForCurrentUser = allFirebaseEventSales.filter(
+              ({ artistName }) => artistName === currentUser?.displayName
+            );
+
+            setAllSales(eventSalesForCurrentUser);
+          }
+        } else {
+          setAllSales([]);
+        }
+      }
+    );
+  });
+
+  return {
+    activeEvent: { ...activeEvent, sales: allSales },
+    loadingEvent,
+    setLoadingEvent,
+    db,
+  };
 };
 
 export default useActiveEvent;

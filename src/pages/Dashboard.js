@@ -232,7 +232,9 @@ const DashBoard = ({ auth, currentUser }) => {
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
 
-  const { activeEvent, loadingEvent, setLoadingEvent, db } = useActiveEvent();
+  const { activeEvent, loadingEvent, setLoadingEvent, db } = useActiveEvent({
+    currentUser,
+  });
 
   const allSales = activeEvent?.sales;
 
