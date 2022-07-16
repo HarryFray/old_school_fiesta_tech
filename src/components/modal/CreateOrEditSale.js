@@ -140,6 +140,8 @@ const CreateOrEditSale = ({
     }
   };
 
+  console.log({ activeEvent });
+
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
       <Box>

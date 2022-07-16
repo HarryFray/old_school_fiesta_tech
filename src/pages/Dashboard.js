@@ -18,11 +18,11 @@ import ConfirmationModal from "../components/modal/Confirmation";
 const filteredSalesBasedOnSearchText = (sales, searchText) => {
   let searchedSales = sales?.filter((sale) => {
     let nameIncludedInSearch = sale.name
-      .toLowerCase()
+      ?.toLowerCase()
       .includes(searchText.toLowerCase());
 
     let artistIncludedInSearch = sale.artistName
-      .toLowerCase()
+      ?.toLowerCase()
       .includes(searchText.toLowerCase());
 
     return nameIncludedInSearch || artistIncludedInSearch;
