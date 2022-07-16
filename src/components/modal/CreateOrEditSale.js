@@ -163,21 +163,12 @@ const CreateOrEditSale = ({
                 size="small"
                 disabled={!currentUser?.superUser}
               />
-              <Controller
-                name="name"
-                control={control}
-                render={({ field }) => (
-                  <Autocomplete
-                    {...field}
-                    disablePortal
-                    options={party}
-                    size="small"
-                    className="text_input"
-                    renderInput={(params) => (
-                      <TextField {...params} label="Guest" />
-                    )}
-                  />
-                )}
+              <TextField
+                {...register("name", { required: true })}
+                label="Art sold to*"
+                className="text_input"
+                variant="outlined"
+                size="small"
               />
               <TextField
                 {...register("email", { required: true })}
