@@ -140,12 +140,6 @@ const CreateOrEditSale = ({
     }
   };
 
-  const party = activeEvent?.guests?.map((guest) => {
-    return {
-      label: guest?.name,
-    };
-  });
-
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
       <Box>

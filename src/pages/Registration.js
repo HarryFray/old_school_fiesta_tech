@@ -10,7 +10,7 @@ import Layout from "../global/Layout";
 import { openSnackBar } from "../redux/reducers";
 import useActiveEvent from "../hooks/useActiveEvent";
 
-const StyledDashBoard = styled.div`
+const StyledRegistration = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -40,8 +40,8 @@ const StyledDashBoard = styled.div`
   }
 `;
 
-const DashBoard = () => {
-  const { activeEvent, db } = useActiveEvent();
+const Registration = ({ currentUser }) => {
+  const { activeEvent, db } = useActiveEvent({ currentUser });
 
   const { register, handleSubmit, reset: resetGuestInput } = useForm();
 
@@ -75,7 +75,7 @@ const DashBoard = () => {
 
   return (
     <Layout hideTopBar>
-      <StyledDashBoard>
+      <StyledRegistration>
         <form onSubmit={handleSubmit(handleGuestCreation)}>
           <div className="content_section">
             <h1>Old Sol Fiesta Registration</h1>
@@ -107,9 +107,9 @@ const DashBoard = () => {
             </Button>
           </div>
         </form>
-      </StyledDashBoard>
+      </StyledRegistration>
     </Layout>
   );
 };
 
-export default DashBoard;
+export default Registration;
