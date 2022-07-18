@@ -18,7 +18,7 @@ const useActiveEvent = ({ currentUser }) => {
         const eventsSnapshot = snapshot.val();
         const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
 
-        const event = firebaseEvents.filter((res) => res.activeEvent)[0];
+        const event = firebaseEvents?.filter((res) => res.activeEvent)[0];
 
         const allFirebaseEventSales = firebaseObjectToArray(event?.sales);
 
@@ -28,7 +28,7 @@ const useActiveEvent = ({ currentUser }) => {
         if (currentUser?.superUser) {
           sales = allFirebaseEventSales;
         } else {
-          const eventSalesForCurrentUser = allFirebaseEventSales.filter(
+          const eventSalesForCurrentUser = allFirebaseEventSales?.filter(
             ({ artistName }) => artistName === currentUser?.displayName
           );
 
