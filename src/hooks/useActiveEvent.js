@@ -1,57 +1,51 @@
 import { useState, useEffect } from "react";
-import { getDatabase, ref, child, get, onValue } from "firebase/database";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 import { firebaseObjectToArray } from "../utils";
 
 const useActiveEvent = ({ currentUser }) => {
-  let party = {};
+  const [activeEvent, setActiveEvent] = useState({});
+  const [loadingEvent, setLoadingEvent] = useState(false);
 
-  const db = getDatabase();
-  const dbRef = ref(db, "/events");
+  useEffect(() => {
+    const db = getDatabase();
+    const dbRef = ref(db, "/events");
 
-  onValue(dbRef, (snapshot) => {
-    const data = snapshot.val();
+    onValue(dbRef, (snapshot) => {
+      setLoadingEvent(true);
 
-    console.log({ data });
-    if (snapshot.exists()) {
-      const eventsSnapshot = snapshot.val();
-      const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
+      if (snapshot.exists()) {
+        const eventsSnapshot = snapshot.val();
+        const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
 
-      const activeEvent = firebaseEvents.filter((res) => res.activeEvent)[0];
+        const event = firebaseEvents.filter((res) => res.activeEvent)[0];
 
-      const allFirebaseEventSales = firebaseObjectToArray(activeEvent?.sales);
+        const allFirebaseEventSales = firebaseObjectToArray(event?.sales);
 
-      const guests = firebaseObjectToArray(activeEvent?.guests);
-      let sales = [];
+        const guests = firebaseObjectToArray(event?.guests);
+        let sales = [];
 
-      if (currentUser?.superUser) {
-        sales = allFirebaseEventSales;
+        if (currentUser?.superUser) {
+          sales = allFirebaseEventSales;
+        } else {
+          const eventSalesForCurrentUser = allFirebaseEventSales.filter(
+            ({ artistName }) => artistName === currentUser?.displayName
+          );
+
+          sales = eventSalesForCurrentUser;
+        }
+
+        setActiveEvent({ ...event, guests, sales });
+        setTimeout(() => setLoadingEvent(false), 1000);
       } else {
-        const eventSalesForCurrentUser = allFirebaseEventSales.filter(
-          ({ artistName }) => artistName === currentUser?.displayName
-        );
+        setActiveEvent({});
 
-        sales = eventSalesForCurrentUser;
+        setTimeout(() => setLoadingEvent(false), 1000);
       }
+    });
+  }, [currentUser]);
 
-      // setActiveEvent({ ...activeEvent, guests, sales });
-      party = { ...activeEvent, guests, sales };
-      // setTimeout(() => setLoadingEvent(false), 1000);
-    } else {
-      // setActiveEvent([]);
-      party = {};
-
-      // setTimeout(() => setLoadingEvent(false), 1000);
-    }
-  });
-  console.log({ party });
-
-  return {
-    activeEvent: party,
-    loadingEvent: false,
-    setLoadingEvent: () => {},
-    db,
-  };
+  return { activeEvent, loadingEvent, setLoadingEvent };
 };
 
 export default useActiveEvent;

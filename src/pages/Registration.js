@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
-import { ref, push, set } from "firebase/database";
+import { ref, push, set, getDatabase } from "firebase/database";
 
 import Layout from "../global/Layout";
 import { openSnackBar } from "../redux/reducers";
@@ -41,9 +41,10 @@ const StyledRegistration = styled.div`
 `;
 
 const Registration = ({ currentUser }) => {
-  const { activeEvent, db } = useActiveEvent({ currentUser });
+  const { activeEvent } = useActiveEvent({ currentUser });
 
   const { register, handleSubmit, reset: resetGuestInput } = useForm();
+  const db = getDatabase();
 
   const dispatch = useDispatch();
 
