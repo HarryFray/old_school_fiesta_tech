@@ -12,8 +12,6 @@ const useActiveEvent = ({ currentUser }) => {
     const dbRef = ref(db, "/events");
 
     onValue(dbRef, (snapshot) => {
-      setLoadingEvent(true);
-
       if (snapshot.exists()) {
         const eventsSnapshot = snapshot.val();
         const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
@@ -36,11 +34,8 @@ const useActiveEvent = ({ currentUser }) => {
         }
 
         setActiveEvent({ ...event, guests, sales });
-        setTimeout(() => setLoadingEvent(false), 1000);
       } else {
         setActiveEvent({});
-
-        setTimeout(() => setLoadingEvent(false), 1000);
       }
     });
   }, [currentUser]);
