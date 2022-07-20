@@ -15,7 +15,7 @@ const getAllTicketsSoldFromSales = (allSales) => {
   return allTicketsSold;
 };
 
-const useActiveEvent = ({ currentUser }) => {
+const useActiveEvent = () => {
   const [allEvents, setAllEvents] = useState([]);
   const [activeEvent, setActiveEvent] = useState({});
 
@@ -31,25 +31,11 @@ const useActiveEvent = ({ currentUser }) => {
         const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
 
         const event = firebaseEvents?.filter((res) => res.activeEvent)[0];
-
-        const allFirebaseEventSales = firebaseObjectToArray(event?.sales);
-
-        const guests = firebaseObjectToArray(event?.guests);
-        let sales = [];
-
-        if (currentUser?.superUser) {
-          sales = allFirebaseEventSales;
-        } else {
-          const eventSalesForCurrentUser = allFirebaseEventSales?.filter(
-            ({ artistName }) => artistName === currentUser?.displayName
-          );
-
-          sales = eventSalesForCurrentUser;
-        }
+        const sales = firebaseObjectToArray(event?.sales);
 
         setActiveEvent({
           ...event,
-          guests,
+          guests: firebaseObjectToArray(event?.guests),
           sales,
           tickets: getAllTicketsSoldFromSales(sales),
         });
@@ -58,7 +44,7 @@ const useActiveEvent = ({ currentUser }) => {
         setActiveEvent({});
       }
     });
-  }, [currentUser]);
+  }, []);
 
   return { activeEvent, allEvents, loadingEvent, setLoadingEvent };
 };

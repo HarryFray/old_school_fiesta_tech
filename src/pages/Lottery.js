@@ -126,7 +126,7 @@ const StyledLottery = styled.div`
 const Lottery = ({ auth, currentUser }) => {
   const [winners, setWinners] = useState([]);
 
-  const { activeEvent } = useActiveEvent({ currentUser });
+  const { activeEvent } = useActiveEvent();
 
   const allTicketsSold = activeEvent?.tickets;
 

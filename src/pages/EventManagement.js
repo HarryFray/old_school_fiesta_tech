@@ -142,9 +142,7 @@ const EventManagement = ({ auth, currentUser }) => {
 
   const db = getDatabase();
 
-  const { allEvents, loadingEvent: loadingEvents } = useActiveEvent({
-    currentUser,
-  });
+  const { allEvents, loadingEvent: loadingEvents } = useActiveEvent();
 
   const handleDeleteEvent = (eventName) => {
     remove(ref(db, `events/${eventName}`));

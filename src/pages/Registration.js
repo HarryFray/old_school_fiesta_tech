@@ -41,7 +41,7 @@ const StyledRegistration = styled.div`
 `;
 
 const Registration = ({ currentUser }) => {
-  const { activeEvent } = useActiveEvent({ currentUser });
+  const { activeEvent } = useActiveEvent();
 
   const { register, handleSubmit, reset: resetGuestInput } = useForm();
   const db = getDatabase();
