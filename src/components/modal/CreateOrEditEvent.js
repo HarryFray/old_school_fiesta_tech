@@ -73,7 +73,7 @@ const convertArtistsArrayToObject = (data) => {
 
   const artists = {};
 
-  data.forEach((artist, i) => {
+  data?.forEach((artist, i) => {
     artists[`artist_name_${i}`] = artist.name;
     artists[`artist_email_${i}`] = artist.email;
   });

@@ -1,57 +1,52 @@
 import { useState, useEffect } from "react";
-import { getDatabase, ref, child, get, onValue } from "firebase/database";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 import { firebaseObjectToArray } from "../utils";
 
-const useActiveEvent = ({ currentUser }) => {
-  let party = {};
+const getAllTicketsSoldFromSales = (allSales) => {
+  const allTicketsSold = [];
 
-  const db = getDatabase();
-  const dbRef = ref(db, "/events");
-
-  onValue(dbRef, (snapshot) => {
-    const data = snapshot.val();
-
-    console.log({ data });
-    if (snapshot.exists()) {
-      const eventsSnapshot = snapshot.val();
-      const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
-
-      const activeEvent = firebaseEvents.filter((res) => res.activeEvent)[0];
-
-      const allFirebaseEventSales = firebaseObjectToArray(activeEvent?.sales);
-
-      const guests = firebaseObjectToArray(activeEvent?.guests);
-      let sales = [];
-
-      if (currentUser?.superUser) {
-        sales = allFirebaseEventSales;
-      } else {
-        const eventSalesForCurrentUser = allFirebaseEventSales.filter(
-          ({ artistName }) => artistName === currentUser?.displayName
-        );
-
-        sales = eventSalesForCurrentUser;
-      }
-
-      // setActiveEvent({ ...activeEvent, guests, sales });
-      party = { ...activeEvent, guests, sales };
-      // setTimeout(() => setLoadingEvent(false), 1000);
-    } else {
-      // setActiveEvent([]);
-      party = {};
-
-      // setTimeout(() => setLoadingEvent(false), 1000);
+  allSales?.forEach((sale) => {
+    for (let ticket = 0; ticket < Number(sale?.ticketsBought); ticket++) {
+      allTicketsSold.push(sale);
     }
   });
-  console.log({ party });
 
-  return {
-    activeEvent: party,
-    loadingEvent: false,
-    setLoadingEvent: () => {},
-    db,
-  };
+  return allTicketsSold;
+};
+
+const useActiveEvent = () => {
+  const [allEvents, setAllEvents] = useState([]);
+  const [activeEvent, setActiveEvent] = useState({});
+
+  const [loadingEvent, setLoadingEvent] = useState(false);
+
+  useEffect(() => {
+    const db = getDatabase();
+    const dbRef = ref(db, "/events");
+
+    onValue(dbRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const eventsSnapshot = snapshot.val();
+        const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
+
+        const event = firebaseEvents?.filter((res) => res.activeEvent)[0];
+        const sales = firebaseObjectToArray(event?.sales);
+
+        setActiveEvent({
+          ...event,
+          guests: firebaseObjectToArray(event?.guests),
+          sales,
+          tickets: getAllTicketsSoldFromSales(sales),
+        });
+        setAllEvents(firebaseEvents);
+      } else {
+        setActiveEvent({});
+      }
+    });
+  }, []);
+
+  return { activeEvent, allEvents, loadingEvent, setLoadingEvent };
 };
 
 export default useActiveEvent;

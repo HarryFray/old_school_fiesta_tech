@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { ref, remove } from "firebase/database";
+import { ref, remove, getDatabase } from "firebase/database";
 import copy from "copy-to-clipboard";
 import { useDispatch } from "react-redux";
 
@@ -232,11 +232,15 @@ const DashBoard = ({ auth, currentUser }) => {
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
 
-  const { activeEvent, loadingEvent, setLoadingEvent, db } = useActiveEvent({
-    currentUser,
-  });
+  const { activeEvent, loadingEvent, setLoadingEvent } = useActiveEvent();
 
-  const allSales = activeEvent?.sales;
+  const db = getDatabase();
+
+  const usereSpecificSales = currentUser?.superUser
+    ? activeEvent?.sales
+    : activeEvent?.sales?.filter(
+        ({ artistName }) => artistName === currentUser?.displayName
+      );
 
   // manage loading and scroll for cleaner mobile experience
   useEffect(() => {
@@ -252,7 +256,10 @@ const DashBoard = ({ auth, currentUser }) => {
     remove(ref(db, `events/${activeEvent?.eventName}/sales/${saleUID}`));
   };
 
-  const filteredSales = filteredSalesBasedOnSearchText(allSales, filterText);
+  const filteredSales = filteredSalesBasedOnSearchText(
+    usereSpecificSales,
+    filterText
+  );
 
   const totalTicketsSold = filteredSales?.reduce(
     (acc, cur) => acc + Number(cur.ticketsBought),
@@ -265,19 +272,19 @@ const DashBoard = ({ auth, currentUser }) => {
 
   const dispatch = useDispatch();
 
-  const getAllEmailsSoldToo = (allSales) => {
+  const getAllEmailsSoldToo = (usereSpecificSales) => {
     dispatch(
       openSnackBar({ message: "Copied all emails of clients you sold to :)" })
     );
 
     const uniqueEmails = {};
 
-    allSales.forEach(({ email }) => (uniqueEmails[email] = email));
+    usereSpecificSales?.forEach(({ email }) => (uniqueEmails[email] = email));
 
     return Object.keys(uniqueEmails);
   };
 
-  const getAllIntaHandlesSoldTo = (allSales) => {
+  const getAllIntaHandlesSoldTo = (usereSpecificSales) => {
     dispatch(
       openSnackBar({
         message: "Copied all Instagram handles of clients you sold to ;)",
@@ -286,7 +293,7 @@ const DashBoard = ({ auth, currentUser }) => {
 
     const uniqueIntaHandles = {};
 
-    allSales.forEach(
+    usereSpecificSales?.forEach(
       ({ instagramHandle }) =>
         (uniqueIntaHandles[instagramHandle] = instagramHandle)
     );
@@ -337,14 +344,16 @@ const DashBoard = ({ auth, currentUser }) => {
               <div className="buttons">
                 <Button
                   size="small"
-                  onClick={() => copy(getAllIntaHandlesSoldTo(allSales))}
+                  onClick={() =>
+                    copy(getAllIntaHandlesSoldTo(usereSpecificSales))
+                  }
                   variant="outlined"
                 >
                   COPY INSTAS
                 </Button>
                 <Button
                   size="small"
-                  onClick={() => copy(getAllEmailsSoldToo(allSales))}
+                  onClick={() => copy(getAllEmailsSoldToo(usereSpecificSales))}
                   variant="outlined"
                 >
                   COPY EMAILS

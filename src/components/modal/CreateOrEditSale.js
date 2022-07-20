@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -8,7 +8,6 @@ import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
 import { getDatabase, ref, push, set } from "firebase/database";
 import { useDispatch } from "react-redux";
-import Autocomplete from "@mui/material/Autocomplete";
 
 import { openSnackBar } from "../../redux/reducers";
 import Typography from "../../global/Typography";
@@ -68,7 +67,7 @@ const CreateOrEditSale = ({
   currentUser,
   activeEvent,
 }) => {
-  const { register, handleSubmit, reset, control } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   const isNewSale = isEmpty(selectedSale);
   const db = getDatabase();
@@ -139,8 +138,6 @@ const CreateOrEditSale = ({
         });
     }
   };
-
-  console.log({ activeEvent });
 
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>

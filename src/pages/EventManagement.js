@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { getDatabase, ref, child, get, remove } from "firebase/database";
+import { getDatabase, ref, remove } from "firebase/database";
 
 import Layout from "../global/Layout";
 import CreateOrEditEvent from "../components/modal/CreateOrEditEvent";
 import ConfirmationModal from "../components/modal/Confirmation";
-import { firebaseObjectToArray } from "../utils";
+import useActiveEvent from "../hooks/useActiveEvent";
 
 const filteredEventsBasedOnSearchText = (events, searchText) => {
   if (!events?.length) return [];
@@ -133,7 +133,6 @@ const StyledEventManagement = styled.div`
 `;
 
 const EventManagement = ({ auth, currentUser }) => {
-  const [allEvents, setAllEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState({});
   const [filterText, setFilterText] = useState("");
 
@@ -141,28 +140,9 @@ const EventManagement = ({ auth, currentUser }) => {
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
 
-  const [loadingEvents, setLoadingEvents] = useState(true);
-
   const db = getDatabase();
 
-  useEffect(() => {
-    setLoadingEvents(true);
-
-    const dbRef = ref(db);
-
-    get(child(dbRef, `events`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        const eventsSnapshot = snapshot.val();
-        const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
-        setAllEvents(firebaseEvents);
-
-        setTimeout(() => setLoadingEvents(false), 1000);
-      } else {
-        setAllEvents([]);
-        setTimeout(() => setLoadingEvents(false), 1000);
-      }
-    });
-  }, [setLoadingEvents, db, createOrEditEventOpen]);
+  const { allEvents, loadingEvent: loadingEvents } = useActiveEvent();
 
   const handleDeleteEvent = (eventName) => {
     remove(ref(db, `events/${eventName}`));
