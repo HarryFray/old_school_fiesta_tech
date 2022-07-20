@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import Modal from "@mui/material/Modal";
@@ -70,7 +70,11 @@ const CreateOrEditSale = ({
   const { register, handleSubmit, reset } = useForm();
 
   const isNewSale = isEmpty(selectedSale);
+  const allGuests = activeEvent?.guests;
+
   const db = getDatabase();
+
+  console.log({ allGuests });
 
   // MANAGES SALE FIELDS ON OPENING MODAL BASED ON USER ACCESS AND NEW/EDIT
   useEffect(() => {
