@@ -1,23 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
-import { getDatabase, ref, child, get } from "firebase/database";
 import { random } from "lodash";
 
 import Layout from "../global/Layout";
-import { firebaseObjectToArray } from "../utils";
-
-const getAllTicketsSoldFromSales = (allSales) => {
-  const allTicketsSold = [];
-
-  allSales.forEach((sale) => {
-    for (let ticket = 0; ticket < Number(sale?.ticketsBought); ticket++) {
-      allTicketsSold.push(sale);
-    }
-  });
-
-  return allTicketsSold;
-};
+import useActiveEvent from "../hooks/useActiveEvent";
 
 const StyledLottery = styled.div`
   height: 100%;
@@ -137,50 +124,11 @@ const StyledLottery = styled.div`
 `;
 
 const Lottery = ({ auth, currentUser }) => {
-  const [activeEvent, setActiveEvent] = useState("");
-
-  const [allTicketsSold, setAllTicketsSold] = useState([]);
   const [winners, setWinners] = useState([]);
 
-  const db = getDatabase();
+  const { activeEvent } = useActiveEvent({ currentUser });
 
-  // GETTING ACTIVE EVENT NAME
-  useEffect(() => {
-    const dbRef = ref(db);
-
-    get(child(dbRef, `events`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        const eventsSnapshot = snapshot.val();
-        const firebaseEvents = firebaseObjectToArray(eventsSnapshot);
-
-        const activeEvent = firebaseEvents.filter((res) => res.activeEvent)[0];
-
-        setActiveEvent(activeEvent);
-      }
-    });
-  });
-
-  // GETTING ALL SALES FOR EVENT AND CONVERTING TO TOTAL TICEKTS SOLD
-  useEffect(() => {
-    const dbRef = ref(db);
-
-    get(child(dbRef, `events/${activeEvent?.eventName}/sales`)).then(
-      (snapshot) => {
-        if (snapshot.exists()) {
-          const eventsSnapshot = snapshot.val();
-          const allFirebaseEventSales = firebaseObjectToArray(eventsSnapshot);
-
-          const allTicketsSold = getAllTicketsSoldFromSales(
-            allFirebaseEventSales
-          );
-
-          setAllTicketsSold(allTicketsSold);
-        } else {
-          setAllTicketsSold([]);
-        }
-      }
-    );
-  });
+  const allTicketsSold = activeEvent?.tickets;
 
   const handleSelectWinner = () => {
     const randomWinnerInt = random(0, allTicketsSold?.length - 1);
