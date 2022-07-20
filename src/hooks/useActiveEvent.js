@@ -6,7 +6,7 @@ import { firebaseObjectToArray } from "../utils";
 const getAllTicketsSoldFromSales = (allSales) => {
   const allTicketsSold = [];
 
-  allSales.forEach((sale) => {
+  allSales?.forEach((sale) => {
     for (let ticket = 0; ticket < Number(sale?.ticketsBought); ticket++) {
       allTicketsSold.push(sale);
     }

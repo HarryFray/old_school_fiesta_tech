@@ -274,7 +274,7 @@ const DashBoard = ({ auth, currentUser }) => {
 
     const uniqueEmails = {};
 
-    allSales.forEach(({ email }) => (uniqueEmails[email] = email));
+    allSales?.forEach(({ email }) => (uniqueEmails[email] = email));
 
     return Object.keys(uniqueEmails);
   };
@@ -288,7 +288,7 @@ const DashBoard = ({ auth, currentUser }) => {
 
     const uniqueIntaHandles = {};
 
-    allSales.forEach(
+    allSales?.forEach(
       ({ instagramHandle }) =>
         (uniqueIntaHandles[instagramHandle] = instagramHandle)
     );
