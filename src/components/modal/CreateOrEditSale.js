@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
 import { getDatabase, ref, push, set } from "firebase/database";
 import { useDispatch } from "react-redux";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import { openSnackBar } from "../../redux/reducers";
 import Typography from "../../global/Typography";
@@ -67,25 +68,34 @@ const CreateOrEditSale = ({
   currentUser,
   activeEvent,
 }) => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, watch } = useForm();
 
   const isNewSale = isEmpty(selectedSale);
-  const db = getDatabase();
+  const allGuests = activeEvent?.guests;
+  const selectedName = watch()?.name;
 
-  // MANAGES SALE FIELDS ON OPENING MODAL BASED ON USER ACCESS AND NEW/EDIT
   useEffect(() => {
     if (isNewSale) {
-      if (currentUser?.superUser) {
-        reset({});
-      } else {
-        reset({ artistName: currentUser?.displayName });
+      if (selectedName) {
+        const selectedGuest = allGuests?.filter(
+          (guest) => guest?.name === selectedName
+        )[0];
+
+        reset({ artistName: currentUser?.displayName, ...selectedGuest });
       }
     } else {
       reset(selectedSale);
     }
-  }, [isNewSale, reset, selectedSale, currentUser]);
+  }, [reset, selectedSale, allGuests, isNewSale, currentUser, selectedName]);
+
+  useEffect(() => {
+    if (!createOrEditSaleOpen) {
+      reset({});
+    }
+  }, [createOrEditSaleOpen, reset]);
 
   const dispatch = useDispatch();
+  const db = getDatabase();
 
   const updateOrCreateSale = (data) => {
     setSelectedSale({});
@@ -148,35 +158,43 @@ const CreateOrEditSale = ({
               {isNewSale ? "Add A New Sale" : "Edit Existing Sale"}
             </h3>
             <div className="content_section">
-              <TextField
-                {...register("artistName", { required: true })}
-                label="Artist Name*"
-                className="text_input"
-                variant="outlined"
-                size="small"
-                disabled={!currentUser?.superUser}
-              />
-              <TextField
-                {...register("name", { required: true })}
-                label="Art sold to*"
-                className="text_input"
-                variant="outlined"
-                size="small"
-              />
-              <TextField
-                {...register("email", { required: true })}
-                label="Email*"
-                className="text_input"
-                variant="outlined"
-                size="small"
-              />
-              <TextField
-                {...register("instagramHandle")}
-                label="Instagram Handle"
-                className="text_input"
-                variant="outlined"
-                size="small"
-              />
+              {currentUser?.superUser && (
+                <TextField
+                  {...register("artistName", { required: true })}
+                  label="Artist Name*"
+                  className="text_input"
+                  variant="outlined"
+                  size="small"
+                />
+              )}
+              {selectedName ? (
+                <TextField
+                  {...register("name", { required: true })}
+                  label="Art sold to*"
+                  className="text_input"
+                  variant="outlined"
+                  size="small"
+                  disabled
+                />
+              ) : (
+                <Autocomplete
+                  disablePortal
+                  className="text_input"
+                  variant="outlined"
+                  size="small"
+                  options={allGuests?.map((guest) => ({ label: guest?.name }))}
+                  renderInput={(params) => {
+                    return (
+                      <TextField
+                        {...register("name", { required: true })}
+                        {...params}
+                        value={selectedName}
+                        label="Art sold to*"
+                      />
+                    );
+                  }}
+                />
+              )}
               <TextField
                 {...register("costOfSale")}
                 label="Cost Of Sale"
