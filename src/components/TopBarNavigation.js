@@ -39,7 +39,32 @@ const StyledTopBarNavigation = styled.div`
     display: flex;
     align-items: center;
 
-    > * {
+    .nav_items {
+      display: flex;
+      align-items: center;
+
+      > * {
+        margin-left: 12px;
+      }
+    }
+
+    a {
+      :hover {
+        color: ${({ theme }) => theme.palette.primary.dark};
+      }
+    }
+
+    .selected_nav_item {
+      a {
+        color: ${({ theme }) => theme.palette.primary.dark};
+      }
+    }
+
+    h3:last-child {
+      display: none;
+    }
+
+    button {
       margin-left: 12px;
     }
   }
@@ -57,6 +82,29 @@ const StyledTopBarNavigation = styled.div`
   }
 `;
 
+const SUPER_USER_NAV_ITEMS = [
+  {
+    path: "lottery",
+    label: "Lottery",
+  },
+  {
+    path: "events",
+    label: "Event Management",
+  },
+  {
+    path: "dashboard",
+    label: "Dashboard",
+  },
+  {
+    path: "registration",
+    label: "Registration",
+  },
+  {
+    path: "guests",
+    label: "Guests",
+  },
+];
+
 const TopBarNavigation = ({ auth, currentUser }) => {
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -68,6 +116,8 @@ const TopBarNavigation = ({ auth, currentUser }) => {
       navigate("/");
     });
   };
+
+  const currentPath = window?.location?.pathname;
 
   return (
     <>
@@ -105,22 +155,24 @@ const TopBarNavigation = ({ auth, currentUser }) => {
           </>
         )}
         <div className="navigation">
-          {currentUser?.superUser && (
-            <>
-              <h3>
-                <Link to="/lottery">Lottery</Link>
-              </h3>
-              <h3>
-                <Link to="/events">Event Management</Link>
-              </h3>
-              <h3>
-                <Link to="/dashboard">Dashboard</Link>
-              </h3>
-              <h3>
-                <Link to="/registration">registration</Link>
-              </h3>
-            </>
-          )}
+          <div className="nav_items">
+            {currentUser?.superUser &&
+              SUPER_USER_NAV_ITEMS.map(({ path, label }) => {
+                return (
+                  <>
+                    <h3
+                      key={path}
+                      className={
+                        currentPath?.includes(path) && "selected_nav_item"
+                      }
+                    >
+                      <Link to={`/${path}`}>{label}</Link>
+                    </h3>
+                    <h3>|</h3>
+                  </>
+                );
+              })}
+          </div>
           <Button
             onClick={() => setConfirmationModalOpen(true)}
             variant="outlined"
