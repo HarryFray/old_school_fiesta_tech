@@ -91,6 +91,20 @@ const CreateOrEditSale = ({
     }
   }, [isNewSale, reset, selectedSale, currentUser]);
 
+  const selectedName = watch()?.name;
+
+
+  // TODO NICK: THE TWO USE EFFECTS HERE NEED TO BE REFACTORED FOR ALL THIS TO WORK...
+  useEffect(() => {
+    if (selectedName) {
+      const selectedGuest = allGuests?.filter(
+        (guest) => guest?.name === selectedName
+      )[0];
+
+      reset({ artistName: currentUser?.displayName, ...selectedGuest });
+    }
+  }, [selectedName, allGuests, reset, watch, currentUser]);
+
   const dispatch = useDispatch();
 
   const updateOrCreateSale = (data) => {
@@ -145,12 +159,6 @@ const CreateOrEditSale = ({
     }
   };
 
-  const testGuest = allGuests?.map((guest) => {
-    return { ...guest, label: guest?.name };
-  });
-
-  console.log();
-
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
       <Box>
@@ -160,32 +168,44 @@ const CreateOrEditSale = ({
               {isNewSale ? "Add A New Sale" : "Edit Existing Sale"}
             </h3>
             <div className="content_section">
-              <TextField
-                {...register("artistName", { required: true })}
-                label="Artist Name*"
-                className="text_input"
-                variant="outlined"
-                size="small"
-                disabled={!currentUser?.superUser}
-              />
-              <Autocomplete
-                disablePortal
-                className="text_input"
-                variant="outlined"
-                size="small"
-                options={testGuest}
-                renderInput={(params) => {
-                  return (
-                    <TextField
-                      {...register("name", { required: true })}
-                      {...params}
-                      value={watch()?.name}
-                      label="Art sold to*"
-                    />
-                  );
-                }}
-              />
-              <TextField
+              {currentUser?.superUser && (
+                <TextField
+                  {...register("artistName", { required: true })}
+                  label="Artist Name*"
+                  className="text_input"
+                  variant="outlined"
+                  size="small"
+                />
+              )}
+              {selectedName ? (
+                <TextField
+                  {...register("name", { required: true })}
+                  label="Art sold to*"
+                  className="text_input"
+                  variant="outlined"
+                  size="small"
+                  disabled
+                />
+              ) : (
+                <Autocomplete
+                  disablePortal
+                  className="text_input"
+                  variant="outlined"
+                  size="small"
+                  options={allGuests?.map((guest) => ({ label: guest?.name }))}
+                  renderInput={(params) => {
+                    return (
+                      <TextField
+                        {...register("name", { required: true })}
+                        {...params}
+                        value={selectedName}
+                        label="Art sold to*"
+                      />
+                    );
+                  }}
+                />
+              )}
+              {/* <TextField
                 {...register("email", { required: true })}
                 label="Email*"
                 className="text_input"
@@ -198,7 +218,7 @@ const CreateOrEditSale = ({
                 className="text_input"
                 variant="outlined"
                 size="small"
-              />
+              /> */}
               <TextField
                 {...register("costOfSale")}
                 label="Cost Of Sale"
