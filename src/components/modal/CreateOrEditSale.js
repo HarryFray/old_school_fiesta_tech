@@ -149,6 +149,8 @@ const CreateOrEditSale = ({
     return { ...guest, label: guest?.name };
   });
 
+  console.log();
+
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
       <Box>
@@ -172,13 +174,16 @@ const CreateOrEditSale = ({
                 variant="outlined"
                 size="small"
                 options={testGuest}
-                renderInput={(params) => (
-                  <TextField
-                    {...register("name", { required: true })}
-                    {...params}
-                    label="Art sold to*"
-                  />
-                )}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...register("name", { required: true })}
+                      {...params}
+                      value={watch()?.name}
+                      label="Art sold to*"
+                    />
+                  );
+                }}
               />
               <TextField
                 {...register("email", { required: true })}
