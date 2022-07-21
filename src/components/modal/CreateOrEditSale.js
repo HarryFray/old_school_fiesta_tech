@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import { isEmpty } from "lodash";
 import { getDatabase, ref, push, set } from "firebase/database";
 import { useDispatch } from "react-redux";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import { openSnackBar } from "../../redux/reducers";
 import Typography from "../../global/Typography";
@@ -67,7 +68,7 @@ const CreateOrEditSale = ({
   currentUser,
   activeEvent,
 }) => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, watch } = useForm();
 
   const isNewSale = isEmpty(selectedSale);
   const allGuests = activeEvent?.guests;
@@ -75,6 +76,7 @@ const CreateOrEditSale = ({
   const db = getDatabase();
 
   console.log({ allGuests });
+  console.log(watch());
 
   // MANAGES SALE FIELDS ON OPENING MODAL BASED ON USER ACCESS AND NEW/EDIT
   useEffect(() => {
@@ -143,6 +145,10 @@ const CreateOrEditSale = ({
     }
   };
 
+  const testGuest = allGuests?.map((guest) => {
+    return { ...guest, label: guest?.name };
+  });
+
   return (
     <StyledCreateOrEditSale open={createOrEditSaleOpen}>
       <Box>
@@ -160,12 +166,19 @@ const CreateOrEditSale = ({
                 size="small"
                 disabled={!currentUser?.superUser}
               />
-              <TextField
-                {...register("name", { required: true })}
-                label="Art sold to*"
+              <Autocomplete
+                disablePortal
                 className="text_input"
                 variant="outlined"
                 size="small"
+                options={testGuest}
+                renderInput={(params) => (
+                  <TextField
+                    {...register("name", { required: true })}
+                    {...params}
+                    label="Art sold to*"
+                  />
+                )}
               />
               <TextField
                 {...register("email", { required: true })}
