@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import Modal from "@mui/material/Modal";
@@ -72,40 +72,30 @@ const CreateOrEditSale = ({
 
   const isNewSale = isEmpty(selectedSale);
   const allGuests = activeEvent?.guests;
+  const selectedName = watch()?.name;
 
-  const db = getDatabase();
-
-  console.log({ allGuests });
-  console.log(watch());
-
-  // MANAGES SALE FIELDS ON OPENING MODAL BASED ON USER ACCESS AND NEW/EDIT
   useEffect(() => {
     if (isNewSale) {
-      if (currentUser?.superUser) {
-        reset({});
-      } else {
-        reset({ artistName: currentUser?.displayName });
+      if (selectedName) {
+        const selectedGuest = allGuests?.filter(
+          (guest) => guest?.name === selectedName
+        )[0];
+
+        reset({ artistName: currentUser?.displayName, ...selectedGuest });
       }
     } else {
       reset(selectedSale);
     }
-  }, [isNewSale, reset, selectedSale, currentUser]);
+  }, [reset, selectedSale, allGuests, isNewSale, currentUser, selectedName]);
 
-  const selectedName = watch()?.name;
-
-
-  // TODO NICK: THE TWO USE EFFECTS HERE NEED TO BE REFACTORED FOR ALL THIS TO WORK...
   useEffect(() => {
-    if (selectedName) {
-      const selectedGuest = allGuests?.filter(
-        (guest) => guest?.name === selectedName
-      )[0];
-
-      reset({ artistName: currentUser?.displayName, ...selectedGuest });
+    if (!createOrEditSaleOpen) {
+      reset({});
     }
-  }, [selectedName, allGuests, reset, watch, currentUser]);
+  }, [createOrEditSaleOpen, reset]);
 
   const dispatch = useDispatch();
+  const db = getDatabase();
 
   const updateOrCreateSale = (data) => {
     setSelectedSale({});
@@ -205,20 +195,6 @@ const CreateOrEditSale = ({
                   }}
                 />
               )}
-              {/* <TextField
-                {...register("email", { required: true })}
-                label="Email*"
-                className="text_input"
-                variant="outlined"
-                size="small"
-              />
-              <TextField
-                {...register("instagramHandle")}
-                label="Instagram Handle"
-                className="text_input"
-                variant="outlined"
-                size="small"
-              /> */}
               <TextField
                 {...register("costOfSale")}
                 label="Cost Of Sale"
