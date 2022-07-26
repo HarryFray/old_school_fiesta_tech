@@ -98,11 +98,6 @@ const StyledDashBoard = styled.div`
     }
 
     tbody {
-      // TODO NICK: REQUIRED FOR TABLE SCROLL (INCOMPLETE)
-      // height: calc(100vh - 200px);
-      // position: absolute;
-      // overflow: scroll;
-
       tr {
         td {
           border-bottom: 0.5px solid ${({ theme }) => theme.palette.secondary.main};
@@ -218,8 +213,6 @@ const StyledDashBoard = styled.div`
 `;
 
 const DashBoard = ({ auth, currentUser }) => {
-  const { isSmall } = useWindowSize();
-
   const [selectedSale, setSelectedSale] = useState({});
   const [filterText, setFilterText] = useState('');
 
@@ -244,16 +237,12 @@ const DashBoard = ({ auth, currentUser }) => {
     setTimeout(() => setLoadingEvent(false), 1000);
   }, [createOrEditSaleOpen, deleteConfirmationModalOpen, setLoadingEvent]);
 
+  const dispatch = useDispatch();
+  const { isSmall } = useWindowSize();
+
   const handleDeleteSale = (saleUID) => {
     remove(ref(db, `events/${activeEvent?.eventName}/sales/${saleUID}`));
   };
-
-  const filteredSales = filteredSalesBasedOnSearchText(usereSpecificSales, filterText);
-
-  const totalTicketsSold = filteredSales?.reduce((acc, cur) => acc + Number(cur.ticketsBought), 0);
-  const totalSales = filteredSales?.reduce((acc, cur) => acc + Number(cur.costOfSale), 0);
-
-  const dispatch = useDispatch();
 
   const getAllEmailsSoldToo = (usereSpecificSales) => {
     dispatch(openSnackBar({ message: 'Copied all emails of clients you sold to :)' }));
@@ -266,11 +255,7 @@ const DashBoard = ({ auth, currentUser }) => {
   };
 
   const getAllIntaHandlesSoldTo = (usereSpecificSales) => {
-    dispatch(
-      openSnackBar({
-        message: 'Copied all Instagram handles of clients you sold to ;)',
-      })
-    );
+    dispatch(openSnackBar({ message: 'Copied all Instagram handles of clients you sold to ;)' }));
 
     const uniqueIntaHandles = {};
 
@@ -280,6 +265,11 @@ const DashBoard = ({ auth, currentUser }) => {
 
     return Object.keys(uniqueIntaHandles);
   };
+
+  const filteredSales = filteredSalesBasedOnSearchText(usereSpecificSales, filterText);
+
+  const totalTicketsSold = filteredSales?.reduce((acc, cur) => acc + Number(cur.ticketsBought), 0);
+  const totalSales = filteredSales?.reduce((acc, cur) => acc + Number(cur.costOfSale), 0);
 
   // DEALS WITH IOS NAVIGATION BOTTOM BAR
   const screenHeight = String(document.documentElement.clientHeight);

@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-
 import store from './redux/store';
 import Theme from './global/Theme';
 import Typography from './global/Typography';
@@ -40,10 +39,7 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setCurrentUser({
-          ...user,
-          superUser: SUPER_USERS_IDS.includes(user?.uid),
-        });
+        setCurrentUser({ ...user, superUser: SUPER_USERS_IDS.includes(user?.uid) });
       } else {
         setCurrentUser({});
       }
