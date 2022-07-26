@@ -9,6 +9,29 @@ import ConfirmationModal from "../components/modal/Confirmation";
 import useWindowSize from "../hooks/useWindowSize";
 import Logo from "../images/Logo.ico";
 
+const SUPER_USER_NAV_ITEMS = [
+  {
+    path: "lottery",
+    label: "Lottery",
+  },
+  {
+    path: "events",
+    label: "Event Management",
+  },
+  {
+    path: "dashboard",
+    label: "Dashboard",
+  },
+  {
+    path: "registration",
+    label: "Registration",
+  },
+  {
+    path: "guests",
+    label: "Guests",
+  },
+];
+
 const StyledTopBarNavigation = styled.div`
   background: ${({ theme }) => theme.palette.secondary.light};
   border-bottom: 1px solid ${({ theme }) => theme.palette.primary.main};
@@ -39,7 +62,32 @@ const StyledTopBarNavigation = styled.div`
     display: flex;
     align-items: center;
 
-    > * {
+    .nav_items {
+      display: flex;
+      align-items: center;
+
+      > * {
+        margin-left: 12px;
+      }
+    }
+
+    a {
+      :hover {
+        color: ${({ theme }) => theme.palette.primary.dark};
+      }
+    }
+
+    .selected_nav_item {
+      a {
+        color: ${({ theme }) => theme.palette.primary.dark};
+      }
+    }
+
+    h3:last-child {
+      display: none;
+    }
+
+    button {
       margin-left: 12px;
     }
   }
@@ -64,10 +112,12 @@ const TopBarNavigation = ({ auth, currentUser }) => {
   const { isSmall } = useWindowSize();
 
   const handleSignOut = () => {
-    signOut(auth).then(() => {
-      navigate("/");
-    });
+    signOut(auth).then(() => navigate("/"));
   };
+
+  const { superUser, displayName } = currentUser;
+
+  const currentPath = window?.location?.pathname;
 
   return (
     <>
@@ -85,11 +135,7 @@ const TopBarNavigation = ({ auth, currentUser }) => {
               <img src={Logo} alt="Logo" width="32" height="32" />
               <h2>Old Sol Fiesta</h2>
             </div>
-            <h5>
-              {`What up ${
-                currentUser?.superUser ? "Super User" : currentUser?.displayName
-              }`}
-            </h5>
+            <h5>{`What up ${superUser ? "Super User" : displayName}`}</h5>
           </div>
         ) : (
           <>
@@ -97,30 +143,28 @@ const TopBarNavigation = ({ auth, currentUser }) => {
               <img src={Logo} alt="Logo" width="40" height="40" />
               <h1>Old Sol Fiesta</h1>
             </div>
-            <h4>
-              {`What up ${
-                currentUser?.superUser ? "SuperUser" : currentUser?.displayName
-              }`}
-            </h4>
+            <h4>{`What up ${superUser ? "SuperUser" : displayName}`}</h4>
           </>
         )}
         <div className="navigation">
-          {currentUser?.superUser && (
-            <>
-              <h3>
-                <Link to="/lottery">Lottery</Link>
-              </h3>
-              <h3>
-                <Link to="/events">Event Management</Link>
-              </h3>
-              <h3>
-                <Link to="/dashboard">Dashboard</Link>
-              </h3>
-              <h3>
-                <Link to="/registration">registration</Link>
-              </h3>
-            </>
-          )}
+          <div className="nav_items">
+            {superUser &&
+              SUPER_USER_NAV_ITEMS.map(({ path, label }) => {
+                return (
+                  <>
+                    <h3
+                      key={path}
+                      className={
+                        currentPath?.includes(path) && "selected_nav_item"
+                      }
+                    >
+                      <Link to={`/${path}`}>{label}</Link>
+                    </h3>
+                    <h3>|</h3>
+                  </>
+                );
+              })}
+          </div>
           <Button
             onClick={() => setConfirmationModalOpen(true)}
             variant="outlined"
