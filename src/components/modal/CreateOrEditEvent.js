@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { useForm, Controller } from "react-hook-form";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import { isEmpty, differenceWith, isEqual } from "lodash";
-import { getDatabase, ref, set } from "firebase/database";
-import Switch from "@mui/material/Switch";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { useForm, Controller } from 'react-hook-form';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { isEmpty, differenceWith, isEqual } from 'lodash';
+import { getDatabase, ref, set } from 'firebase/database';
+import Switch from '@mui/material/Switch';
 import {
   createUserWithEmailAndPassword,
   updateProfile,
   signInWithEmailAndPassword,
-} from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+} from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
-import Typography from "../../global/Typography";
+import Typography from '../../global/Typography';
 
 const createUsersAndLogOut = (artists, auth, navigate) => {
   Promise.all(
@@ -27,18 +27,18 @@ const createUsersAndLogOut = (artists, auth, navigate) => {
       )
         .then(async (userCredential) => {
           const user = userCredential.user;
-          console.log("New user created");
+          console.log('New user created');
 
           await updateProfile(user, {
             displayName: artist?.name,
           })
             .then(() => {
-              console.log("Updated username");
+              console.log('Updated username');
             })
-            .catch(() => console.log("Error updating username"));
+            .catch(() => console.log('Error updating username'));
         })
         .catch((error) => {
-          console.log("Error on signup", error);
+          console.log('Error on signup', error);
         });
     })
   ).then(() =>
@@ -46,7 +46,7 @@ const createUsersAndLogOut = (artists, auth, navigate) => {
       auth,
       process.env.REACT_APP_DEFAULT_SUPER_USER_EMAIL,
       process.env.REACT_APP_DEFAULT_USER_PASSWORD
-    ).then(() => navigate("/events"))
+    ).then(() => navigate('/events'))
   );
 };
 
@@ -56,10 +56,10 @@ const mergeArtistEmailsAndNames = (data) => {
   for (const [key, value] of Object.entries(data)) {
     const artistIndex = Number(key.slice(-1));
 
-    if (!isNaN(artistIndex) && key.includes("artist") && value.length) {
-      if (key.includes("name")) {
+    if (!isNaN(artistIndex) && key.includes('artist') && value.length) {
+      if (key.includes('name')) {
         artists[artistIndex] = { ...artists[artistIndex], name: value };
-      } else if (key.includes("email")) {
+      } else if (key.includes('email')) {
         artists[artistIndex] = { ...artists[artistIndex], email: value };
       }
     }
@@ -166,8 +166,8 @@ const CreateOrEditEvent = ({
   useEffect(() => {
     if (isNewEvent) {
       reset({
-        eventName: "",
-        dateOccuring: "",
+        eventName: '',
+        dateOccuring: '',
         activeEvent: false,
         lockedEvent: false,
       });
@@ -184,13 +184,7 @@ const CreateOrEditEvent = ({
   const updateOrCreateEvent = (data) => {
     const artistArray = mergeArtistEmailsAndNames(data);
 
-    const {
-      activeEvent,
-      lockedEvent,
-      dateOccuring,
-      eventName,
-      sales = false,
-    } = data;
+    const { activeEvent, lockedEvent, dateOccuring, eventName, sales = false } = data;
 
     const relevantEventData = {
       artists: artistArray,
@@ -202,18 +196,16 @@ const CreateOrEditEvent = ({
     };
 
     const nameOfEventExists = Boolean(
-      allEvents?.find(
-        (event) => event?.eventName?.toLowerCase() === eventName?.toLowerCase()
-      )
+      allEvents?.find((event) => event?.eventName?.toLowerCase() === eventName?.toLowerCase())
     );
 
     if (!eventName) {
-      alert("CREATING AN EVENT WITHOUT A NAME WILL DESTROY THE DB");
+      alert('CREATING AN EVENT WITHOUT A NAME WILL DESTROY THE DB');
       return;
     }
 
     if (isNewEvent && nameOfEventExists) {
-      alert("THIS EVENT EXISTS ALREADY CHOOSE A DIFFERENT NAME");
+      alert('THIS EVENT EXISTS ALREADY CHOOSE A DIFFERENT NAME');
       return;
     }
 
@@ -237,10 +229,10 @@ const CreateOrEditEvent = ({
       <Box>
         <Typography>
           <form onSubmit={handleSubmit(updateOrCreateEvent)}>
-            <h3>{isNewEvent ? "Create New Event" : "Edit Existing Event"}</h3>
+            <h3>{isNewEvent ? 'Create New Event' : 'Edit Existing Event'}</h3>
             <div className="content_section">
               <TextField
-                {...register("eventName", { required: true })}
+                {...register('eventName', { required: true })}
                 label="Event Name (once created this can not be changed)"
                 className="text_input"
                 variant="outlined"
@@ -248,7 +240,7 @@ const CreateOrEditEvent = ({
                 disabled={!isNewEvent}
               />
               <TextField
-                {...register("dateOccuring")}
+                {...register('dateOccuring')}
                 label="Date Of Event"
                 className="text_input"
                 variant="outlined"
@@ -258,29 +250,21 @@ const CreateOrEditEvent = ({
                 <Controller
                   name="activeEvent"
                   control={control}
-                  render={({ field }) => (
-                    <Switch checked={field?.value} {...field} />
-                  )}
+                  render={({ field }) => <Switch checked={field?.value} {...field} />}
                 />
                 <h4>
-                  {getValues("activeEvent")
-                    ? "This is the current event"
-                    : "Make this the current event"}
+                  {getValues('activeEvent')
+                    ? 'This is the current event'
+                    : 'Make this the current event'}
                 </h4>
               </div>
               <div className="current_event_switch">
                 <Controller
                   name="lockedEvent"
                   control={control}
-                  render={({ field }) => (
-                    <Switch checked={field?.value} {...field} />
-                  )}
+                  render={({ field }) => <Switch checked={field?.value} {...field} />}
                 />
-                <h4>
-                  {getValues("lockedEvent")
-                    ? "This event is locked"
-                    : "Lock this event"}
-                </h4>
+                <h4>{getValues('lockedEvent') ? 'This event is locked' : 'Lock this event'}</h4>
               </div>
               <div className="artists_section">
                 <h4>Artists:</h4>
@@ -309,18 +293,14 @@ const CreateOrEditEvent = ({
                 <div className="manage_artists_buttons">
                   <Button
                     className="add_artist_button"
-                    onClick={() =>
-                      setArtistEditFields(artistEditFields.slice(1))
-                    }
+                    onClick={() => setArtistEditFields(artistEditFields.slice(1))}
                     variant="outlined"
                   >
                     Delete Artist
                   </Button>
                   <Button
                     className="add_artist_button"
-                    onClick={() =>
-                      setArtistEditFields([...artistEditFields, {}])
-                    }
+                    onClick={() => setArtistEditFields([...artistEditFields, {}])}
                     variant="outlined"
                   >
                     Add Artist
@@ -339,7 +319,7 @@ const CreateOrEditEvent = ({
                 Never Mind
               </Button>
               <Button variant="contained" type="submit" size="small">
-                {isNewEvent ? "Create Event" : "Update Event"}
+                {isNewEvent ? 'Create Event' : 'Update Event'}
               </Button>
             </div>
           </form>

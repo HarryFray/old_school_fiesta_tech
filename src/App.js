@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import { isEmpty } from "lodash";
-import { Provider } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
+import { isEmpty } from 'lodash';
+import { Provider } from 'react-redux';
 
-import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { initializeApp } from 'firebase/app';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-import store from "./redux/store";
-import Theme from "./global/Theme";
-import Typography from "./global/Typography";
-import SignIn from "./components/SignIn";
+import store from './redux/store';
+import Theme from './global/Theme';
+import Typography from './global/Typography';
+import SignIn from './components/SignIn';
 
-import DashBoard from "./pages/Dashboard";
-import Lottery from "./pages/Lottery";
-import EventManagement from "./pages/EventManagement";
-import Registration from "./pages/Registration";
+import DashBoard from './pages/Dashboard';
+import Lottery from './pages/Lottery';
+import EventManagement from './pages/EventManagement';
+import Registration from './pages/Registration';
 
 const FIRE_BASE_CONFIG = {
   apiKey: process.env.REACT_APP_FB_API_KEY,
@@ -63,38 +63,24 @@ function App() {
                 </>
               ) : (
                 <>
-                  <Route
-                    path="*"
-                    element={<Navigate to="/dashboard" replace />}
-                  />
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
                   <Route
                     path="dashboard"
-                    element={
-                      <DashBoard auth={auth} currentUser={currentUser} />
-                    }
+                    element={<DashBoard auth={auth} currentUser={currentUser} />}
                   />
                   {currentUser?.superUser && (
                     <>
                       <Route
                         path="events"
-                        element={
-                          <EventManagement
-                            auth={auth}
-                            currentUser={currentUser}
-                          />
-                        }
+                        element={<EventManagement auth={auth} currentUser={currentUser} />}
                       />
                       <Route
                         path="lottery"
-                        element={
-                          <Lottery auth={auth} currentUser={currentUser} />
-                        }
+                        element={<Lottery auth={auth} currentUser={currentUser} />}
                       />
                       <Route
                         path="registration"
-                        element={
-                          <Registration auth={auth} currentUser={currentUser} />
-                        }
+                        element={<Registration auth={auth} currentUser={currentUser} />}
                       />
                     </>
                   )}

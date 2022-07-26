@@ -1,29 +1,25 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { ref, remove, getDatabase } from "firebase/database";
-import copy from "copy-to-clipboard";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { ref, remove, getDatabase } from 'firebase/database';
+import copy from 'copy-to-clipboard';
+import { useDispatch } from 'react-redux';
 
-import Layout from "../global/Layout";
-import useWindowSize from "../hooks/useWindowSize";
-import useActiveEvent from "../hooks/useActiveEvent";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { openSnackBar } from "../redux/reducers";
+import Layout from '../global/Layout';
+import useWindowSize from '../hooks/useWindowSize';
+import useActiveEvent from '../hooks/useActiveEvent';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { openSnackBar } from '../redux/reducers';
 
-import CreateOrEditSale from "../components/modal/CreateOrEditSale";
-import ConfirmationModal from "../components/modal/Confirmation";
+import CreateOrEditSale from '../components/modal/CreateOrEditSale';
+import ConfirmationModal from '../components/modal/Confirmation';
 
 const filteredSalesBasedOnSearchText = (sales, searchText) => {
   let searchedSales = sales?.filter((sale) => {
-    let nameIncludedInSearch = sale.name
-      ?.toLowerCase()
-      .includes(searchText.toLowerCase());
+    let nameIncludedInSearch = sale.name?.toLowerCase().includes(searchText.toLowerCase());
 
-    let artistIncludedInSearch = sale.artistName
-      ?.toLowerCase()
-      .includes(searchText.toLowerCase());
+    let artistIncludedInSearch = sale.artistName?.toLowerCase().includes(searchText.toLowerCase());
 
     return nameIncludedInSearch || artistIncludedInSearch;
   });
@@ -109,8 +105,7 @@ const StyledDashBoard = styled.div`
 
       tr {
         td {
-          border-bottom: 0.5px solid
-            ${({ theme }) => theme.palette.secondary.main};
+          border-bottom: 0.5px solid ${({ theme }) => theme.palette.secondary.main};
           overflow-wrap: anywhere;
           padding: 0 0 0 20px;
 
@@ -226,11 +221,10 @@ const DashBoard = ({ auth, currentUser }) => {
   const { isSmall } = useWindowSize();
 
   const [selectedSale, setSelectedSale] = useState({});
-  const [filterText, setFilterText] = useState("");
+  const [filterText, setFilterText] = useState('');
 
   const [createOrEditSaleOpen, setCreateOrEditSaleOpen] = useState(false);
-  const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
-    useState(false);
+  const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] = useState(false);
 
   const { activeEvent, loadingEvent, setLoadingEvent } = useActiveEvent();
 
@@ -238,9 +232,7 @@ const DashBoard = ({ auth, currentUser }) => {
 
   const usereSpecificSales = currentUser?.superUser
     ? activeEvent?.sales
-    : activeEvent?.sales?.filter(
-        ({ artistName }) => artistName === currentUser?.displayName
-      );
+    : activeEvent?.sales?.filter(({ artistName }) => artistName === currentUser?.displayName);
 
   // manage loading and scroll for cleaner mobile experience
   useEffect(() => {
@@ -256,26 +248,15 @@ const DashBoard = ({ auth, currentUser }) => {
     remove(ref(db, `events/${activeEvent?.eventName}/sales/${saleUID}`));
   };
 
-  const filteredSales = filteredSalesBasedOnSearchText(
-    usereSpecificSales,
-    filterText
-  );
+  const filteredSales = filteredSalesBasedOnSearchText(usereSpecificSales, filterText);
 
-  const totalTicketsSold = filteredSales?.reduce(
-    (acc, cur) => acc + Number(cur.ticketsBought),
-    0
-  );
-  const totalSales = filteredSales?.reduce(
-    (acc, cur) => acc + Number(cur.costOfSale),
-    0
-  );
+  const totalTicketsSold = filteredSales?.reduce((acc, cur) => acc + Number(cur.ticketsBought), 0);
+  const totalSales = filteredSales?.reduce((acc, cur) => acc + Number(cur.costOfSale), 0);
 
   const dispatch = useDispatch();
 
   const getAllEmailsSoldToo = (usereSpecificSales) => {
-    dispatch(
-      openSnackBar({ message: "Copied all emails of clients you sold to :)" })
-    );
+    dispatch(openSnackBar({ message: 'Copied all emails of clients you sold to :)' }));
 
     const uniqueEmails = {};
 
@@ -287,15 +268,14 @@ const DashBoard = ({ auth, currentUser }) => {
   const getAllIntaHandlesSoldTo = (usereSpecificSales) => {
     dispatch(
       openSnackBar({
-        message: "Copied all Instagram handles of clients you sold to ;)",
+        message: 'Copied all Instagram handles of clients you sold to ;)',
       })
     );
 
     const uniqueIntaHandles = {};
 
     usereSpecificSales?.forEach(
-      ({ instagramHandle }) =>
-        (uniqueIntaHandles[instagramHandle] = instagramHandle)
+      ({ instagramHandle }) => (uniqueIntaHandles[instagramHandle] = instagramHandle)
     );
 
     return Object.keys(uniqueIntaHandles);
@@ -344,9 +324,7 @@ const DashBoard = ({ auth, currentUser }) => {
               <div className="buttons">
                 <Button
                   size="small"
-                  onClick={() =>
-                    copy(getAllIntaHandlesSoldTo(usereSpecificSales))
-                  }
+                  onClick={() => copy(getAllIntaHandlesSoldTo(usereSpecificSales))}
                   variant="outlined"
                 >
                   COPY INSTAS
@@ -365,7 +343,7 @@ const DashBoard = ({ auth, currentUser }) => {
                     setSelectedSale({});
                   }}
                   variant="contained"
-                  disabled={activeEvent?.lockedEvent}
+                  disabled={activeEvent?.lockedEvent || !activeEvent?.guests?.length}
                 >
                   ADD SALE
                 </Button>
@@ -377,9 +355,7 @@ const DashBoard = ({ auth, currentUser }) => {
               <thead>
                 <tr>
                   <th className="xSmall_col">#</th>
-                  {currentUser?.superUser && (
-                    <th className="large_col">Artist's Name</th>
-                  )}
+                  {currentUser?.superUser && <th className="large_col">Artist's Name</th>}
                   <th className="small_col">Art Sold To</th>
                   <th className="large_col">Email</th>
                   <th className="small_col">Instagram</th>
@@ -391,14 +367,8 @@ const DashBoard = ({ auth, currentUser }) => {
               {Boolean(filteredSales?.length && !loadingEvent) && (
                 <tbody>
                   {filteredSales?.map((sale, id) => {
-                    const {
-                      name,
-                      artistName,
-                      email,
-                      instagramHandle,
-                      costOfSale,
-                      ticketsBought,
-                    } = sale;
+                    const { name, artistName, email, instagramHandle, costOfSale, ticketsBought } =
+                      sale;
 
                     return (
                       <React.Fragment key={id}>
@@ -408,7 +378,7 @@ const DashBoard = ({ auth, currentUser }) => {
                           <td>{name}</td>
                           <td>{email}</td>
                           <td>{instagramHandle}</td>
-                          <td>{costOfSale ? `$${costOfSale}.00` : ""}</td>
+                          <td>{costOfSale ? `$${costOfSale}.00` : ''}</td>
                           <td>{ticketsBought}</td>
                           <td>
                             <div className="action_buttons">
@@ -443,13 +413,7 @@ const DashBoard = ({ auth, currentUser }) => {
             Boolean(filteredSales?.length && !loadingEvent) && (
               <div className="sale_cards">
                 {filteredSales?.map((sale, id) => {
-                  const {
-                    name,
-                    email,
-                    instagramHandle,
-                    costOfSale,
-                    ticketsBought,
-                  } = sale;
+                  const { name, email, instagramHandle, costOfSale, ticketsBought } = sale;
 
                   return (
                     <div key={id} className="sale_card">
@@ -468,7 +432,7 @@ const DashBoard = ({ auth, currentUser }) => {
                         </h5>
                         <h5 className="caption">
                           <span className="bold">Cost: </span>
-                          {costOfSale ? "$" + costOfSale + ".00" : ""}
+                          {costOfSale ? '$' + costOfSale + '.00' : ''}
                         </h5>
                         <h5 className="caption">
                           <span className="bold">Tickets: </span>
@@ -487,15 +451,6 @@ const DashBoard = ({ auth, currentUser }) => {
                         >
                           Edit
                         </Button>
-                        {/* <Button
-                          size="small"
-                          onClick={() => {
-                            setSelectedSale({ ...sale, id });
-                            setDeleteConfirmationModalOpen(true);
-                          }}
-                        >
-                          Delete
-                        </Button> */}
                       </div>
                     </div>
                   );
@@ -511,9 +466,7 @@ const DashBoard = ({ auth, currentUser }) => {
           {Boolean(!filteredSales?.length && !loadingEvent) && (
             <div className="empty_search_text">
               <h2>No sales available</h2>
-              <h6 className="subtitle-2">
-                Either sell something or update your search
-              </h6>
+              <h6 className="subtitle-2">Either sell something or update your search</h6>
             </div>
           )}
         </StyledDashBoard>

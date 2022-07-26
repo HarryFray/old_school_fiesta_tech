@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import React from 'react';
+import styled from 'styled-components';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
-import Typography from "../../global/Typography";
+import Typography from '../../global/Typography';
 
 const StyledConfirmationModal = styled(Modal)`
   .MuiBox-root {
@@ -54,7 +54,7 @@ const ConfirmationModal = ({
   confirmationModalModalOpen,
   setConfirmationModalModalOpen,
   confirmationAction,
-  title = "Are You Sure You Want to Delete!?",
+  title = 'Are You Sure You Want to Delete!?',
   text = `It's a really big deal if you do, it's not like
    you can just create a new one that is the same as this one was...`,
 }) => {
@@ -70,10 +70,7 @@ const ConfirmationModal = ({
           <h3 className="bold">{title}</h3>
           <h6 className="subtitle-2">{text}</h6>
           <div className="buttons">
-            <Button
-              onClick={() => setConfirmationModalModalOpen(false)}
-              variant="outlined"
-            >
+            <Button onClick={() => setConfirmationModalModalOpen(false)} variant="outlined">
               Never Mind
             </Button>
             <Button variant="contained" onClick={handleClickDelete}>

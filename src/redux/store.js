@@ -1,6 +1,6 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
 
-import snackBarReducer from "./reducers";
+import snackBarReducer from './reducers';
 
 export default configureStore({
   reducer: {

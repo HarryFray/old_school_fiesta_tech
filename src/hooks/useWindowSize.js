@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import { breakPoints } from "../global/Theme";
+import { breakPoints } from '../global/Theme';
 
 const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState({
@@ -16,10 +16,10 @@ const useWindowSize = () => {
       });
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     handleResize();
 
-    return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   let isXSmall = windowSize.width <= parseInt(breakPoints.xSmall, 10);
