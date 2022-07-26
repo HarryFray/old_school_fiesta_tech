@@ -107,35 +107,21 @@ const CreateOrEditSale = ({
         saleUID,
       })
         .then(() => {
-          dispatch(
-            openSnackBar({
-              message: 'you successfully added a new sale',
-            })
-          );
+          dispatch(openSnackBar({ message: 'you successfully added a new sale' }));
         })
         .catch(() => {
           dispatch(
-            openSnackBar({
-              message: 'There was an issue creating your sale',
-              status: 'error',
-            })
+            openSnackBar({ message: 'There was an issue creating your sale', status: 'error' })
           );
         });
     } else {
       set(ref(db, `events/${activeEvent?.eventName}/sales/${data.saleUID}`), data)
         .then(() => {
-          dispatch(
-            openSnackBar({
-              message: 'you successfully updated sale',
-            })
-          );
+          dispatch(openSnackBar({ message: 'you successfully updated sale' }));
         })
         .catch(() => {
           dispatch(
-            openSnackBar({
-              message: 'There was an issue updating your sale',
-              status: 'error',
-            })
+            openSnackBar({ message: 'There was an issue updating your sale', status: 'error' })
           );
         });
     }
