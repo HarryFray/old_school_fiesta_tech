@@ -168,7 +168,7 @@ const Guests = ({ auth, currentUser }) => {
 
   const { isSmall } = useWindowSize();
 
-  const filteredguest = filteredGuestsBasedOnSearchText(activeEvent?.guests, filterText);
+  const filteredGuests = filteredGuestsBasedOnSearchText(activeEvent?.guests, filterText);
 
   // DEALS WITH IOS NAVIGATION BOTTOM BAR
   const screenHeight = String(document.documentElement.clientHeight);
@@ -202,9 +202,9 @@ const Guests = ({ auth, currentUser }) => {
                 <th className="large_col">Instagram</th>
               </tr>
             </thead>
-            {Boolean(filteredguest?.length && !loadingEvent) && (
+            {Boolean(filteredGuests?.length && !loadingEvent) && (
               <tbody>
-                {filteredguest?.map((guest, id) => {
+                {filteredGuests?.map((guest, id) => {
                   const { name, email, instagramHandle } = guest;
 
                   return (
@@ -222,9 +222,9 @@ const Guests = ({ auth, currentUser }) => {
             )}
           </table>
         ) : (
-          Boolean(filteredguest?.length && !loadingEvent) && (
+          Boolean(filteredGuests?.length && !loadingEvent) && (
             <div className="guest_cards">
-              {filteredguest?.map((guest, id) => {
+              {filteredGuests?.map((guest, id) => {
                 const { name, email, instagramHandle } = guest;
 
                 return (
@@ -254,7 +254,7 @@ const Guests = ({ auth, currentUser }) => {
             <LoadingSpinner />
           </div>
         )}
-        {Boolean(!filteredguest?.length && !loadingEvent) && (
+        {Boolean(!filteredGuests?.length && !loadingEvent) && (
           <div className="empty_search_text">
             <h2>No guest available</h2>
             <h6 className="subtitle-2">Guests must register through the registration page</h6>
