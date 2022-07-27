@@ -1,22 +1,20 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import CircularProgress from "@mui/material/CircularProgress";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { getDatabase, ref, remove } from "firebase/database";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import CircularProgress from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { getDatabase, ref, remove } from 'firebase/database';
 
-import Layout from "../global/Layout";
-import CreateOrEditEvent from "../components/modal/CreateOrEditEvent";
-import ConfirmationModal from "../components/modal/Confirmation";
-import useActiveEvent from "../hooks/useActiveEvent";
+import Layout from '../global/Layout';
+import CreateOrEditEvent from '../components/modal/CreateOrEditEvent';
+import ConfirmationModal from '../components/modal/Confirmation';
+import useActiveEvent from '../hooks/useActiveEvent';
 
 const filteredEventsBasedOnSearchText = (events, searchText) => {
   if (!events?.length) return [];
 
   let searchedEvents = events?.filter((event) => {
-    let nameIncludedInSearch = event?.eventName
-      ?.toLowerCase()
-      ?.includes(searchText?.toLowerCase());
+    let nameIncludedInSearch = event?.eventName?.toLowerCase()?.includes(searchText?.toLowerCase());
 
     return nameIncludedInSearch;
   });
@@ -134,11 +132,10 @@ const StyledEventManagement = styled.div`
 
 const EventManagement = ({ auth, currentUser }) => {
   const [selectedEvent, setSelectedEvent] = useState({});
-  const [filterText, setFilterText] = useState("");
+  const [filterText, setFilterText] = useState('');
 
   const [createOrEditEventOpen, setCreateOrEditEventOpen] = useState(false);
-  const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
-    useState(false);
+  const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] = useState(false);
 
   const db = getDatabase();
 
@@ -203,18 +200,12 @@ const EventManagement = ({ auth, currentUser }) => {
             {Boolean(filteredEvents?.length && !loadingEvents) && (
               <tbody>
                 {filteredEvents?.map((event, id) => {
-                  const {
-                    eventName,
-                    dateOccuring,
-                    artists,
-                    activeEvent,
-                    lockedEvent,
-                  } = event;
+                  const { eventName, dateOccuring, artists, activeEvent, lockedEvent } = event;
 
                   const artistNamesString = artists
                     ?.map((artist) => `${artist?.name},`)
-                    .join(" ")
-                    .replace(/,\s*$/, "");
+                    .join(' ')
+                    .replace(/,\s*$/, '');
 
                   return (
                     <React.Fragment key={id}>

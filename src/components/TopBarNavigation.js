@@ -1,34 +1,34 @@
-import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import { signOut } from "firebase/auth";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import { signOut } from 'firebase/auth';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import ConfirmationModal from "../components/modal/Confirmation";
-import useWindowSize from "../hooks/useWindowSize";
-import Logo from "../images/Logo.ico";
+import ConfirmationModal from '../components/modal/Confirmation';
+import useWindowSize from '../hooks/useWindowSize';
+import Logo from '../images/Logo.ico';
 
 const SUPER_USER_NAV_ITEMS = [
   {
-    path: "lottery",
-    label: "Lottery",
+    path: 'lottery',
+    label: 'Lottery',
   },
   {
-    path: "events",
-    label: "Event Management",
+    path: 'events',
+    label: 'Event Management',
   },
   {
-    path: "dashboard",
-    label: "Dashboard",
+    path: 'dashboard',
+    label: 'Dashboard',
   },
   {
-    path: "registration",
-    label: "Registration",
+    path: 'registration',
+    label: 'Registration',
   },
   {
-    path: "guests",
-    label: "Guests",
+    path: 'guests',
+    label: 'Guests',
   },
 ];
 
@@ -112,7 +112,7 @@ const TopBarNavigation = ({ auth, currentUser }) => {
   const { isSmall } = useWindowSize();
 
   const handleSignOut = () => {
-    signOut(auth).then(() => navigate("/"));
+    signOut(auth).then(() => navigate('/'));
   };
 
   const { superUser, displayName } = currentUser;
@@ -135,7 +135,7 @@ const TopBarNavigation = ({ auth, currentUser }) => {
               <img src={Logo} alt="Logo" width="32" height="32" />
               <h2>Old Sol Fiesta</h2>
             </div>
-            <h5>{`What up ${superUser ? "Super User" : displayName}`}</h5>
+            <h5>{`What up ${superUser ? 'Super User' : displayName}`}</h5>
           </div>
         ) : (
           <>
@@ -143,7 +143,7 @@ const TopBarNavigation = ({ auth, currentUser }) => {
               <img src={Logo} alt="Logo" width="40" height="40" />
               <h1>Old Sol Fiesta</h1>
             </div>
-            <h4>{`What up ${superUser ? "SuperUser" : displayName}`}</h4>
+            <h4>{`What up ${superUser ? 'SuperUser' : displayName}`}</h4>
           </>
         )}
         <div className="navigation">
@@ -152,12 +152,7 @@ const TopBarNavigation = ({ auth, currentUser }) => {
               SUPER_USER_NAV_ITEMS.map(({ path, label }) => {
                 return (
                   <>
-                    <h3
-                      key={path}
-                      className={
-                        currentPath?.includes(path) && "selected_nav_item"
-                      }
-                    >
+                    <h3 key={path} className={currentPath?.includes(path) && 'selected_nav_item'}>
                       <Link to={`/${path}`}>{label}</Link>
                     </h3>
                     <h3>|</h3>
@@ -165,11 +160,7 @@ const TopBarNavigation = ({ auth, currentUser }) => {
                 );
               })}
           </div>
-          <Button
-            onClick={() => setConfirmationModalOpen(true)}
-            variant="outlined"
-            size="small"
-          >
+          <Button onClick={() => setConfirmationModalOpen(true)} variant="outlined" size="small">
             Sign Out
           </Button>
         </div>

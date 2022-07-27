@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const snackBarSlice = createSlice({
-  name: "snackBar",
+  name: 'snackBar',
   initialState: {
     open: false,
-    message: "",
-    status: "success",
+    message: '',
+    status: 'success',
   },
   reducers: {
     openSnackBar: (state, action) => {

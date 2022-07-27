@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { useState, useEffect } from 'react';
+import { getDatabase, ref, onValue } from 'firebase/database';
 
-import { firebaseObjectToArray } from "../utils";
+import { firebaseObjectToArray } from '../utils';
 
 const getAllTicketsSoldFromSales = (allSales) => {
   const allTicketsSold = [];
@@ -23,7 +23,7 @@ const useActiveEvent = () => {
 
   useEffect(() => {
     const db = getDatabase();
-    const dbRef = ref(db, "/events");
+    const dbRef = ref(db, '/events');
 
     onValue(dbRef, (snapshot) => {
       if (snapshot.exists()) {

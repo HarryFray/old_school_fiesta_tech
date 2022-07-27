@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
-import osfBackground from "../images/osf-background.png";
+import osfBackground from '../images/osf-background.png';
 
 const StyledSignIn = styled.div`
   background: white;
@@ -75,26 +75,26 @@ const StyledSignIn = styled.div`
 `;
 
 const SignIn = ({ auth }) => {
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [errorText, setErrorText] = useState("");
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [errorText, setErrorText] = useState('');
 
   useEffect(() => {
-    setErrorText("");
+    setErrorText('');
   }, [password, email]);
 
   const navigate = useNavigate();
 
   const handleUserSignIn = (auth, email, password) => {
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => navigate("/dashboard"))
+      .then(() => navigate('/dashboard'))
       .catch(({ message }) => {
         if (!email || !password) {
-          setErrorText("Please enter a password and email");
-        } else if (message.includes("password")) {
-          setErrorText("Invalid Password");
-        } else if (message.includes("email")) {
-          setErrorText("Invalid Email");
+          setErrorText('Please enter a password and email');
+        } else if (message.includes('password')) {
+          setErrorText('Invalid Password');
+        } else if (message.includes('email')) {
+          setErrorText('Invalid Email');
         } else {
           setErrorText(message);
         }
@@ -104,12 +104,7 @@ const SignIn = ({ auth }) => {
   return (
     <StyledSignIn>
       <div id="bg">
-        <img
-          src={osfBackground}
-          alt="Old Sol Fiesta Background"
-          width="500"
-          height="600"
-        />
+        <img src={osfBackground} alt="Old Sol Fiesta Background" width="500" height="600" />
       </div>
       <div className="login_card">
         <TextField

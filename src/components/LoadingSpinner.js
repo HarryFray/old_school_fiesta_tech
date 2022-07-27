@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import Logo from "../images/Logo.ico";
+import Logo from '../images/Logo.ico';
 
 const StyledLoadingSpinner = styled.div`
   img {

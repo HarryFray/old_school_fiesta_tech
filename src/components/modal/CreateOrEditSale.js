@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
-import { useForm } from "react-hook-form";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import { isEmpty } from "lodash";
-import { getDatabase, ref, push, set } from "firebase/database";
-import { useDispatch } from "react-redux";
-import Autocomplete from "@mui/material/Autocomplete";
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { useForm } from 'react-hook-form';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { isEmpty } from 'lodash';
+import { getDatabase, ref, push, set } from 'firebase/database';
+import { useDispatch } from 'react-redux';
+import Autocomplete from '@mui/material/Autocomplete';
 
-import { openSnackBar } from "../../redux/reducers";
-import Typography from "../../global/Typography";
+import { openSnackBar } from '../../redux/reducers';
+import Typography from '../../global/Typography';
 
 const StyledCreateOrEditSale = styled(Modal)`
   .MuiBox-root {
@@ -77,9 +77,7 @@ const CreateOrEditSale = ({
   useEffect(() => {
     if (isNewSale) {
       if (selectedName) {
-        const selectedGuest = allGuests?.filter(
-          (guest) => guest?.name === selectedName
-        )[0];
+        const selectedGuest = allGuests?.filter((guest) => guest?.name === selectedName)[0];
 
         reset({ artistName: currentUser?.displayName, ...selectedGuest });
       }
@@ -102,48 +100,28 @@ const CreateOrEditSale = ({
     setCreateOrEditSaleOpen(false);
 
     if (isNewSale) {
-      const saleUID = push(
-        ref(db, `events/${activeEvent?.eventName}/sales`),
-        data
-      ).key;
+      const saleUID = push(ref(db, `events/${activeEvent?.eventName}/sales`), data).key;
 
       set(ref(db, `events/${activeEvent?.eventName}/sales/${saleUID}`), {
         ...data,
         saleUID,
       })
         .then(() => {
-          dispatch(
-            openSnackBar({
-              message: "you successfully added a new sale",
-            })
-          );
+          dispatch(openSnackBar({ message: 'you successfully added a new sale' }));
         })
         .catch(() => {
           dispatch(
-            openSnackBar({
-              message: "There was an issue creating your sale",
-              status: "error",
-            })
+            openSnackBar({ message: 'There was an issue creating your sale', status: 'error' })
           );
         });
     } else {
-      set(
-        ref(db, `events/${activeEvent?.eventName}/sales/${data.saleUID}`),
-        data
-      )
+      set(ref(db, `events/${activeEvent?.eventName}/sales/${data.saleUID}`), data)
         .then(() => {
-          dispatch(
-            openSnackBar({
-              message: "you successfully updated sale",
-            })
-          );
+          dispatch(openSnackBar({ message: 'you successfully updated sale' }));
         })
         .catch(() => {
           dispatch(
-            openSnackBar({
-              message: "There was an issue updating your sale",
-              status: "error",
-            })
+            openSnackBar({ message: 'There was an issue updating your sale', status: 'error' })
           );
         });
     }
@@ -154,13 +132,11 @@ const CreateOrEditSale = ({
       <Box>
         <Typography>
           <form onSubmit={handleSubmit(updateOrCreateSale)}>
-            <h3 className="bold">
-              {isNewSale ? "Add A New Sale" : "Edit Existing Sale"}
-            </h3>
+            <h3 className="bold">{isNewSale ? 'Add A New Sale' : 'Edit Existing Sale'}</h3>
             <div className="content_section">
               {currentUser?.superUser && (
                 <TextField
-                  {...register("artistName", { required: true })}
+                  {...register('artistName', { required: true })}
                   label="Artist Name*"
                   className="text_input"
                   variant="outlined"
@@ -169,7 +145,7 @@ const CreateOrEditSale = ({
               )}
               {selectedName ? (
                 <TextField
-                  {...register("name", { required: true })}
+                  {...register('name', { required: true })}
                   label="Art sold to*"
                   className="text_input"
                   variant="outlined"
@@ -186,7 +162,7 @@ const CreateOrEditSale = ({
                   renderInput={(params) => {
                     return (
                       <TextField
-                        {...register("name", { required: true })}
+                        {...register('name', { required: true })}
                         {...params}
                         value={selectedName}
                         label="Art sold to*"
@@ -196,7 +172,7 @@ const CreateOrEditSale = ({
                 />
               )}
               <TextField
-                {...register("costOfSale")}
+                {...register('costOfSale')}
                 label="Cost Of Sale"
                 className="text_input"
                 variant="outlined"
@@ -205,7 +181,7 @@ const CreateOrEditSale = ({
                 step="0.01"
               />
               <TextField
-                {...register("ticketsBought", { required: true, min: 1 })}
+                {...register('ticketsBought', { required: true, min: 1 })}
                 label="Tickets Bought (must be greater than 0)"
                 className="text_input"
                 variant="outlined"
@@ -225,7 +201,7 @@ const CreateOrEditSale = ({
                 Never Mind
               </Button>
               <Button variant="contained" type="submit">
-                {isNewSale ? "Create Sale" : "Update Sale"}
+                {isNewSale ? 'Create Sale' : 'Update Sale'}
               </Button>
             </div>
           </form>

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Button from "@mui/material/Button";
-import { random } from "lodash";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Button from '@mui/material/Button';
+import { random } from 'lodash';
 
-import Layout from "../global/Layout";
-import useActiveEvent from "../hooks/useActiveEvent";
+import Layout from '../global/Layout';
+import useActiveEvent from '../hooks/useActiveEvent';
 
 const StyledLottery = styled.div`
   height: 100%;
@@ -189,10 +189,7 @@ const Lottery = ({ auth, currentUser }) => {
                       <td>{artistName}</td>
                       <td>
                         <div className="action_buttons">
-                          <Button
-                            size="small"
-                            onClick={() => handleDeleteWinner(id)}
-                          >
+                          <Button size="small" onClick={() => handleDeleteWinner(id)}>
                             Delete
                           </Button>
                         </div>
