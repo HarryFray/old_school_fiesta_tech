@@ -8,45 +8,40 @@ import TextField from '@mui/material/TextField';
 import { isEmpty, differenceWith, isEqual } from 'lodash';
 import { getDatabase, ref, set } from 'firebase/database';
 import Switch from '@mui/material/Switch';
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  signInWithEmailAndPassword,
-} from 'firebase/auth';
+import { updateProfile, sendSignInLinkToEmail } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
 import Typography from '../../global/Typography';
 
-const createUsersAndLogOut = (artists, auth, navigate) => {
+const sendUserSignInLink = (artists, auth, navigate) => {
   Promise.all(
     artists.map(async (artist) => {
-      await createUserWithEmailAndPassword(
-        auth,
-        artist?.email,
-        process.env.REACT_APP_DEFAULT_USER_PASSWORD
-      )
-        .then(async (userCredential) => {
-          const user = userCredential.user;
-          console.log('New user created');
+      const actionCodeSettings = {
+        url: 'https://oldsolfiesta.com/dashboard',
+        handleCodeInApp: true,
+      };
 
-          await updateProfile(user, {
-            displayName: artist?.name,
-          })
-            .then(() => {
-              console.log('Updated username');
-            })
-            .catch(() => console.log('Error updating username'));
+      sendSignInLinkToEmail(auth, artist?.email, actionCodeSettings)
+        .then(async () => {
+          console.log('that worked!');
+
+          // TODO NICK: SAVE THEY NAME IF THEY ARE CREATED!
+          // const user = userCredential.user;
+          // console.log('New user created');
+
+          // await updateProfile(user, {
+          //   displayName: artist?.name,
+          // })
+          //   .then(() => {
+          //     console.log('Updated username');
+          //   })
+          //   .catch(() => console.log('Error updating username'));
         })
         .catch((error) => {
-          console.log('Error on signup', error);
+          console.log('error sending email: ', error);
+          // ...
         });
     })
-  ).then(() =>
-    signInWithEmailAndPassword(
-      auth,
-      process.env.REACT_APP_DEFAULT_SUPER_USER_EMAIL,
-      process.env.REACT_APP_DEFAULT_USER_PASSWORD
-    ).then(() => navigate('/events'))
   );
 };
 
@@ -219,7 +214,7 @@ const CreateOrEditEvent = ({
       );
 
       if (artistsCreatedOrUpdated) {
-        createUsersAndLogOut(artistArray, auth, navigate);
+        sendUserSignInLink(artistArray, auth, navigate);
       }
     });
   };
