@@ -4,6 +4,7 @@ import { signOut } from 'firebase/auth';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import cx from 'classnames';
 
 import ConfirmationModal from '../components/modal/Confirmation';
 import useWindowSize from '../hooks/useWindowSize';
@@ -15,20 +16,20 @@ const SUPER_USER_NAV_ITEMS = [
     label: 'Lottery',
   },
   {
-    path: 'events',
-    label: 'Event Management',
-  },
-  {
-    path: 'dashboard',
-    label: 'Dashboard',
+    path: 'guests',
+    label: 'Guests',
   },
   {
     path: 'registration',
     label: 'Registration',
   },
   {
-    path: 'guests',
-    label: 'Guests',
+    path: 'events',
+    label: 'Event Management',
+  },
+  {
+    path: 'dashboard',
+    label: 'Dashboard',
   },
 ];
 
@@ -151,12 +152,12 @@ const TopBarNavigation = ({ auth, currentUser }) => {
             {superUser &&
               SUPER_USER_NAV_ITEMS.map(({ path, label }) => {
                 return (
-                  <>
-                    <h3 key={path} className={currentPath?.includes(path) && 'selected_nav_item'}>
+                  <React.Fragment key={path}>
+                    <h3 className={cx({ selected_nav_item: currentPath?.includes(path) })}>
                       <Link to={`/${path}`}>{label}</Link>
                     </h3>
                     <h3>|</h3>
-                  </>
+                  </React.Fragment>
                 );
               })}
           </div>
