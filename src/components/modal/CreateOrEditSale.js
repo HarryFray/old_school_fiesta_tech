@@ -72,7 +72,7 @@ const CreateOrEditSale = ({
 
   const isNewSale = isEmpty(selectedSale);
   const allGuests = activeEvent?.guests;
-  const selectedName = watch()?.name;
+  const selectedName = watch()?.fullName;
 
   useEffect(() => {
     if (isNewSale) {
@@ -145,7 +145,7 @@ const CreateOrEditSale = ({
               )}
               {selectedName ? (
                 <TextField
-                  {...register('name', { required: true })}
+                  {...register('fullName', { required: true })}
                   label="Art sold to*"
                   className="text_input"
                   variant="outlined"

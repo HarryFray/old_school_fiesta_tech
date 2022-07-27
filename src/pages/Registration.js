@@ -53,6 +53,7 @@ const Registration = () => {
 
     set(ref(db, `events/${activeEvent?.eventName}/guests/${guestUID}`), {
       ...data,
+      fullName: `${data?.firstName} ${data?.lastName}`,
       guestUID,
     })
       .then(() => {
@@ -76,8 +77,15 @@ const Registration = () => {
           <div className="content_section">
             <h1>Old Sol Fiesta Registration</h1>
             <TextField
-              {...register('name', { required: true })}
-              label="Name*"
+              {...register('firstName', { required: true })}
+              label="First Name*"
+              className="text_input"
+              variant="outlined"
+              size="small"
+            />
+            <TextField
+              {...register('lastName', { required: true })}
+              label="Last Name*"
               className="text_input"
               variant="outlined"
               size="small"

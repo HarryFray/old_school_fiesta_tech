@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 const filteredGuestsBasedOnSearchText = (guest, searchText) => {
   let searchedGuest = guest?.filter((guest) => {
-    let nameIncludedInSearch = guest.name?.toLowerCase().includes(searchText.toLowerCase());
+    let nameIncludedInSearch = guest.fullName?.toLowerCase().includes(searchText.toLowerCase());
 
     return nameIncludedInSearch;
   });
@@ -205,13 +205,13 @@ const Guests = ({ auth, currentUser }) => {
             {Boolean(filteredGuests?.length && !loadingEvent) && (
               <tbody>
                 {filteredGuests?.map((guest, id) => {
-                  const { name, email, instagramHandle } = guest;
+                  const { fullName, email, instagramHandle } = guest;
 
                   return (
                     <React.Fragment key={id}>
                       <tr>
                         <td>{id + 1}</td>
-                        <td>{name}</td>
+                        <td>{fullName}</td>
                         <td>{email}</td>
                         <td>{instagramHandle}</td>
                       </tr>
@@ -225,14 +225,14 @@ const Guests = ({ auth, currentUser }) => {
           Boolean(filteredGuests?.length && !loadingEvent) && (
             <div className="guest_cards">
               {filteredGuests?.map((guest, id) => {
-                const { name, email, instagramHandle } = guest;
+                const { fullName, email, instagramHandle } = guest;
 
                 return (
                   <div key={id} className="guest_card">
                     <div>
                       <h5 className="caption">
                         <span className="bold">Name: </span>
-                        {name}
+                        {fullName}
                       </h5>
                       <h5 className="caption">
                         <span className="bold">Email: </span>
