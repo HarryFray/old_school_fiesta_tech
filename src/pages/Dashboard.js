@@ -357,15 +357,21 @@ const DashBoard = ({ auth, currentUser }) => {
               {Boolean(filteredSales?.length && !loadingEvent) && (
                 <tbody>
                   {filteredSales?.map((sale, id) => {
-                    const { name, artistName, email, instagramHandle, costOfSale, ticketsBought } =
-                      sale;
+                    const {
+                      fullName,
+                      artistName,
+                      email,
+                      instagramHandle,
+                      costOfSale,
+                      ticketsBought,
+                    } = sale;
 
                     return (
                       <React.Fragment key={id}>
                         <tr>
                           <td>{id + 1}</td>
                           {currentUser?.superUser && <td>{artistName}</td>}
-                          <td>{name}</td>
+                          <td>{fullName}</td>
                           <td>{email}</td>
                           <td>{instagramHandle}</td>
                           <td>{costOfSale ? `$${costOfSale}.00` : ''}</td>
@@ -403,14 +409,14 @@ const DashBoard = ({ auth, currentUser }) => {
             Boolean(filteredSales?.length && !loadingEvent) && (
               <div className="sale_cards">
                 {filteredSales?.map((sale, id) => {
-                  const { name, email, instagramHandle, costOfSale, ticketsBought } = sale;
+                  const { fullName, email, instagramHandle, costOfSale, ticketsBought } = sale;
 
                   return (
                     <div key={id} className="sale_card">
                       <div>
                         <h5 className="caption">
                           <span className="bold">Name: </span>
-                          {name}
+                          {fullName}
                         </h5>
                         <h5 className="caption">
                           <span className="bold">Email: </span>
