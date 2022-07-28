@@ -77,8 +77,7 @@ const CreateOrEditSale = ({
   useEffect(() => {
     if (isNewSale) {
       if (selectedName) {
-        const selectedGuest = allGuests?.filter((guest) => guest?.name === selectedName)[0];
-
+        const selectedGuest = allGuests?.filter((guest) => guest?.fullName === selectedName)[0];
         reset({ artistName: currentUser?.displayName, ...selectedGuest });
       }
     } else {
@@ -143,34 +142,23 @@ const CreateOrEditSale = ({
                   size="small"
                 />
               )}
-              {selectedName ? (
-                <TextField
-                  {...register('fullName', { required: true })}
-                  label="Art sold to*"
-                  className="text_input"
-                  variant="outlined"
-                  size="small"
-                  disabled
-                />
-              ) : (
-                <Autocomplete
-                  disablePortal
-                  className="text_input"
-                  variant="outlined"
-                  size="small"
-                  options={allGuests?.map((guest) => ({ label: guest?.name }))}
-                  renderInput={(params) => {
-                    return (
-                      <TextField
-                        {...register('name', { required: true })}
-                        {...params}
-                        value={selectedName}
-                        label="Art sold to*"
-                      />
-                    );
-                  }}
-                />
-              )}
+              <Autocomplete
+                disablePortal
+                className="text_input"
+                variant="outlined"
+                size="small"
+                options={allGuests?.map((guest) => ({ label: guest?.fullName }))}
+                renderInput={(params) => {
+                  return (
+                    <TextField
+                      {...register('fullName', { required: true })}
+                      {...params}
+                      value={selectedName}
+                      label="Art sold to*"
+                    />
+                  );
+                }}
+              />
               <TextField
                 {...register('costOfSale')}
                 label="Cost Of Sale"
